@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Section Page</title>
+</head>
+<body>
+<h1>Create Section Page</h1>
+
+    <form action="/createsection/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="logout">Logout</button>
+    </form>
+    <form action="/createsection/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+    </form>
+    <form action="/createsection/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+    </form>
+    <form action="/createsection/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="directory">View Directory</button>
+    </form>
+<br>
+<br>
+    <form action="/createsection/" method="post">
+        {% csrf_token %}
+        <table>
+            <tr><td>section number: </td><td><input type="text" name="sectionnumber"></td></tr>
+            <tr><td>location: </td><td><input type="text" name="location"></td></tr>
+            <tr><td>days meeting: </td><td><input type="text" name="daysmeeting"></td></tr>
+            <tr><td>start time: </td><td><input type="text" name="starttime"></td></tr>
+            <tr><td>end time: </td><td><input type="text" name="endtime"></td></tr>
+            <tr><td>section type: </td><td><select name ="type" id="type">
+                <option value="le">Lecture</option>
+                <option value="gr">Grader</option>
+                <option value="se">Section</option>
+            </select></td></tr>
+        </table>
+        <input type="submit">
+    </form>
+    <form action="/createsection/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="cancel">Cancel</button>
+    </form>
+</body>
+</html>

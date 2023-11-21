@@ -2,34 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Course List</title>
 </head>
 <body>
-<h1>Dashboard</h1>
+<h1>Course List Page</h1>
 
-    <form action="/dashboard/" method="post">
+    <form action="/courselist/" method="post">
         {% csrf_token %}
         <button type = "submit" name="navigation" value="logout">Logout</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/courselist/" method="post">
         {% csrf_token %}
         <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/courselist/" method="post">
         {% csrf_token %}
         <button type = "submit" name="navigation" value="courselist">View Course List</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/courselist/" method="post">
         {% csrf_token %}
         <button type = "submit" name="navigation" value="directory">View Directory</button>
     </form>
 <br>
 <br>
-    <form action="/dashboard/" method="post">
+<form action="/courselist/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="viewself">View My Account</button>
+        <button type = "submit" name="navigation" value="createcourse">Create New Course</button>
     </form>
-</body>
-</html>
+    <form action="/courselist/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="coursepage">View Course</button>
+    </form>
 </body>
 </html>

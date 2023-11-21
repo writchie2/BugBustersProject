@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User Page</title>
+</head>
+<body>
+<h1>Edit User Page</h1>
+
+    <form action="/edituser/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="logout">Logout</button>
+    </form>
+    <form action="/edituser/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+    </form>
+    <form action="/edituser/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+    </form>
+    <form action="/edituser/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="directory">View Directory</button>
+    </form>
+<br>
+<br>
+
+
+<table>
+    <tr><td>Current First Name</td><td>*variable*</td>
+        <td>
+            <form action="/edituser/" method="post">
+                {% csrf_token %}
+                <input type="text" name="firstname"> <input type="submit"></form>
+        </td>
+    </tr>
+    <tr><td>Current Last Name:</td><td>*variable*</td>
+        <td>
+            <form action="/edituser/" method="post">
+                {% csrf_token %}
+                <input type="text" name="lastname"> <input type="submit"></form>
+        </td>
+    </tr>
+    <tr><td>Current Phone Number:</td><td>*variable*</td>
+        <td>
+            <form action="/edituser/" method="post">
+                {% csrf_token %}
+                <input type="text" name="phonenumber"> <input type="submit"></form>
+        </td>
+    </tr>
+    <tr><td>Current Address:</td><td>*variable*</td>
+        <td>
+            <form action="/edituser/" method="post">
+                {% csrf_token %}
+                <input type="text" name="address"> <input type="submit"></form>
+        </td>
+    </tr>
+    <tr><td>Current Role:</td><td>*variable*</td>
+        <td>
+            <form action="/edituser/" method="post">
+                {% csrf_token %}
+                <input type="text" name="role"> <input type="submit"></form>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

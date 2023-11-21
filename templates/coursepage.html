@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Page</title>
+</head>
+<body>
+<h1>Course Page</h1>
+
+    <form action="/coursepage/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="logout">Logout</button>
+    </form>
+    <form action="/coursepage/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+    </form>
+    <form action="/coursepage/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+    </form>
+    <form action="/coursepage/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="directory">View Directory</button>
+    </form>
+<br>
+<br>
+    <form action="/coursepage/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="createsection">Create New Section</button>
+    </form>
+    <form action="/coursepage/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="sectionpage">View Section</button>
+    </form>
+    <form action="/coursepage/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="deletecourse">Delete Course</button>
+    </form>
+</body>
+</html>
