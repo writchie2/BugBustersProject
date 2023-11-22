@@ -25,5 +25,54 @@
     </form>
 <br>
 <br>
+
+<table>
+    <tr><td>Current Course Name</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/editcourse/" method="post">
+                {% csrf_token %}
+                <input type="text" name="coursename"> <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current Department:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/editcourse/" method="post">
+                {% csrf_token %}
+                <input type="text" name="department"> <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current Course Number:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/editcourse/" method="post">
+                {% csrf_token %}
+                <input type="text"  name="coursenumber"> <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current Semester:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/editcourse/" method="post">
+                {% csrf_token %}
+                <select name ="semester" id="semester">
+                <option value="fa">Fall</option>
+                <option value="sp">Spring</option>
+                <option value="su">Summer</option>
+                <option value="wi">Winter</option>
+                </select>
+                <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current Year:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/editcourse/" method="post">
+                {% csrf_token %}
+                <input type="text" name="year"> <input type="submit"></form>
+            </td>
+        </tr>
+</table>
 </body>
 </html>

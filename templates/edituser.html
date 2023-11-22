@@ -28,41 +28,46 @@
 
 
 <table>
-    <tr><td>Current First Name</td><td>*variable*</td>
-        <td>
-            <form action="/edituser/" method="post">
+    <tr><td>Current First Name</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/edituser/" method="post">
                 {% csrf_token %}
                 <input type="text" name="firstname"> <input type="submit"></form>
-        </td>
-    </tr>
-    <tr><td>Current Last Name:</td><td>*variable*</td>
-        <td>
-            <form action="/edituser/" method="post">
+            </td>
+        </tr>
+    <tr><td>Current Last Name:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/edituser/" method="post">
                 {% csrf_token %}
                 <input type="text" name="lastname"> <input type="submit"></form>
-        </td>
-    </tr>
-    <tr><td>Current Phone Number:</td><td>*variable*</td>
-        <td>
-            <form action="/edituser/" method="post">
+            </td>
+        </tr>
+    <tr><td>Current Phone Number:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="phonenumber"> <input type="submit"></form>
-        </td>
-    </tr>
-    <tr><td>Current Address:</td><td>*variable*</td>
-        <td>
-            <form action="/edituser/" method="post">
+                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="phonenumber"> <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current Address:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/edituser/" method="post">
                 {% csrf_token %}
                 <input type="text" name="address"> <input type="submit"></form>
-        </td>
-    </tr>
-    <tr><td>Current Role:</td><td>*variable*</td>
-        <td>
-            <form action="/edituser/" method="post">
+            </td>
+        </tr>
+    <tr><td>Current Role:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/edituser/" method="post">
                 {% csrf_token %}
                 <input type="text" name="role"> <input type="submit"></form>
-        </td>
-    </tr>
+            </td>
+        </tr>
 </table>
 
 </body>

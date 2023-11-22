@@ -28,22 +28,22 @@
     <form action="/createcourse/" method="post">
         {% csrf_token %}
         <table>
-            <tr><td>course namme: </td><td><input type="text" name="coursename"></td></tr>
-            <tr><td>department: </td><td><input type="text" name="department"></td></tr>
-            <tr><td>course number: </td><td><input type="text" name="coursenumber"></td></tr>
-            <tr><td>semester: </td><td><select name ="semester" id="semester">
+            <tr><td>Course Name: </td><td><input type="text" name="coursename"required></td></tr>
+            <tr><td>Department: </td><td><input type="text" name="department"required></td></tr>
+            <tr><td>Course Number: </td><td><input type="text" name="coursenumber"required></td></tr>
+            <tr><td>semester: </td><td><select name ="semester" id="semester"required>
                 <option value="fa">Fall</option>
                 <option value="sp">Spring</option>
                 <option value="su">Summer</option>
                 <option value="wi">Winter</option>
             </select></td></tr>
-            <tr><td>year: </td><td><input type="text" name="year"></td></tr>
+            <tr><td>Year: </td><td><input type="text" name="year"required></td></tr>
         </table>
         <input type="submit">
     </form>
     <form action="/createcourse/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="cancel">Cancel</button>
+        <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="cancel">Cancel</button>
     </form>
 </body>
 </html>

@@ -25,5 +25,69 @@
     </form>
 <br>
 <br>
+
+
+<table>
+    <tr><td>Current Section Number</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/editsection/" method="post">
+                {% csrf_token %}
+                <input type="text" name="sectionnumber"> <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current Location:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/editsection/" method="post">
+                {% csrf_token %}
+                <input type="text" name="location"> <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current Days Meeting:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/editsection/" method="post">
+                {% csrf_token %}
+                <input type="checkbox" name="M" value="M" id="M"><label for="M">Monday</label>
+                <input type="checkbox" name="T" value="T" id="T"><label for="T">Tuesday</label>
+                <input type="checkbox" name="W" value="W" id="W"><label for="W">Wednesday</label>
+                <input type="checkbox" name="H" value="H" id="H"><label for="H">Thursday</label>
+                <input type="checkbox" name="F" value="F" id="F"><label for="F">Friday</label>
+                <input type="checkbox" name="S" value="S" id="S"><label for="S">Saturday</label>
+                <input type="checkbox" name="U" value="U" id="U"><label for="U">Sunday</label>
+                <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current Start Time:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/editsection/" method="post">
+                {% csrf_token %}
+                <input type="time" name="starttime"> <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current End Time:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/editsection/" method="post">
+                {% csrf_token %}
+                <input type="time" name="endtime"> <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current Section Type:</td><td>*variable*</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/editcourse/" method="post">
+                {% csrf_token %}
+                <select name ="semester" id="semester">
+                <option value="le">Lecture</option>
+                <option value="gr">Grader</option>
+                <option value="se">Section</option>
+                </select>
+                <input type="submit"></form>
+            </td>
+        </tr>
+</table>
 </body>
 </html>
