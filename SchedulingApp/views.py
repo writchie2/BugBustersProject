@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .models import Course, MyUser, Section
 from django.http import HttpResponseRedirect
+from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection
 
 
 class Login(View):
@@ -138,6 +139,8 @@ class CoursePage(View):
             return redirect("/directory/")
         if request.POST['navigation'] == "createsection":
             return redirect("/createsection/")
+        if request.POST['navigation'] == "editcourse":
+            return redirect("/editcourse/")
         if request.POST['navigation'] == "sectionpage":
             return redirect("/sectionpage/")
         if request.POST['navigation'] == "deletecourse":
@@ -194,6 +197,8 @@ class SectionPage(View):
             return redirect("/directory/")
         if request.POST['navigation'] == "viewcourse":
             return redirect("/coursepage/")
+        if request.POST['navigation'] == "editsection":
+            return redirect("/editsection/")
         if request.POST['navigation'] == "deletesection":
             return redirect("/coursepage/")
 
@@ -233,54 +238,4 @@ class EditSection(View):
             return redirect("/directory/")
 
 #Functions to impliment and create tests for
-def func_CreateUser(request):
-    return redirect("/login")
-def func_EditUser(request):
-    return redirect("/login")
-def func_DeleteUser(request):
-    return redirect("/login")
-def func_CreateCourse(request):
-    return redirect("/login")
-def func_EditCourse(request):
-    return redirect("/login")
-def func_DeleteCourse(request):
-    return redirect("/login")
-def func_CreateSection(request):
-    return redirect("/login")
-def func_EditSection(request):
-    return redirect("/login")
-def func_DeleteSection(request):
-    return redirect("/login")
-def func_ValidateFirstName(firstName):
-    pass
-def func_ValidateLastName(lastName):
-    pass
-def func_ValidatePhoneNumber(phoneNumber):
-    pass
-def func_ValidateStreetAddress(streetAddress):
-    pass
-def func_ValidateCity(city):
-    pass
-def func_ValidateState(state):
-    pass
-def func_ValidateZipCode(state):
-    pass
-def func_ValidateCourseName(name):
-    pass
-def func_ValidateDepartment(department):
-    pass
-def func_ValidateCourseNumber(courseNumber):
-    pass
-def func_ValidateYear(year):
-    pass
-def func_ValidateSectionNumber(sectionNumber):
-    pass
-def func_ValidateLocation(location):
-    pass
-def func_ValidateDaysMeeting(daysMeeting):
-    pass
-def func_ValidateStartTime(startTime):
-    pass
-def func_ValidateEndTime(endTime):
-    pass
 

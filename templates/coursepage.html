@@ -31,6 +31,10 @@
     </form>
     <form action="/coursepage/" method="post">
         {% csrf_token %}
+        <button type = "submit" name="navigation" value="editcourse">Edit This Course</button>
+    </form>
+    <form action="/coursepage/" method="post">
+        {% csrf_token %}
         <button type = "submit" name="navigation" value="sectionpage">View Section</button>
     </form>
     <form action="/coursepage/" method="post">

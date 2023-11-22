@@ -31,6 +31,10 @@
     </form>
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
+        <button type = "submit" name="navigation" value="editsection">Edit This Section</button>
+    </form>
+    <form action="/sectionpage/" method="post">
+        {% csrf_token %}
         <button type = "submit" name="navigation" value="deletesection">Delete This Section</button>
     </form>
 </body>

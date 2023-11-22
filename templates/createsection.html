@@ -28,12 +28,20 @@
     <form action="/createsection/" method="post">
         {% csrf_token %}
         <table>
-            <tr><td>section number: </td><td><input type="text" name="sectionnumber"></td></tr>
-            <tr><td>location: </td><td><input type="text" name="location"></td></tr>
-            <tr><td>days meeting: </td><td><input type="text" name="daysmeeting"></td></tr>
-            <tr><td>start time: </td><td><input type="text" name="starttime"></td></tr>
-            <tr><td>end time: </td><td><input type="text" name="endtime"></td></tr>
-            <tr><td>section type: </td><td><select name ="type" id="type">
+            <tr><td>Section Number: </td><td><input type="text" name="sectionnumber"required></td></tr>
+            <tr><td>Location: </td><td><input type="text" name="location"required></td></tr>
+            <tr><td>Days meeting: </td>
+                <td><input type="checkbox" name="M" value="M" id="M"><label for="M">Monday</label>
+                <input type="checkbox" name="T" value="T" id="T"><label for="T">Tuesday</label>
+                <input type="checkbox" name="W" value="W" id="W"><label for="W">Wednesday</label>
+                <input type="checkbox" name="H" value="H" id="H"><label for="H">Thursday</label>
+                <input type="checkbox" name="F" value="F" id="F"><label for="F">Friday</label>
+                <input type="checkbox" name="S" value="S" id="S"><label for="S">Saturday</label>
+                <input type="checkbox" name="U" value="U" id="U"><label for="U">Sunday</label></td>
+            </tr>
+            <tr><td>Start Time: </td><td><input type="time" name="starttime"required></td></tr>
+            <tr><td>End Time: </td><td><input type="time" name="endtime"required></td></tr>
+            <tr><td>Section Type: </td><td><select name ="type" id="type"required>
                 <option value="le">Lecture</option>
                 <option value="gr">Grader</option>
                 <option value="se">Section</option>
@@ -43,7 +51,7 @@
     </form>
     <form action="/createsection/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="cancel">Cancel</button>
+        <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="cancel">Cancel</button>
     </form>
 </body>
 </html>
