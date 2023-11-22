@@ -6,13 +6,29 @@ from SchedulingApp.functions import func_ValidateCourseName, func_ValidateDepart
 from django.test import TestCase, Client
 
 class ValidateCourseNameTest(TestCase):
-    pass
+    def testValidCourseName(self):
+        pass
+
+    def testInvalidCourseName(self):
+        pass
 
 class ValidateDepartment(TestCase):
-    pass
+    def testValidDepartment(self):
+        pass
+
+    def testInvalidDepartment(self):
+        pass
 
 class ValidateCourseNumberTest(TestCase):
-    pass
+    def testValidCourseNumber(self):
+        pass
+
+    def testInvalidCourseNumber(self):
+        pass
 
 class ValidateYearTest(TestCase):
-    pass
+    def testValidYear(self):
+        pass
+
+    def testInvalidYear(self):
+        pass
