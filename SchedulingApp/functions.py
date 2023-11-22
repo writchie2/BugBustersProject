@@ -80,7 +80,6 @@ def func_ValidateLocation(location):
     pass
 def func_ValidateDaysMeeting(daysMeeting):
     pass
-def func_ValidateStartTime(startTime):
+def func_ValidateStartAndEndTime(startTime, endTime):
     pass
-def func_ValidateEndTime(endTime):
-    pass
+

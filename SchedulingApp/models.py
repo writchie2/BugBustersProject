@@ -40,7 +40,7 @@ class Section(models.Model):
     ]
     type = models.CharField(max_length=2, choices=TYPE_CHOICES, default="le", editable=True)
     location = models.CharField(max_length=50, default="defaultlocation", editable=True)
-    daysMeeting = models.CharField(max_length=7, default="MWTHF", editable=True)
+    daysMeeting = models.CharField(max_length=7, default="MTWHF", editable=True)
     startTime = models.CharField(max_length=50, default="defaultstarttime", editable=True)
     endTime = models.CharField(max_length=50, default="defaultendtime", editable=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
