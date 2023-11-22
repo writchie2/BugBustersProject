@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .models import Course, MyUser, Section
 from django.http import HttpResponseRedirect
-from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection
+from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection, func_Login, func_Logout
 
 
 class Login(View):
@@ -10,7 +10,17 @@ class Login(View):
         return render(request, "login.HTML")
 
     def post(self, request):
-        return redirect("/dashboard")
+        if "email" in request.POST:
+            message = func_Login(request)
+            if message =="success.":
+                user = MyUser.objects.get(email=request.POST['email'])
+                request.session["email"] = user.email
+                request.session["role"] = user.role
+                return redirect("/dashboard/")
+            else:
+                return render(request, "login.html", {"message": message})
+
+        #return redirect("/dashboard")
 
 
 class Dashboard(View):

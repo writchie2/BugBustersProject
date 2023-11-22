@@ -8,7 +8,23 @@ and redirects to the dashboard
 Failure returns a render with a failure method    
 """
 def func_Login(request):
-    return redirect("/login")
+    noSuchUser = False
+    isWrongPassword = False
+    isBlank = ("" == request.POST['email']) or ("" == request.POST['password'])
+    try:
+        user = MyUser.objects.get(email=request.POST['email'])
+        isWrongPassword = (user.password != request.POST['password'])
+
+    except:
+        noSuchUser = True
+    if isBlank:
+        return "Fields cannot be blank."
+    elif noSuchUser:
+        return "That username does not exist."
+    elif isWrongPassword:
+        return "Incorrect password."
+    else:
+        return "success."
 """
 Logout redirects the page to the login page and flushes the session of any tokens
 """

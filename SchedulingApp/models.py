@@ -1,7 +1,7 @@
 from django.db import models
 
 class MyUser(models.Model):
-    email = models.CharField(max_length=20, default="default@uwm.edu", editable=True)
+    email = models.CharField(primary_key=True,max_length=20, default="default@uwm.edu", editable=True)
     password = models.CharField(max_length=20, default="defaultpassword", editable=True)
     firstName = models.CharField(max_length=20, default="defaultfirstname", editable=True)
     lastName = models.CharField(max_length=20, default="defaultlastname", editable=True)
