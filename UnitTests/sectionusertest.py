@@ -83,21 +83,36 @@ class ValidateDaysMeetingTest(TestCase):
     def testMeetingDayAndAsync(self):
         result = func_ValidateDaysMeeting("MNo Meeting Pattern")
         self.assertFalse(result, "M and No Meeting Pattern returns True (Valid).")
+    def test_invalidArg(self):
+        with self.assertRaises(TypeError, msg="Non-String input does not raise TypeError."):
+            result = func_ValidateDaysMeeting(1)
+            result = func_ValidateDaysMeeting(2.5)
 
 
 class ValidateStartAndEndTimeTest(TestCase):
+    def test_Valid(self):
+        result = func_ValidateStartAndEndTime("08:00", "08:50")
+        self.assertTrue(result, "08:00-08:50 returns False (inValid).")
+        result = func_ValidateStartAndEndTime("17:30", "19:20")
+        self.assertTrue(result, "17:30-19:20 returns False (inValid).")
+        result = func_ValidateStartAndEndTime("13:", "14:15")
+        self.assertTrue(result, "08:00-08:50 returns False (inValid).")
     def test_EndBeforeStart(self):
         result = func_ValidateStartAndEndTime("16:00","15:00")
         self.assertFalse(result, "End Time Before Start Time returns True (Valid).")
-    def test_StartBeforeEight(self):
-        result = func_ValidateStartAndEndTime("7:55","9:00")
+    def test_StartBeforeEightAM(self):
+        result = func_ValidateStartAndEndTime("07:55","09:00")
         self.assertFalse(result, "Start Time Before 8 returns True (Valid).")
     def test_StartSixPMOrLater(self):
         result = func_ValidateStartAndEndTime("18:00","19:00")
         self.assertFalse(result, "Start Time at 18:00 returns True (Valid).")
     def test_StartEqualsEnd(self):
-        result = func_ValidateStartAndEndTime("9:00","9:00")
+        result = func_ValidateStartAndEndTime("09:00","09:00")
         self.assertFalse(result, "Equal Start and End Time returns True (Valid).")
     def test_EndEightPMorLater(self):
         result = func_ValidateStartAndEndTime("17:30", "20:00")
         self.assertFalse(result, "End Time at 20:00 returns True (Valid).")
+    def test_invalidArg(self):
+        with self.assertRaises(TypeError, msg="Non-String input does not raise TypeError."):
+            result = func_ValidateStartAndEndTime(1,2)
+            result = func_ValidateStartAndEndTime(1.0,2.0)
