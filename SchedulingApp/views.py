@@ -2,12 +2,12 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .models import Course, MyUser, Section
 from django.http import HttpResponseRedirect
-from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection, func_Login, func_Logout
+from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection, func_Login, func_AlphabeticalMyUserList
 
 
 class Login(View):
     def get(self, request):
-        return render(request, "login.HTML")
+        return render(request, "login.html")
 
     def post(self, request):
         if "email" in request.POST:
@@ -29,8 +29,11 @@ class Dashboard(View):
 
     def post(self, request):
         if request.POST['navigation'] == "logout":
+            del request.session["email"]
+            del request.session["role"]
             return redirect("/login/")
         if request.POST['navigation'] == "viewself":
+            request.session["selecteduser"] = request.session["email"]
             return redirect("/userpage/")
         if request.POST['navigation'] == "courselist":
             return redirect("/courselist/")
@@ -42,7 +45,8 @@ class Dashboard(View):
 
 class Directory(View):
     def get(self, request):
-        return render(request, "directory.html")
+        sortedUsers = func_AlphabeticalMyUserList(MyUser.objects.all())
+        return render(request, "directory.html", {"list": sortedUsers})
 
     def post(self, request):
         if request.POST['navigation'] == "logout":

@@ -65,7 +65,12 @@
             <td>New Value:</td>
             <td><form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="role"> <input type="submit"></form>
+                <select name ="role" id="role"required>
+                <option value="admin">Admin</option>
+                <option value="instructor">Instructor</option>
+                <option value="ta">TA</option>
+                </select>
+                <input type="submit"></form>
             </td>
         </tr>
 </table>

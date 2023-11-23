@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .models import Course, MyUser, Section
 from django.http import HttpResponseRedirect
+from operator import itemgetter
 """
 Login verifies the user has an account created and all inputs are valid. Adds their username to a session token as well as if they're an admin 
 and redirects to the dashboard
@@ -28,8 +29,21 @@ def func_Login(request):
 """
 Logout redirects the page to the login page and flushes the session of any tokens
 """
-def func_Logout(request):
-    return redirect("/login")
+
+def func_AlphabeticalMyUserList(user_bin):
+    userList = []
+    for user in user_bin:
+        thisdict = {
+            "lastname": user.lastName,
+            "fullname": user.__str__(),
+            "email": user.email,
+            "role": user.role
+        }
+        userList.append(thisdict)
+    alphabetical = sorted(userList, key=itemgetter('lastname'))
+    return alphabetical
+
+
 
 """
 POST Functions. These happen from button presses and form submissions.

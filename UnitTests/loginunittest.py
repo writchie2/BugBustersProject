@@ -1,7 +1,6 @@
 import sys
-import requests
 sys.path.append('../SchedulingApp')
-from SchedulingApp.models import  MyUser, Course, Section
+from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
 
@@ -23,16 +22,16 @@ class LoginTest(TestCase):
     def test_BlankPassword(self):
         response = func_Login(self.factory.post("/", {"email": "writchie@uwm.edu", "password": ""}, follow=True))
         self.assertEqual(response, "Fields cannot be blank.",
-                         "Wrong Password does not return Fields cannot be blank.")
+                         "Blank Password does not return Fields cannot be blank.")
     def test_BlankEmail(self):
         response = func_Login(self.factory.post("/", {"email": "", "password": "password"}, follow=True))
         self.assertEqual(response, "Fields cannot be blank.",
-                         "Wrong Password does not return Fields cannot be blank.")
+                         "Blank email does not return Fields cannot be blank.")
     def test_BlankEmailAndPassword(self):
         response = func_Login(self.factory.post("/", {"email": "", "password": ""}, follow=True))
         self.assertEqual(response, "Fields cannot be blank.",
-                         "Wrong Password does not return Fields cannot be blank.")
+                         "Blank email and password does not return Fields cannot be blank.")
     def test_NoUserWithUsername(self):
         response = func_Login(self.factory.post("/", {"email": "Notcreated@uwm.edu", "password": "password"}, follow=True))
         self.assertEqual(response, "That username does not exist.",
-                         "Wrong Password does not return That username does not exist.")
+                         "No MyUser associated with email does not return That username does not exist.")
