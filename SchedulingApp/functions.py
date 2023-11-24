@@ -43,7 +43,23 @@ def func_AlphabeticalMyUserList(user_bin):
     alphabetical = sorted(userList, key=itemgetter('lastname'))
     return alphabetical
 
-
+def func_UserAsDict(userEmail):
+    if userEmail is None:
+        raise Exception("User does not exist!")
+    user = MyUser.objects.filter(email=userEmail).first()
+    dict = {
+        "email": user.email,
+        "firstname": user.firstName,
+        "lastname": user.lastName,
+        "phonenumber": user.phoneNumber,
+        "streetaddress": user.streetAddress,
+        "city": user.city,
+        "state": user.state,
+        "zipcode": user.zipcode,
+        "role": user.role,
+        "fullname": user.__str__()
+    }
+    return dict
 
 """
 POST Functions. These happen from button presses and form submissions.

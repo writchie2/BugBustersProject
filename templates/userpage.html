@@ -5,7 +5,7 @@
     <title>User Page</title>
 </head>
 <body>
-<h1>User Page</h1>
+<h1>User Page - {{ user.fullname }}</h1>
 
     <form action="/userpage/" method="post">
         {% csrf_token %}
@@ -25,13 +25,15 @@
     </form>
 <br>
 <br>
+    {% if role == "admin" %}
     <form action="/userpage/" method="post">
         {% csrf_token %}
         <button type = "submit" name="navigation" value="edituser">Edit User</button>
     </form>
     <form action="/userpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="deleteuser">Delete User</button>
+        <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser">Delete User</button>
     </form>
+    {% endif %}
 </body>
 </html>

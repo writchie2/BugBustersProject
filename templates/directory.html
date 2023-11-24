@@ -29,10 +29,13 @@
         {% csrf_token %}
         <button type = "submit" name="navigation" value="viewaccount">View Account</button>
     </form>
+    {% if role == "admin" %}
     <form action="/directory/" method="post">
         {% csrf_token %}
         <button type = "submit" name="navigation" value="createuser">Create New User</button>
     </form>
+    {% endif %}
+{{ message }}
 <table>
     {% for user in list %}
         <tr>
