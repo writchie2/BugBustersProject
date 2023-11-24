@@ -11,11 +11,12 @@
 <form action="/" method="post" id="loginform">
     {% csrf_token %}
     <table>
-        <tr><td><label for="username">Username: </label></td><td><input type="text" id="username" name="username" maxlength="20"></td></tr>
+        <tr><td><label for="username">Name: </label></td><td><input type="text" id="Name" name="Name" maxlength="20"></td></tr>
         <tr><td><label for="password">Password: </label></td><td><input type="password" id="password" name="password" maxlength="20"></td></tr>
     </table>
     <p>Forgot your password? <a href="#">Click here to reset it.</a></p>
     <input type="submit" value="Login">
 </form>
+  {{ message }}
 </body>
 </html>
