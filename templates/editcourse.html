@@ -27,7 +27,7 @@
 <br>
 
 <table>
-    <tr><td>Current Course Name</td><td>*variable*</td></tr>
+    <tr><td>Current Course Name</td><td>{{course.name}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/editcourse/" method="post">
@@ -35,7 +35,7 @@
                 <input type="text" name="coursename"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Department:</td><td>*variable*</td></tr>
+    <tr><td>Current Department:</td><td>{{course.department}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/editcourse/" method="post">
@@ -43,7 +43,7 @@
                 <input type="text" name="department"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Course Number:</td><td>*variable*</td></tr>
+    <tr><td>Current Course Number:</td><td>{{course.coursenumber}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/editcourse/" method="post">
@@ -51,7 +51,7 @@
                 <input type="text"  name="coursenumber"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Semester:</td><td>*variable*</td></tr>
+    <tr><td>Current Semester:</td><td>{{ course.semester }}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/editcourse/" method="post">
@@ -65,7 +65,7 @@
                 <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Year:</td><td>*variable*</td></tr>
+    <tr><td>Current Year:</td><td>{{ course.year }}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/editcourse/" method="post">
@@ -74,5 +74,10 @@
             </td>
         </tr>
 </table>
+{{ message }}
+<form action="/editcourse/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="cancel">Cancel</button>
+</form>
 </body>
 </html>
