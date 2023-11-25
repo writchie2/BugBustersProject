@@ -2,18 +2,64 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .models import Course, MyUser, Section
 from django.http import HttpResponseRedirect
+from operator import itemgetter
 """
 Login verifies the user has an account created and all inputs are valid. Adds their username to a session token as well as if they're an admin 
 and redirects to the dashboard
 Failure returns a render with a failure method    
 """
 def func_Login(request):
-    return redirect("/login")
+    noSuchUser = False
+    isWrongPassword = False
+    isBlank = ("" == request.POST['email']) or ("" == request.POST['password'])
+    try:
+        user = MyUser.objects.get(email=request.POST['email'])
+        isWrongPassword = (user.password != request.POST['password'])
+
+    except:
+        noSuchUser = True
+    if isBlank:
+        return "Fields cannot be blank."
+    elif noSuchUser:
+        return "That username does not exist."
+    elif isWrongPassword:
+        return "Incorrect password."
+    else:
+        return "success."
 """
 Logout redirects the page to the login page and flushes the session of any tokens
 """
-def func_Logout(request):
-    return redirect("/login")
+
+def func_AlphabeticalMyUserList(user_bin):
+    userList = []
+    for user in user_bin:
+        thisdict = {
+            "lastname": user.lastName,
+            "fullname": user.__str__(),
+            "email": user.email,
+            "role": user.role
+        }
+        userList.append(thisdict)
+    alphabetical = sorted(userList, key=itemgetter('lastname'))
+    return alphabetical
+
+def func_UserAsDict(userEmail):
+    if userEmail is None:
+        raise Exception("User does not exist!")
+    user = MyUser.objects.filter(email=userEmail).first()
+    dict = {
+        "email": user.email,
+        "firstname": user.firstName,
+        "lastname": user.lastName,
+        "phonenumber": user.phoneNumber,
+        "streetaddress": user.streetAddress,
+        "city": user.city,
+        "state": user.state,
+        "zipcode": user.zipcode,
+        "role": user.role,
+        "fullname": user.__str__()
+    }
+    return dict
 
 """
 POST Functions. These happen from button presses and form submissions.

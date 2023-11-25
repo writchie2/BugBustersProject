@@ -2,15 +2,25 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .models import Course, MyUser, Section
 from django.http import HttpResponseRedirect
-from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection
+from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection, func_Login, func_AlphabeticalMyUserList, func_UserAsDict
 
 
 class Login(View):
     def get(self, request):
-        return render(request, "login.HTML")
+        return render(request, "login.html")
 
     def post(self, request):
-        return redirect("/dashboard")
+        if "email" in request.POST:
+            message = func_Login(request)
+            if message =="success.":
+                user = MyUser.objects.get(email=request.POST['email'])
+                request.session["email"] = user.email
+                request.session["role"] = user.role
+                return redirect("/dashboard/")
+            else:
+                return render(request, "login.html", {"message": message})
+
+        #return redirect("/dashboard")
 
 
 class Dashboard(View):
@@ -19,8 +29,11 @@ class Dashboard(View):
 
     def post(self, request):
         if request.POST['navigation'] == "logout":
+            del request.session["email"]
+            del request.session["role"]
             return redirect("/login/")
         if request.POST['navigation'] == "viewself":
+            request.session["selecteduser"] = request.session["email"]
             return redirect("/userpage/")
         if request.POST['navigation'] == "courselist":
             return redirect("/courselist/")
@@ -32,49 +45,78 @@ class Dashboard(View):
 
 class Directory(View):
     def get(self, request):
-        return render(request, "directory.html")
-
-    def post(self, request):
-        if request.POST['navigation'] == "logout":
-            return redirect("/login/")
-        if request.POST['navigation'] == "dashboard":
-            return redirect("/dashboard/")
-        if request.POST['navigation'] == "courselist":
-            return redirect("/courselist/")
-        if request.POST['navigation'] == "directory":
-            return redirect("/directory/")
-        if request.POST['navigation'] == "viewaccount":
-            return redirect("/userpage/")
-        if request.POST['navigation'] == "createuser":
-            return redirect("/createuser/")
-
-
-class UserPage(View):
-    def get(self, request):
-        return render(request, "userpage.html")
-
-    def post(self, request):
-        if request.POST['navigation'] == "logout":
-            return redirect("/login/")
-        if request.POST['navigation'] == "dashboard":
-            return redirect("/dashboard/")
-        if request.POST['navigation'] == "courselist":
-            return redirect("/courselist/")
-        if request.POST['navigation'] == "directory":
-            return redirect("/directory/")
-        if request.POST['navigation'] == "edituser":
-            return redirect("/edituser/")
-        if request.POST['navigation'] == "deleteuser":
-            return redirect("/dashboard/")
-
-
-class CreateUser(View):
-    def get(self, request):
-        return render(request, "createuser.html")
+        sortedUsers = func_AlphabeticalMyUserList(MyUser.objects.all())
+        return render(request, "directory.html", {"list": sortedUsers, "role": request.session['role']})
 
     def post(self, request):
         if 'navigation' in request.POST:
             if request.POST['navigation'] == "logout":
+                del request.session["email"]
+                del request.session["role"]
+                return redirect("/login/")
+            if request.POST['navigation'] == "dashboard":
+                return redirect("/dashboard/")
+            if request.POST['navigation'] == "courselist":
+                return redirect("/courselist/")
+            if request.POST['navigation'] == "directory":
+                return redirect("/directory/")
+            if request.POST['navigation'] == "createuser":
+                if request.session['role'] != 'admin':
+                    return render(request, "directory.html", {"message": "Only admins can create users!"})
+                else:
+                    return redirect("/createuser/")
+        if 'selecteduser' in request.POST:
+            request.session["selecteduser"] = request.POST['selecteduser']
+            return redirect("/userpage/")
+
+
+class UserPage(View):
+    def get(self, request):
+        return render(request, "userpage.html",
+                      {"user": func_UserAsDict(request.session['selecteduser']), "role": request.session['role']})
+
+    def post(self, request):
+        if request.POST['navigation'] == "logout":
+            del request.session["email"]
+            del request.session["role"]
+            del request.session["selecteduser"]
+            return redirect("/login/")
+        if request.POST['navigation'] == "dashboard":
+            del request.session["selecteduser"]
+            return redirect("/dashboard/")
+        if request.POST['navigation'] == "courselist":
+            del request.session["selecteduser"]
+            return redirect("/courselist/")
+        if request.POST['navigation'] == "directory":
+            del request.session["selecteduser"]
+            return redirect("/directory/")
+        if request.POST['navigation'] == "edituser":
+            if request.session['role'] != 'admin':
+                return render(request, "userpage.html", {"message": "Only admins can edit users!","user": func_UserAsDict(request.session['selecteduser'])})
+            else:
+                return redirect("/edituser/")
+        if request.POST['navigation'] == "deleteuser":
+            if request.session['role'] != 'admin':
+                return render(request, "userpage.html", {"message": "Only admins can delete users!","user": func_UserAsDict(request.session['selecteduser'])})
+            else:
+                del request.session["selecteduser"]
+                return redirect("/directory/")
+
+
+class CreateUser(View):
+    def get(self, request):
+        if request.session['role'] != "admin":
+            sortedUsers = func_AlphabeticalMyUserList(MyUser.objects.all())
+            return render(request, "directory.html",
+                          {"list": sortedUsers, "role": request.session['role'], "message": "Only Admins can create users!"})
+        else:
+            return render(request, "createuser.html")
+
+    def post(self, request):
+        if 'navigation' in request.POST:
+            if request.POST['navigation'] == "logout":
+                del request.session["email"]
+                del request.session["role"]
                 return redirect("/login/")
             if request.POST['navigation'] == "dashboard":
                 return redirect("/dashboard/")
@@ -83,14 +125,20 @@ class CreateUser(View):
             if request.POST['navigation'] == "directory":
                 return redirect("/directory/")
             if request.POST['navigation'] == "cancel":
-                return redirect("/coursepage/")
+                return redirect("/directory/")
 
         return func_CreateUser(request)
 
 
 class EditUser(View):
     def get(self, request):
-        return render(request, "edituser.html")
+        if request.session['role'] != "admin":
+            sortedUsers = func_AlphabeticalMyUserList(MyUser.objects.all())
+            return render(request, "directory.html",
+                          {"list": sortedUsers, "role": request.session['role'],
+                           "message": "Only Admins can edit users!"})
+        else:
+            return render(request, "edituser.html")
 
     def post(self, request):
         if request.POST['navigation'] == "logout":

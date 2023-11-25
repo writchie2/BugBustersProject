@@ -1,7 +1,7 @@
 from django.db import models
 
 class MyUser(models.Model):
-    email = models.CharField(max_length=20, default="default@uwm.edu", editable=True)
+    email = models.CharField(primary_key=True,max_length=20, default="default@uwm.edu", editable=True)
     password = models.CharField(max_length=20, default="defaultpassword", editable=True)
     firstName = models.CharField(max_length=20, default="defaultfirstname", editable=True)
     lastName = models.CharField(max_length=20, default="defaultlastname", editable=True)
@@ -11,34 +11,36 @@ class MyUser(models.Model):
     state = models.CharField(max_length=2, default="WI", editable=True)
     zipcode = models.IntegerField(default=53206, editable=True)
     ROLE_CHOICES = [
-        ("ad", "Admin"),
-        ("in", "Instructor"),
+        ("admin", "Admin"),
+        ("instructor", "Instructor"),
         ("ta", "TA")
     ]
-    role = models.CharField(max_length=2, choices=ROLE_CHOICES, default="ad", editable=True)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="ad", editable=True)
+    def __str__(self):
+        return self.firstName + " " + self.lastName
 
 class Course(models.Model):
     name = models.CharField(max_length=50, default="defaultcoursename", editable=True)
     department = models.CharField(max_length=20, default="defaultdept", editable=True)
     courseNumber = models.IntegerField(default=1234, editable=True)
     Semester_CHOICES = [
-        ("sp", "Spring"),
-        ("su", "Summer"),
-        ("fa", "Fall"),
-        ("wi", "Winter")
+        ("spring", "Spring"),
+        ("summer", "Summer"),
+        ("fall", "Fall"),
+        ("winter", "Winter")
     ]
-    semester = models.CharField(max_length=2, choices=Semester_CHOICES, default="fa", editable=True)
+    semester = models.CharField(max_length=6, choices=Semester_CHOICES, default="fa", editable=True)
     year = models.IntegerField(default=2023, editable=True)
     assignedUser = models.ManyToManyField(MyUser,  null=True)
 
 class Section(models.Model):
     sectionNumber = models.IntegerField(default=400, editable=True)
     TYPE_CHOICES = [
-        ("le", "Lecture"),
-        ("gr", "Grader"),
-        ("se", "Section")
+        ("lecture", "Lecture"),
+        ("grader", "Grader"),
+        ("section", "Section")
     ]
-    type = models.CharField(max_length=2, choices=TYPE_CHOICES, default="le", editable=True)
+    type = models.CharField(max_length=7, choices=TYPE_CHOICES, default="le", editable=True)
     location = models.CharField(max_length=50, default="defaultlocation", editable=True)
     daysMeeting = models.CharField(max_length=7, default="MTWHF", editable=True)
     startTime = models.CharField(max_length=50, default="defaultstarttime", editable=True)
