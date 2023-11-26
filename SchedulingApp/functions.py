@@ -242,18 +242,22 @@ def func_ValidatePhoneNumber(phoneNumber):
     pattern1 = re.compile(r'^\(\d{3}\)\d{3}-\d{4}$')
     pattern2 = re.compile(r'^\d{3}-\d{3}-\d{4}$')
     pattern3 = re.compile(r'^\d{10}$')
+    pattern4 = re.compile(r'^\(\d{3}\)\d{7}$')
 
     match1 = pattern1.match(phoneNumber)
     match2 = pattern2.match(phoneNumber)
     match3 = pattern3.match(phoneNumber)
+    match4 = pattern4.match(phoneNumber)
 
-    return match1 or match2 or match3
+    return bool(match1) or bool(match2) or bool(match3) or bool(match4)
 
 def func_ValidateStreetAddress(streetAddress):
     pass
 
 def func_ValidateCity(city):
-    pass
+    pattern = re.compile(r'^[a-zA-Z\s]+$')
+    match = pattern.match(city)
+    return bool(match)
 def func_ValidateState(state):
     pass
 def func_ValidateZipCode(state):
