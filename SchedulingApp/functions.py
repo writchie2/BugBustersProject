@@ -259,7 +259,22 @@ def func_ValidateCity(city):
     match = pattern.match(city)
     return bool(match)
 def func_ValidateState(state):
-    pass
+    valid_state = ["AL", "AK", "AZ", "AR",
+                   "CA", "CO", "CT", "DC",
+                   "DE", "FL", "GA", "HI",
+                   "ID", "IL", "IN", "IA",
+                   "KS", "KY", "LA", "ME",
+                   "MD", "MA", "MI", "MN",
+                   "MS", "MO", "MT", "NE",
+                   "NV", "NH", "NJ", "NM",
+                   "NY", "NC", "ND", "OH",
+                   "OK", "OR", "PA", "RI",
+                   "SC", "SD", "TN", "TX",
+                   "UT", "VT", "VA", "WA",
+                   "WV", "WI", "WY"]
+
+    return state in valid_state
+
 def func_ValidateZipCode(state):
     pass
 def func_ValidateRole(role):
