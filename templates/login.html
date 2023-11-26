@@ -1,19 +1,29 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
     <title>Login</title>
+    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<h1>Login</h1>
+<body id="wrapper">
+<h1 id="titlebar">Welcome to Schedule Planner!</h1>
 
-<form action="/" method="post">
+<form action="/" method="post" id="loginform">
     {% csrf_token %}
     <table>
-        <tr><td>name: </td><td><input type="email" name="email"></td></tr>
-        <tr><td>password: </td><td><input type="password" name="password"></td></tr>
+        <tr>
+            <td class="label">Name:</td>
+            <td><input type="email" name="email" placeholder="user@email.com"></td>
+        </tr>
+        <tr>
+            <td class="label">Password:</td>
+            <td><input type="password" name="password"></td>
+        </tr>
     </table>
-    <input type="submit">
+    <input type="submit" name="navigation" value="Login">
 </form>
 {{ message }}
 </body>
