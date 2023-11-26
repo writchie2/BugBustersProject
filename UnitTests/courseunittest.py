@@ -1,7 +1,6 @@
 import sys
-
 sys.path.append('../SchedulingApp')
-from SchedulingApp.models import MyUser, Course, Section
+from SchedulingApp.models import Course
 from SchedulingApp.functions import (
     func_ValidateCourseName,
     func_ValidateDepartment,
@@ -9,7 +8,7 @@ from SchedulingApp.functions import (
     func_ValidateSemester,
     func_ValidateYear
 )
-from django.test import TestCase, Client
+from django.test import TestCase
 
 
 class TestCreateCourse(TestCase):
