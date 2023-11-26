@@ -239,7 +239,15 @@ def func_ValidateLastName(lastName):
     else:
         return False
 def func_ValidatePhoneNumber(phoneNumber):
-    pass
+    pattern1 = re.compile(r'^\(\d{3}\)\d{3}-\d{4}$')
+    pattern2 = re.compile(r'^\d{3}-\d{3}-\d{4}$')
+    pattern3 = re.compile(r'^\d{10}$')
+
+    match1 = pattern1.match(phoneNumber)
+    match2 = pattern2.match(phoneNumber)
+    match3 = pattern3.match(phoneNumber)
+
+    return match1 or match2 or match3
 
 def func_ValidateStreetAddress(streetAddress):
     pass
