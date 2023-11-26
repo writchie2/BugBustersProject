@@ -90,5 +90,10 @@
             </td>
         </tr>
 </table>
+{{ message }}
+<form action="/editsection/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="cancel">Cancel</button>
+</form>
 </body>
 </html>

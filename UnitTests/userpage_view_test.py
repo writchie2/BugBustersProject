@@ -117,7 +117,7 @@ class UserPageTest(TestCase):
         self.assertNotIn("selectedCourse", self.client.session, "Session has selected course saved at createuser.")
         self.assertNotIn("selectedSection", self.client.session, "Session has selected section saved at createuser.")
 
-    def test_PostEditUserNotAdmin(self):
+    def test_PostDeleteUserNotAdmin(self):
         session = self.client.session
         session["email"] = "ballen@uwm.edu"
         session["role"] = "ta"
