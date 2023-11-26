@@ -24,9 +24,9 @@ class TestCreateCourse(TestCase):
         self.invalidCourse = Course(
             name="",
             department="Invalid",
-            courseNumber=0,
+            courseNumber=000,
             semester="Invalid",
-            year=0,
+            year=1000,
         )
 
     def testCourseName(self):
