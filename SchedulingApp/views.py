@@ -241,7 +241,7 @@ class CoursePage(View):
                 if request.session['role'] != 'admin':
                     return render(request, "courselist.html", {"message": "Only admins can create courses!"})
                 else:
-                    return redirect("/createcourse/")
+                    return redirect("/createsection/")
             if request.POST['navigation'] == "editcourse":
                 if request.session['role'] != 'admin':
                     return render(request, "coursepage.html", {"message": "Only admins can edit courses!",
