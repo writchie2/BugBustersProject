@@ -70,11 +70,11 @@ class UserPageTest(TestCase):
         response = self.client.post("/userpage/", {"navigation": "dashboard"}, follow=True)
         self.assertTemplateUsed(response, 'dashboard.html')
         self.assertEqual(self.client.session["email"], "writchie@uwm.edu",
-                         "Email not saved when navigating to userpage")
-        self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to directory")
-        self.assertNotIn("selectedUser", self.client.session, "Session has selected user saved at direcotry.")
-        self.assertNotIn("selectedCourse", self.client.session, "Session has selected course saved at directory.")
-        self.assertNotIn("selectedSection", self.client.session, "Session has selected section saved at directory.")
+                         "Email not saved when navigating to dashboard")
+        self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to dashboard")
+        self.assertNotIn("selectedUser", self.client.session, "Session has selected user saved at dashboard.")
+        self.assertNotIn("selectedCourse", self.client.session, "Session has selected course saved at dashboard.")
+        self.assertNotIn("selectedSection", self.client.session, "Session has selected section saved at dashboard.")
 
     def test_PostEditUserAdmin(self):
         response = self.client.post("/userpage/", {"navigation": "edituser"}, follow=True)

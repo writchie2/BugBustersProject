@@ -28,7 +28,7 @@
 
 
 <table>
-    <tr><td>Current Section Number</td><td>*variable*</td></tr>
+    <tr><td>Current Section Number:</td><td>{{section.sectionnumber}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/editsection/" method="post">
@@ -36,7 +36,7 @@
                 <input type="text" name="sectionnumber"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Location:</td><td>*variable*</td></tr>
+    <tr><td>Current Location:</td><td>{{section.location}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/editsection/" method="post">
@@ -44,7 +44,7 @@
                 <input type="text" name="location"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Days Meeting:</td><td>*variable*</td></tr>
+    <tr><td>Current Days Meeting:</td><td>{{section.daysmeeting}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/editsection/" method="post">
@@ -60,7 +60,7 @@
                 <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Start Time:</td><td>*variable*</td></tr>
+    <tr><td>Current Start Time:</td><td>{{section.starttime}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/editsection/" method="post">
@@ -68,7 +68,7 @@
                 <input type="time" name="starttime"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current End Time:</td><td>*variable*</td></tr>
+    <tr><td>Current End Time:</td><td>{{section.endtime}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/editsection/" method="post">
@@ -76,7 +76,7 @@
                 <input type="time" name="endtime"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Section Type:</td><td>*variable*</td></tr>
+    <tr><td>Current Section Type:</td><td>{{section.type}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/editcourse/" method="post">

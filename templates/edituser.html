@@ -28,7 +28,7 @@
 
 
 <table>
-    <tr><td>Current First Name</td><td>*variable*</td></tr>
+    <tr><td>Current First Name:</td><td>{{user.firstname}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/edituser/" method="post">
@@ -36,7 +36,7 @@
                 <input type="text" name="firstname"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Last Name:</td><td>*variable*</td></tr>
+    <tr><td>Current Last Name:</td><td>{{user.lastname}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/edituser/" method="post">
@@ -44,23 +44,47 @@
                 <input type="text" name="lastname"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Phone Number:</td><td>*variable*</td></tr>
+    <tr><td>Current Phone Number:</td><td>{{user.phonenumber}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="phonenumber"> <input type="submit"></form>
+                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" name="phonenumber"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Address:</td><td>*variable*</td></tr>
+    <tr><td>Current Street Address:</td><td>{{user.streetaddress}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="address"> <input type="submit"></form>
+                <input type="text" name="streetaddress"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Role:</td><td>*variable*</td></tr>
+    <tr><td>Current City:</td><td>{{user.city}}</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/edituser/" method="post">
+                {% csrf_token %}
+                <input type="text" name="city"> <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current State:</td><td>{{user.state}}</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/edituser/" method="post">
+                {% csrf_token %}
+                <input type="text" name="state"> <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current Zipcode:</td><td>{{user.zipcode}}</td></tr>
+        <tr>
+            <td>New Value:</td>
+            <td><form action="/edituser/" method="post">
+                {% csrf_token %}
+                <input type="text" name="zipcode"> <input type="submit"></form>
+            </td>
+        </tr>
+    <tr><td>Current Role:</td><td>{{user.role}}</td></tr>
         <tr>
             <td>New Value:</td>
             <td><form action="/edituser/" method="post">
@@ -74,6 +98,10 @@
             </td>
         </tr>
 </table>
-
+{{ message }}
+<form action="/edituser/" method="post">
+        {% csrf_token %}
+        <button type = "submit" name="navigation" value="cancel">Cancel</button>
+</form>
 </body>
 </html>

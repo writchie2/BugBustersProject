@@ -1,7 +1,7 @@
 from django.db import models
 
 class MyUser(models.Model):
-    email = models.CharField(primary_key=True,max_length=20, default="default@uwm.edu", editable=True)
+    email = models.CharField(max_length=20, default="default@uwm.edu", editable=True)
     password = models.CharField(max_length=20, default="defaultpassword", editable=True)
     firstName = models.CharField(max_length=20, default="defaultfirstname", editable=True)
     lastName = models.CharField(max_length=20, default="defaultlastname", editable=True)
@@ -31,7 +31,10 @@ class Course(models.Model):
     ]
     semester = models.CharField(max_length=6, choices=Semester_CHOICES, default="fa", editable=True)
     year = models.IntegerField(default=2023, editable=True)
-    assignedUser = models.ManyToManyField(MyUser,  null=True)
+    assignedUser = models.ManyToManyField(MyUser, blank=True)
+
+    def __str__(self):
+        return self.department + " " + str(self.courseNumber) + " " + self.name
 
 class Section(models.Model):
     sectionNumber = models.IntegerField(default=400, editable=True)
@@ -47,3 +50,6 @@ class Section(models.Model):
     endTime = models.CharField(max_length=50, default="defaultendtime", editable=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     assignedUser = models.ForeignKey(MyUser, on_delete=models.PROTECT, null=True)
+
+    def __str__(self):
+        return str(self.sectionNumber) + " " + self.type
