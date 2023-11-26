@@ -39,5 +39,15 @@
         <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="deletesection">Delete This Section</button>
     </form>
     {% endif %}
+
+<table>
+    <tr><td>Section Number:</td><td>{{ section.sectionnumber }}</td></tr>
+    <tr><td>Type:</td><td>{{section.type }}</td></tr>
+    <tr><td>Location:</td><td>{{ section.location }}</td></tr>
+    <tr><td>Start Time:</td><td>{{ section.starttime }}</td></tr>
+    <tr><td>End Time:</td><td>{{ section.endtime }}</td></tr>
+    <tr><td>Course:</td><td>{{ section.course.title }}</td></tr>
+    <tr><td>Instructor:</td><td>{{ section.assigneduser.fullname }}</td></tr>
+</table>
 </body>
 </html>
