@@ -279,7 +279,12 @@ def func_ValidateZipCode(zip):
     pattern = re.compile(r'^\d{5}$')
     return bool(pattern.match(zip))
 def func_ValidateRole(role):
-    pass
+    ROLE_CHOICES = [
+        ("admin", "Admin"),
+        ("instructor", "Instructor"),
+        ("ta", "TA")
+    ]
+    return role in ROLE_CHOICES
 """
 Course validator functions used when creating or editing Course objects
 """
