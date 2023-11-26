@@ -275,8 +275,9 @@ def func_ValidateState(state):
 
     return state in valid_state
 
-def func_ValidateZipCode(state):
-    pass
+def func_ValidateZipCode(zip):
+    pattern = re.compile(r'^\d{5}$')
+    return bool(pattern.match(zip))
 def func_ValidateRole(role):
     pass
 """
