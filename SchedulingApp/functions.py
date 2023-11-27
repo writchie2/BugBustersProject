@@ -218,10 +218,33 @@ def func_ValidateEmail(email):
     else:
         return False
 def func_ValidatePassword(password,confirmPassword):
-    if password == confirmPassword:
-        return True
-    else:
+    if password != confirmPassword:
         return False
+    if len(password) < 8 or len(password) > 20:
+        return False
+
+    special = ["@", "#", "$", "%",
+               "^", "&", "*", "`",
+               "(", ")", "-", "_",
+               "+", "=", "{", "}",
+               "|", "~", "/", "",
+               "<", ">", ",", ".",
+               ";", ":", "'", "?",
+               "!"]
+
+    if not any(char in special for char in password):
+        return False
+
+    if not any(char.isupper() for char in password):
+        return False
+
+    if not any(char.isdigit() for char in password):
+        return False
+
+    return True
+
+
+
 def func_ValidateFirstName(firstName):
     if all(c.isalpha or c == '' for c in firstName):
         if firstName[0].isupper():
@@ -239,19 +262,54 @@ def func_ValidateLastName(lastName):
     else:
         return False
 def func_ValidatePhoneNumber(phoneNumber):
-    pass
+    pattern1 = re.compile(r'^\(\d{3}\)\d{3}-\d{4}$')
+    pattern2 = re.compile(r'^\d{3}-\d{3}-\d{4}$')
+    pattern3 = re.compile(r'^\d{10}$')
+    pattern4 = re.compile(r'^\(\d{3}\)\d{7}$')
+
+    match1 = pattern1.match(phoneNumber)
+    match2 = pattern2.match(phoneNumber)
+    match3 = pattern3.match(phoneNumber)
+    match4 = pattern4.match(phoneNumber)
+
+    return bool(match1) or bool(match2) or bool(match3) or bool(match4)
 
 def func_ValidateStreetAddress(streetAddress):
-    pass
+    pattern = re.compile(r'^\d+\s+[a-zA-Z\s]{1,50}$')
+    match = pattern.match(streetAddress)
+    return bool(match)
 
 def func_ValidateCity(city):
-    pass
+    pattern = re.compile(r'^[a-zA-Z\s]{1,20}$')
+    match = pattern.match(city)
+    return bool(match)
 def func_ValidateState(state):
-    pass
-def func_ValidateZipCode(state):
-    pass
+    valid_state = ["AL", "AK", "AZ", "AR",
+                   "CA", "CO", "CT", "DC",
+                   "DE", "FL", "GA", "HI",
+                   "ID", "IL", "IN", "IA",
+                   "KS", "KY", "LA", "ME",
+                   "MD", "MA", "MI", "MN",
+                   "MS", "MO", "MT", "NE",
+                   "NV", "NH", "NJ", "NM",
+                   "NY", "NC", "ND", "OH",
+                   "OK", "OR", "PA", "RI",
+                   "SC", "SD", "TN", "TX",
+                   "UT", "VT", "VA", "WA",
+                   "WV", "WI", "WY"]
+
+    return state in valid_state
+
+def func_ValidateZipCode(zip):
+    pattern = re.compile(r'^\d{5}$')
+    return bool(pattern.match(zip))
 def func_ValidateRole(role):
-    pass
+    ROLE_CHOICES = [
+        ("admin", "Admin"),
+        ("instructor", "Instructor"),
+        ("ta", "TA")
+    ]
+    return role in ROLE_CHOICES
 """
 Course validator functions used when creating or editing Course objects
 """
