@@ -1,38 +1,44 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Page</title>
+    <meta name="viewport" content="width=device-width">
+    <title>User - {{ user.fullname }}</title>
+    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body>
-<h1>User Page - {{ user.fullname }}</h1>
-
+<body id="wrapper">
+<div id="navlist">
+    <h1>User Page - {{ user.fullname }}</h1>
     <form action="/userpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="logout">Logout</button>
+        <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
     <form action="/userpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+        <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
     <form action="/userpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+        <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
     <form action="/userpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="directory">View Directory</button>
+        <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
+</div>
 <br>
 <br>
     {% if role == "admin" %}
     <form action="/userpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="edituser">Edit User</button>
+        <button type = "submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
     </form>
     <form action="/userpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser">Delete User</button>
+        <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser" class="redbutton">Delete User</button>
     </form>
     {% endif %}
 

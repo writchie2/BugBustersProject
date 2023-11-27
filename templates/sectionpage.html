@@ -1,44 +1,53 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
     <title>Section Page</title>
+    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<h1>Section Page - {{ section.sectionnumber }}. Assigned to {{ section.assigneduser.fullname }}</h1>
+
+<body id="wrapper">
+<div id="navlist">
+    <h1>Section Page - {{ section.sectionnumber }}. Assigned to {{ section.assigneduser.fullname }}</h1>
 
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="logout">Logout</button>
+        <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+        <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+        <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="directory">View Directory</button>
+        <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
+</div>
 <br>
 <br>
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="viewcourse">Back To Course</button>
+        <button type = "submit" name="navigation" value="viewcourse" class="bluebutton">Back To Course</button>
     </form>
     {% if role == 'admin' %}
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="editsection">Edit This Section</button>
+        <button type = "submit" name="navigation" value="editsection" class="bluebutton">Edit This Section</button>
     </form>
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="deletesection">Delete This Section</button>
+
+        <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="deletesection" class="redbutton">Delete This Section</button>
     </form>
     {% endif %}
+
 
 <table>
     <tr><td>Section Number:</td><td>{{ section.sectionnumber }}</td></tr>
@@ -49,5 +58,6 @@
     <tr><td>Course:</td><td>{{ section.course.title }}</td></tr>
     <tr><td>Instructor:</td><td>{{ section.assigneduser.fullname }}</td></tr>
 </table>
+
 </body>
 </html>
