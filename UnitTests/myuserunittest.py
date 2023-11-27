@@ -45,7 +45,7 @@ class ValidateEmailTest(TestCase):
 
 class ValidatePasswordTest(TestCase):
     invalid_password = ["12345678", "password!2", "a", "abcd"]
-    valid_passsword = ["P@assword2", "aN0ther_password", "g00d!pAss"]
+    valid_password = ["P@assword2", "aN0ther_password", "g00d!pAss"]
     almost_matching = ["P@assword", "an0ther_password", "gO0d!pASs"]
     long_password = "L0ng#Passworddddddddd"
 
@@ -60,11 +60,11 @@ class ValidatePasswordTest(TestCase):
             self.assertFalse(func_ValidatePassword(password, password), "Expected: False Actual: True")
 
     def test_valid_password(self):
-        for password in self.valid_passsword:
+        for password in self.valid_password:
             self.assertTrue(func_ValidatePassword(password, password), "Expected: True Actual: False")
 
     def test_mismatching_password(self):
-        for password1, password2 in self.valid_passsword, self.almost_matching:
+        for password1, password2 in zip(self.valid_password, self.almost_matching):
             self.assertFalse(func_ValidatePassword(password1, password2), "Expected: False Actual True")
 
     def test_long_password(self):
