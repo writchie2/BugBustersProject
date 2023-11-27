@@ -108,17 +108,29 @@ def func_SectionAsDict(sectionID):
     if sectionID is None:
         raise Exception("Section does not exist!")
     section = Section.objects.filter(id=sectionID).first()
-    dict = {
-        "id": section.id,
-        "sectionnumber": section.sectionNumber,
-        "type": section.type,
-        "location": section.location,
-        "daysmeeting": section.daysMeeting,
-        "starttime": section.startTime,
-        "endtime": section.endTime,
-        "course": func_CourseAsDict(section.course.id),
-        "assigneduser": func_UserAsDict(section.assignedUser.email)
-    }
+    if section.assignedUser != None:
+        dict = {
+            "id": section.id,
+            "sectionnumber": section.sectionNumber,
+            "type": section.type,
+            "location": section.location,
+            "daysmeeting": section.daysMeeting,
+            "starttime": section.startTime,
+            "endtime": section.endTime,
+            "course": func_CourseAsDict(section.course.id),
+            "assigneduser": func_UserAsDict(section.assignedUser.email)
+        }
+    else:
+        dict = {
+            "id": section.id,
+            "sectionnumber": section.sectionNumber,
+            "type": section.type,
+            "location": section.location,
+            "daysmeeting": section.daysMeeting,
+            "starttime": section.startTime,
+            "endtime": section.endTime,
+            "course": func_CourseAsDict(section.course.id)
+        }
     return dict
 
 """
