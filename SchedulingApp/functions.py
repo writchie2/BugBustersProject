@@ -275,10 +275,12 @@ def func_ValidatePhoneNumber(phoneNumber):
     return bool(match1) or bool(match2) or bool(match3) or bool(match4)
 
 def func_ValidateStreetAddress(streetAddress):
-    pass
+    pattern = re.compile(r'^\d+\s+[a-zA-Z\s]+$')
+    match = pattern.match(streetAddress)
+    return bool(match)
 
 def func_ValidateCity(city):
-    pattern = re.compile(r'^[a-zA-Z\s]+$')
+    pattern = re.compile(r'^[a-zA-Z\s]{1,20}$')
     match = pattern.match(city)
     return bool(match)
 def func_ValidateState(state):
