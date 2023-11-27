@@ -5,7 +5,7 @@
     <title>Course Page</title>
 </head>
 <body>
-<h1>Course Page</h1>
+<h1>Course Page - {{ course.title }}</h1>
 
     <form action="/coursepage/" method="post">
         {% csrf_token %}
@@ -25,6 +25,7 @@
     </form>
 <br>
 <br>
+    {% if role == 'admin' %}
     <form action="/coursepage/" method="post">
         {% csrf_token %}
         <button type = "submit" name="navigation" value="createsection">Create New Section</button>
@@ -35,11 +36,34 @@
     </form>
     <form action="/coursepage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="sectionpage">View Section</button>
-    </form>
-    <form action="/coursepage/" method="post">
-        {% csrf_token %}
         <button type = "submit" name="navigation" value="deletecourse">Delete Course</button>
     </form>
+    {% endif %}
+
+<table>
+    <tr><td>Course:</td><td>{{ course.title }}</td></tr>
+    <tr><td>Semester:</td><td>{{course.semester }} {{course.year }}</td></tr>
+</table>
+
+Assigned Users
+    <table>
+       <tr>
+           {% for user in course.users %}
+               <tr><td>{{ user.fullname }}</td></tr>
+           {% endfor %}
+       </tr>
+    </table>
+Sections
+<table>
+    {% for section in course.sections %}
+        <tr>
+            <td>{{ section.title }}</td><td>{{ section.id }}</td>
+            <td><form action="/coursepage/" method="post">
+                {% csrf_token %}
+                <button type = "submit" name="selectedsection" value={{ section.id }}>View Section</button>
+            </form></td>
+        </tr>
+    {% endfor %}
+</table>
 </body>
 </html>

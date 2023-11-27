@@ -25,13 +25,24 @@
     </form>
 <br>
 <br>
-<form action="/courselist/" method="post">
+    {% if role == "admin" %}
+    <form action="/courselist/" method="post">
         {% csrf_token %}
         <button type = "submit" name="navigation" value="createcourse">Create New Course</button>
     </form>
-    <form action="/courselist/" method="post">
-        {% csrf_token %}
-        <button type = "submit" name="navigation" value="coursepage">View Course</button>
-    </form>
+    {% endif %}
+{{ message }}
+<table>
+    {% for course in list %}
+        <tr>
+            <td>{{ course.title }}</td>
+            <td>{{ course.semester }}, {{ course.year }}</td>
+            <td><form action="/courselist/" method="post">
+                {% csrf_token %}
+                <button type = "submit" name="selectedcourse" value={{ course.id }}>View Course</button>
+            </form></td>
+        </tr>
+    {% endfor %}
+</table>
 </body>
 </html>

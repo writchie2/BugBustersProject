@@ -8,9 +8,11 @@
     <title>Section Page</title>
     <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
+
 <body id="wrapper">
 <div id="navlist">
     <h1>Section Page - {{ section.sectionnumber }}. Assigned to {{ section.assigneduser.fullname }}</h1>
+
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
@@ -41,8 +43,21 @@
     </form>
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
+
         <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="deletesection" class="redbutton">Delete This Section</button>
     </form>
     {% endif %}
+
+
+<table>
+    <tr><td>Section Number:</td><td>{{ section.sectionnumber }}</td></tr>
+    <tr><td>Type:</td><td>{{section.type }}</td></tr>
+    <tr><td>Location:</td><td>{{ section.location }}</td></tr>
+    <tr><td>Start Time:</td><td>{{ section.starttime }}</td></tr>
+    <tr><td>End Time:</td><td>{{ section.endtime }}</td></tr>
+    <tr><td>Course:</td><td>{{ section.course.title }}</td></tr>
+    <tr><td>Instructor:</td><td>{{ section.assigneduser.fullname }}</td></tr>
+</table>
+
 </body>
 </html>

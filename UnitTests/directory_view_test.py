@@ -78,7 +78,7 @@ class DirectoryViewTest(TestCase):
         response = self.client.post("/directory/", {"navigation": "courselist"}, follow=True)
         self.assertTemplateUsed(response, 'courselist.html')
         self.assertEqual(self.client.session["email"], "writchie@uwm.edu",
-                         "Email not saved when navigating to userpage")
+                         "Email not saved when navigating to courselist")
         self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to courselist")
         self.assertNotIn("selectedUser", self.client.session, "Session has selected user saved at courselist.")
         self.assertNotIn("selectedCourse", self.client.session, "Session has selected course saved at courselist.")
@@ -88,7 +88,7 @@ class DirectoryViewTest(TestCase):
         response = self.client.post("/directory/", {"navigation": "directory"}, follow=True)
         self.assertTemplateUsed(response, 'directory.html')
         self.assertEqual(self.client.session["email"], "writchie@uwm.edu",
-                         "Email not saved when navigating to userpage")
+                         "Email not saved when navigating to directory")
         self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to directory")
         self.assertNotIn("selectedUser", self.client.session, "Session has selected user saved at direcotry.")
         self.assertNotIn("selectedCourse", self.client.session, "Session has selected course saved at directory.")
@@ -98,11 +98,11 @@ class DirectoryViewTest(TestCase):
         response = self.client.post("/directory/", {"navigation": "dashboard"}, follow=True)
         self.assertTemplateUsed(response, 'dashboard.html')
         self.assertEqual(self.client.session["email"], "writchie@uwm.edu",
-                         "Email not saved when navigating to userpage")
-        self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to directory")
-        self.assertNotIn("selectedUser", self.client.session, "Session has selected user saved at direcotry.")
-        self.assertNotIn("selectedCourse", self.client.session, "Session has selected course saved at directory.")
-        self.assertNotIn("selectedSection", self.client.session, "Session has selected section saved at directory.")
+                         "Email not saved when navigating to dashboard")
+        self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to dashboard")
+        self.assertNotIn("selectedUser", self.client.session, "Session has selected user saved at dashboard.")
+        self.assertNotIn("selectedCourse", self.client.session, "Session has selected course saved at dashboard.")
+        self.assertNotIn("selectedSection", self.client.session, "Session has selected section saved at dashboard.")
 
     def test_PostSelectedUser(self):
         response = self.client.post("/directory/", {"selecteduser": "scramer@uwm.edu"}, follow=True)
@@ -118,7 +118,7 @@ class DirectoryViewTest(TestCase):
         response = self.client.post("/directory/", {"navigation": "createuser"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(self.client.session["email"], "writchie@uwm.edu",
-                         "Email not saved when navigating to userpage")
+                         "Email not saved when navigating to createuser")
         self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to createuser")
         self.assertNotIn("selectedUser", self.client.session, "Session has selected user saved at createuser.")
         self.assertNotIn("selectedCourse", self.client.session, "Session has selected course saved at createuser.")

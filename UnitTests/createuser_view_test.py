@@ -5,7 +5,7 @@ from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
 
-class DirectoryViewTest(TestCase):
+class CreatUserViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         session = self.client.session
@@ -104,7 +104,7 @@ class DirectoryViewTest(TestCase):
         self.assertEqual(newUser.state, "WI", "User saved with wrong email")
         self.assertEqual(newUser.zipcode, "53026", "User saved with wrong email")
         self.assertEqual(newUser.role, "ta", "User saved with wrong email")
-        self.assertTemplateUsed(response, 'directory.html')
+        self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"], "User created successfully!",
                          "Message not played if successful user creation")
 
@@ -121,7 +121,7 @@ class DirectoryViewTest(TestCase):
                                      "state": "WI",
                                      "zipcode": "53026",
                                      "role": "ta"}, follow=True)
-        self.assertTemplateUsed(response, 'directory.html')
+        self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"], "Non-unique username. Please try again.",
                          "Error not played if nonunique usernames")
         response = self.client.post("/createuser/",
@@ -136,7 +136,7 @@ class DirectoryViewTest(TestCase):
                                      "state": "WI",
                                      "zipcode": "53026",
                                      "role": "ta"}, follow=True)
-        self.assertTemplateUsed(response, 'directory.html')
+        self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"], "Passwords do not match. Please try again.",
                          "Error not played if not matching passwords")
         response = self.client.post("/createuser/",
@@ -151,7 +151,7 @@ class DirectoryViewTest(TestCase):
                                      "state": "WI",
                                      "zipcode": "53026",
                                      "role": "ta"}, follow=True)
-        self.assertTemplateUsed(response, 'directory.html')
+        self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
                          "Invalid first name. Must start with a capital and have no spaces. Please try again.",
                          "Error not played if invalid firstname")
@@ -167,7 +167,7 @@ class DirectoryViewTest(TestCase):
                                      "state": "WI",
                                      "zipcode": "53026",
                                      "role": "ta"}, follow=True)
-        self.assertTemplateUsed(response, 'directory.html')
+        self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
                          "Invalid last name. Must start with a capital and have no spaces. Please try again.",
                          "Error not played if invalid lastname")
@@ -183,7 +183,7 @@ class DirectoryViewTest(TestCase):
                                      "state": "WI",
                                      "zipcode": "53026",
                                      "role": "ta"}, follow=True)
-        self.assertTemplateUsed(response, 'directory.html')
+        self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
                          "Invalid phone number. Must be 9 numbers 0-9. Please try again.",
                          "Error not played if invalid phonenumber")
@@ -199,7 +199,7 @@ class DirectoryViewTest(TestCase):
                                      "state": "WI",
                                      "zipcode": "53026",
                                      "role": "ta"}, follow=True)
-        self.assertTemplateUsed(response, 'directory.html')
+        self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
                          "Invalid street address. Please try again.",
                          "Error not played if invalid address")
@@ -215,7 +215,7 @@ class DirectoryViewTest(TestCase):
                                      "state": "WI",
                                      "zipcode": "53026",
                                      "role": "ta"}, follow=True)
-        self.assertTemplateUsed(response, 'directory.html')
+        self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
                          "Invalid city. Please try again.",
                          "Error not played if invalid city")
@@ -231,7 +231,7 @@ class DirectoryViewTest(TestCase):
                                      "state": "W",
                                      "zipcode": "53026",
                                      "role": "ta"}, follow=True)
-        self.assertTemplateUsed(response, 'directory.html')
+        self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
                          "Invalid state. Please try again.",
                          "Error not played if invalid state")
@@ -247,7 +247,7 @@ class DirectoryViewTest(TestCase):
                                      "state": "WI",
                                      "zipcode": "5302",
                                      "role": "ta"}, follow=True)
-        self.assertTemplateUsed(response, 'directory.html')
+        self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
                          "Invalid zipcode. Please try again.",
                          "Error not played if invalid zipcode")
@@ -263,7 +263,7 @@ class DirectoryViewTest(TestCase):
                                      "state": "W",
                                      "zipcode": "53026",
                                      "role": "student"}, follow=True)
-        self.assertTemplateUsed(response, 'directory.html')
+        self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
                          "Invalid role. Please try again.",
                          "Error not played if invalid role")

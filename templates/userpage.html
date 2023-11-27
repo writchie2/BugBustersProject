@@ -41,5 +41,15 @@
         <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser" class="redbutton">Delete User</button>
     </form>
     {% endif %}
+
+<table>
+    <tr><td>User:</td><td>{{ user.fullname }}</td></tr>
+    <tr><td>Email:</td><td>{{ user.email }}</td></tr>
+    <tr><td>Role:</td><td>{{ user.role }}</td></tr>
+    {% if role == "admin" %}
+        <tr><td>Phone Number:</td><td>{{ user.phonenumber }}</td></tr>
+        <tr><td>Address:</td><td>{{ user.streetaddress }}. {{ user.city }}, {{ user.state }} {{ user.zipcode}}</td></tr>
+    {% endif %}
+</table>
 </body>
 </html>
