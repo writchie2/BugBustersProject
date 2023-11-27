@@ -213,14 +213,12 @@ def func_DeleteSection(request):
 MyUser validator functions used when creating or editing MyUser objects
 """
 def func_ValidateEmail(email):
-    if re.findall("[^@\s]+@[^@\s]+\.[^@\s]+", email):
-        return True
-    else:
-        return False
+    return bool(re.fullmatch(r"[^@\s]{1,12}@uwm\.edu", email))
+
 def func_ValidatePassword(password,confirmPassword):
     if password != confirmPassword:
         return False
-    if len(password) < 8 or len(password) > 20:
+    if len(password) < 8 or len(password) > 20 :
         return False
 
     special = ["@", "#", "$", "%",
@@ -280,7 +278,7 @@ def func_ValidateStreetAddress(streetAddress):
     return bool(match)
 
 def func_ValidateCity(city):
-    pattern = re.compile(r'^[a-zA-Z\s]{1,20}$')
+    pattern = re.compile(r'^[a-zA-Z\s]{2,20}$')
     match = pattern.match(city)
     return bool(match)
 def func_ValidateState(state):

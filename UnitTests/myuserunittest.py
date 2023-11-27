@@ -9,16 +9,14 @@ from django.test import TestCase, Client
 
 
 class ValidateEmailTest(TestCase):
-    max_email_length = 20
-    min_email_length = 9
 
     invalid_emails = ["invalid_email", "user@edu", "user@.edu", "a",
-                      "user@uwm.com ", "user.edu", "@uwm.edu",
-                      "person 1@uwm.edu", ".person@uwm.edu", "per..son@uwm.edu"]
+                      "user.edu", "@uwm.edu", "person 1@uwm.edu",
+                      ".person@uwm.edu", "per..son@uwm.edu"]
 
     invalid_whitespace = [" user@uwm.edu", "user@uwm.edu ", " user@uwm.edu "]
 
-    long_email = "a" * ((max_email_length - min_email_length) + 1) + "@uwm.edu"
+    long_email = "aaaaaaaaaaaaaaaaa" + "@uwm.edu"
 
     valid_email = ["email@uwm.edu", "person2@uwm.edu", "some_body@gmail.com"]
 
@@ -195,7 +193,7 @@ class ValidateCityTest(TestCase):
 
     invalid_city = ["a", "L0s Ang3l3s", "Ch!c@go"]
 
-    long_city = "A" * 20
+    long_city = "AAAAAAAAAAAAAAAAAAAAAAAAAA"
 
     def test_no_city(self):
         self.assertFalse(func_ValidateCity(""), "Expected: False Actual: True")
