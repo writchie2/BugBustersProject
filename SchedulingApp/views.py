@@ -437,7 +437,7 @@ class EditSection(View):
                 return redirect("/directory/")
             if request.POST['navigation'] == "cancel":
                 return redirect('/sectionpage/')
-        message = func_EditUser(request)
+        message = func_EditSection(request)
         return render(request, "editsection.html",
                       {"section": func_SectionAsDict(request.session['selectedsection']), "message": message})
 

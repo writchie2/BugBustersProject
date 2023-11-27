@@ -57,7 +57,7 @@ Sections
 <table>
     {% for section in course.sections %}
         <tr>
-            <td>{{ section.title }}</td><td>{{ section.id }}</td>
+            <td>{{ section.title }}</td>
             <td><form action="/coursepage/" method="post">
                 {% csrf_token %}
                 <button type = "submit" name="selectedsection" value={{ section.id }}>View Section</button>

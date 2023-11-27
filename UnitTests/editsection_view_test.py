@@ -247,7 +247,7 @@ class EditUserPageTest(TestCase):
                          "error message does not show for unsuccessful edit")
 
     def test_PostEditTypeValid(self):
-        response = self.client.post("/editsection/", {"type": "section"}, follow=True)
+        response = self.client.post("/editsection/", {"type": "lab"}, follow=True)
         self.assertTemplateUsed(response, 'editsection.html')
         self.assertEqual("writchie@uwm.edu", self.client.session["email"],
                          "Email not saved when editing type")
