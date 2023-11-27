@@ -1,50 +1,57 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
     <title>Directory</title>
+    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<h1>Directory Page</h1>
-
-    <form action="/directory/" method="post">
+<body id="wrapper">
+<div id="navlist">
+    <h1>Directory</h1>
+    <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="logout">Logout</button>
+        <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
-    <form action="/directory/" method="post">
+    <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+        <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
-    <form action="/directory/" method="post">
+    <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+        <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
-    <form action="/directory/" method="post">
+    <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="directory">View Directory</button>
+        <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
+</div>
 <br>
 <br>
+<form action="/dashboard/" method="post">
+    {% csrf_token %}
+    <button type="submit" name="navigation" value="viewself" class="bluebutton">View My Account</button>
+</form>
+{% if role == "admin" %}
     <form action="/directory/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="viewaccount">View Account</button>
+        <button type="submit" name="navigation" value="createuser" class="greenbutton">Create New User</button>
     </form>
-    {% if role == "admin" %}
-    <form action="/directory/" method="post">
-        {% csrf_token %}
-        <button type = "submit" name="navigation" value="createuser">Create New User</button>
-    </form>
-    {% endif %}
+{% endif %}
 {{ message }}
-<table>
+<table id="myTable">
     {% for user in list %}
         <tr>
-            <td>{{ user.fullname }}</td>
+            <td class="label">{{ user.fullname }}</td>
             <td>{{ user.role }}</td>
-            <td><form action="/directory/" method="post">
-                {% csrf_token %}
-                <button type = "submit" name="selecteduser" value={{ user.email }}>View User</button>
-            </form></td>
+            <td>
+                <form action="/directory/" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="selecteduser" class="bluebutton" value={{ user.email }}>View User</button>
+                </form>
+            </td>
         </tr>
     {% endfor %}
 </table>
