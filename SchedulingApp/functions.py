@@ -3,7 +3,7 @@ from django.views import View
 from .models import Course, MyUser, Section
 from django.http import HttpResponseRedirect
 from operator import itemgetter
-import re
+import re, time
 """
 Login verifies the user has an account created and all inputs are valid. Adds their username to a session token as well as if they're an admin 
 and redirects to the dashboard
@@ -38,7 +38,7 @@ def func_AlphabeticalMyUserList(user_bin):
             "lastname": user.lastName,
             "fullname": user.__str__(),
             "email": user.email,
-            "role": user.role
+            "role": user.role.capitalize()
         }
         userList.append(thisdict)
     alphabetical = sorted(userList, key=itemgetter('lastname'))
@@ -58,7 +58,7 @@ def func_UserAsDict(userEmail):
         "city": user.city,
         "state": user.state,
         "zipcode": user.zipcode,
-        "role": user.role,
+        "role": user.role.capitalize(),
         "fullname": user.__str__()
     }
     return dict
@@ -69,7 +69,7 @@ def func_AlphabeticalCourseList(course_bin):
         thisdict = {
             "title": course.__str__(),
             "id": course.id,
-            "semester": course.semester,
+            "semester": course.semester.capitalize(),
             "year":course.year
         }
         courseList.append(thisdict)
@@ -108,15 +108,22 @@ def func_SectionAsDict(sectionID):
     if sectionID is None:
         raise Exception("Section does not exist!")
     section = Section.objects.filter(id=sectionID).first()
+    start_t = time.strptime(section.startTime, "%H:%M")
+    end_t = time.strptime(section.endTime, "%H:%M")
+    start_12hour = time.strftime("%I:%M %p", start_t)
+    end_12hour = time.strftime("%I:%M %p", end_t)
+    daysMeetingFormat = section.daysMeeting
+    if daysMeetingFormat == 'A':
+        daysMeetingFormat = "No Meeting Pattern"
     if section.assignedUser != None:
         dict = {
             "id": section.id,
             "sectionnumber": section.sectionNumber,
-            "type": section.type,
+            "type": section.type.capitalize(),
             "location": section.location,
-            "daysmeeting": section.daysMeeting,
-            "starttime": section.startTime,
-            "endtime": section.endTime,
+            "daysmeeting": daysMeetingFormat,
+            "starttime": start_12hour,
+            "endtime": end_12hour,
             "course": func_CourseAsDict(section.course.id),
             "assigneduser": func_UserAsDict(section.assignedUser.email)
         }
@@ -124,11 +131,11 @@ def func_SectionAsDict(sectionID):
         dict = {
             "id": section.id,
             "sectionnumber": section.sectionNumber,
-            "type": section.type,
+            "type": section.type.capitalize(),
             "location": section.location,
-            "daysmeeting": section.daysMeeting,
-            "starttime": section.startTime,
-            "endtime": section.endTime,
+            "daysmeeting": daysMeetingFormat,
+            "starttime": start_12hour,
+            "endtime": end_12hour,
             "course": func_CourseAsDict(section.course.id)
         }
     return dict
@@ -216,11 +223,104 @@ def func_EditCourse(request):
 def func_DeleteCourse(request):
     return redirect("/login")
 def func_CreateSection(request):
-    return redirect("/login")
+    #return request.POST['sectionnumber'] + request.POST['location'] + request.POST['starttime'] + request.POST['endtime'] + request.POST['daysmeeting'] + request.POST['type']
+    if ('sectionnumber' not in request.POST or 'location' not in request.POST or
+            'starttime' not in request.POST
+            or'endtime' not in request.POST or 'type' not in request.POST):
+        return "Please fill out all fields!"
+    newSectionNumber = int(request.POST["sectionnumber"])
+    newLocation = request.POST["location"]
+    newDaysMeeting = ''
+    for days in request.POST.getlist('daysmeeting'):
+        newDaysMeeting += days
+    newStartTime = request.POST["starttime"]
+    newEndTime = request.POST["endtime"]
+    newType = request.POST['type']
+    if func_ValidateSectionNumber(newSectionNumber) == False:
+        return "Invalid Section Number. Must be between 100 and 999 and unique!"
+    if func_ValidateDaysMeeting(newDaysMeeting) == False:
+        return "Invalid Days Meeting. Must be in order MTWHFSU, 'No Meeting Pattern' cannot be selected with other days."
+    if func_ValidateLocation(newLocation) == False:
+        return "Invalid Location. Format: Room# Building Name"
+    if func_ValidateSectionType(newType) == False:
+        return "Invalid Type. Must be lecture, section, or grader."
+    if func_ValidateStartAndEndTime(newStartTime,newEndTime) == False:
+        return "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end."
+
+    newSection = Section.objects.create(sectionNumber=newSectionNumber, type=newType,
+                                        location=newLocation, daysMeeting=newDaysMeeting,
+                                        startTime=newStartTime, endTime=newEndTime,
+                                        course= Course.objects.filter(id=request.session['selectedcourse']).first())
+    newSection.save()
+    return "Section created successfully!"
+
+
 def func_EditSection(request):
-    return redirect("/login")
+    chosen = Section.objects.filter(id=request.session['selectedsection']).first()
+    if 'sectionnumber' in request.POST:
+        newSectionNumber = int(request.POST["sectionnumber"])
+        if func_ValidateSectionNumber(newSectionNumber) == False:
+            return "Invalid Section Number. Must be between 100 and 999 and unique!"
+        else:
+            chosen = Section.objects.filter(id=request.session['selectedsection']).first()
+            chosen.sectionNumber = newSectionNumber
+            chosen.save()
+            return("Section Number edited successfully!")
+
+    if 'location' in request.POST:
+        newLocation = request.POST["location"]
+        if func_ValidateLocation(newLocation) == False:
+            return "Invalid Location. Format: Room# Building Name"
+        else:
+            chosen = Section.objects.filter(id=request.session['selectedsection']).first()
+            chosen.location = newLocation
+            chosen.save()
+            return ("Location edited successfully!")
+
+    if 'daysmeeting' in request.POST:
+        newDaysMeeting = ''
+        for days in request.POST.getlist('daysmeeting'):
+            newDaysMeeting += days
+        if func_ValidateDaysMeeting(newDaysMeeting) == False:
+            return "Invalid Days Meeting. Must be in order MTWHFSU, 'No Meeting Pattern' cannot be selected with other days."
+        else:
+            chosen = Section.objects.filter(id=request.session['selectedsection']).first()
+            chosen.daysMeeting= newDaysMeeting
+            chosen.save()
+            return ("Days Meeting edited successfully!")
+
+    if 'starttime' in request.POST:
+        newStartTime = request.POST["starttime"]
+        if func_ValidateStartAndEndTime(newStartTime, chosen.endTime) == False:
+            return "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end."
+        else:
+            chosen = Section.objects.filter(id=request.session['selectedsection']).first()
+            chosen.startTime= newStartTime
+            chosen.save()
+            return ("Start Time edited successfully!")
+
+    if 'endtime' in request.POST:
+        newEndTime = request.POST["endtime"]
+        if func_ValidateStartAndEndTime(chosen.startTime, newEndTime) == False:
+            return "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end."
+        else:
+            chosen = Section.objects.filter(id=request.session['selectedsection']).first()
+            chosen.endTime= newEndTime
+            chosen.save()
+            return ("End Time edited successfully!")
+
+    if 'type' in request.POST:
+        newType = request.POST['type']
+        if func_ValidateSectionType(newType) == False:
+            return "Invalid Type. Must be lecture, section, or grader."
+        else:
+            chosen = Section.objects.filter(id=request.session['selectedsection']).first()
+            chosen.type= newType
+            chosen.save()
+            return ("Type edited successfully!")
+
 def func_DeleteSection(request):
-    return redirect("/login")
+    Section.objects.filter(id=request.session['selectedsection']).first().delete()
 """
 MyUser validator functions used when creating or editing MyUser objects
 """
@@ -339,11 +439,91 @@ def func_ValidateYear(year):
 Section validator functions used when creating or editing Section objects
 """
 def func_ValidateSectionNumber(sectionNumber):
-    pass
-def func_ValidateLocation(location):
-    pass
-def func_ValidateDaysMeeting(daysMeeting):
-    pass
-def func_ValidateStartAndEndTime(startTime, endTime):
-    pass
+    if isinstance(sectionNumber, int):
+        if sectionNumber < 99 or sectionNumber > 999:
+            return False
+        if(Section.objects.filter(sectionNumber = sectionNumber).first() == None):
+            return True
 
+    else:
+        return False
+def func_ValidateLocation(location):
+    if not isinstance(location, str):
+        return False
+    location_pattern = "^([A-Z]?)(\\d{1,}) [a-zA-Z0-9\\s]"
+    match = re.match(location_pattern, location)
+    if (match != None):
+        if (location[-1].isspace()  ):
+            return False
+        else:
+            if location.count('  ')==0:
+                return True
+            else:
+                return False
+    else:
+        if location == "Online":
+            return True
+        else:
+            return False
+def func_ValidateDaysMeeting(daysMeeting):
+    order = {
+        'M':0,
+        'T': 1,
+        'W': 2,
+        'H': 3,
+        'F': 4,
+        'S': 5,
+        'U': 6,
+        'A': -1,
+    }
+    if not isinstance(daysMeeting, str):
+        return False
+    if daysMeeting == "A":
+        return True
+    else:
+        if daysMeeting == '':
+            return False
+        else:
+            for index in range(0, len(daysMeeting)):
+                current = order.get(daysMeeting[index])
+                if index+1 == len(daysMeeting):
+                    return True
+                next = order.get(daysMeeting[index+1])
+                if next <= current:
+                    return False
+
+def func_ValidateStartAndEndTime(startTime, endTime):
+    if not isinstance(startTime, str) or not isinstance(endTime,str):
+        return False
+    if startTime == endTime:
+        return False
+    time_pattern = "([01]?[0-9]|2[0-3]):[0-5][0-9]"
+    matchStart = re.match(time_pattern, startTime)
+    matchEnd = re.match(time_pattern, endTime)
+    if matchStart != None and matchEnd != None:
+        startSplit = startTime.split(':')
+        endSplit = endTime.split(':')
+        startHour = int(startSplit[0])
+        startMin = int(startSplit[1])
+        endHour = int(endSplit[0])
+        endMin = int(endSplit[1])
+        if startHour < 8:
+            return False
+        if startHour > 17:
+            return False
+        if endHour > 19:
+            return False
+        if startHour > endHour:
+            return False
+        if startHour == endHour:
+            if endMin < startMin:
+                return False
+        return True
+    else:
+        return False
+
+def func_ValidateSectionType(type):
+    if type == 'lecture' or type == 'grader' or type == 'lab':
+        return True
+    else:
+        return False
