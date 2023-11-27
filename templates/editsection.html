@@ -1,53 +1,68 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Section Page</title>
+    <meta name="viewport" content="width=device-width">
+    <title>Edit Section</title>
+    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<h1>Edit Section Page</h1>
-
+<body id="wrapper">
+<div id="navlist">
+    <h1>Edit Section Page</h1>
     <form action="/editsection/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="logout">Logout</button>
+        <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
     <form action="/editsection/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+        <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
     <form action="/editsection/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+        <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
     <form action="/editsection/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="directory">View Directory</button>
+        <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
+</div>
 <br>
 <br>
-
-
 <table>
-    <tr><td>Current Section Number</td><td>*variable*</td></tr>
-        <tr>
-            <td>New Value:</td>
-            <td><form action="/editsection/" method="post">
+    <tr>
+        <td class="label">Current Section Number:</td>
+        <td>{{ section.sectionnumber }}</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/editsection/" method="post">
                 {% csrf_token %}
-                <input type="text" name="sectionnumber"> <input type="submit"></form>
-            </td>
-        </tr>
-    <tr><td>Current Location:</td><td>*variable*</td></tr>
-        <tr>
-            <td>New Value:</td>
-            <td><form action="/editsection/" method="post">
+                <input type="text" name="sectionnumber"> <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Location:</td>
+        <td>{{ section.location }}</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/editsection/" method="post">
                 {% csrf_token %}
-                <input type="text" name="location"> <input type="submit"></form>
-            </td>
-        </tr>
-    <tr><td>Current Days Meeting:</td><td>*variable*</td></tr>
-        <tr>
-            <td>New Value:</td>
-            <td><form action="/editsection/" method="post">
+                <input type="text" name="location"> <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Days Meeting:</td>
+        <td>{{ section.daysmeeting }}</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/editsection/" method="post">
                 {% csrf_token %}
                 <input type="checkbox" name="M" value="M" id="M"><label for="M">Monday</label>
                 <input type="checkbox" name="T" value="T" id="T"><label for="T">Tuesday</label>
@@ -57,38 +72,51 @@
                 <input type="checkbox" name="S" value="S" id="S"><label for="S">Saturday</label>
                 <input type="checkbox" name="U" value="U" id="U"><label for="U">Sunday</label>
                 <input type="checkbox" name="A" value="A" id="A"><label for="A">No Meeting Pattern</label>
-                <input type="submit"></form>
-            </td>
-        </tr>
-    <tr><td>Current Start Time:</td><td>*variable*</td></tr>
-        <tr>
-            <td>New Value:</td>
-            <td><form action="/editsection/" method="post">
+                <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Start Time:</td>
+        <td>{{ section.starttime }}</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/editsection/" method="post">
                 {% csrf_token %}
-                <input type="time" name="starttime"> <input type="submit"></form>
-            </td>
-        </tr>
-    <tr><td>Current End Time:</td><td>*variable*</td></tr>
-        <tr>
-            <td>New Value:</td>
-            <td><form action="/editsection/" method="post">
+                <input type="time" name="starttime"> <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current End Time:</td>
+        <td>{{ section.endtime }}</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/editsection/" method="post">
                 {% csrf_token %}
-                <input type="time" name="endtime"> <input type="submit"></form>
-            </td>
-        </tr>
-    <tr><td>Current Section Type:</td><td>*variable*</td></tr>
-        <tr>
-            <td>New Value:</td>
-            <td><form action="/editcourse/" method="post">
+                <input type="time" name="endtime"> <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Section Type:</td>
+        <td>{{ section.type }}</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/editcourse/" method="post">
                 {% csrf_token %}
-                <select name ="semester" id="semester">
-                <option value="lecture">Lecture</option>
-                <option value="grader">Grader</option>
-                <option value="section">Section</option>
+                <select name="semester" id="semester">
+                    <option value="lecture">Lecture</option>
+                    <option value="grader">Grader</option>
+                    <option value="section">Section</option>
                 </select>
-                <input type="submit"></form>
-            </td>
-        </tr>
+                <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
 </table>
+{{ message }}
 </body>
 </html>

@@ -11,29 +11,25 @@
 <body id="wrapper">
 <div id="navlist">
     <h1>Directory</h1>
-    <form action="/dashboard/" method="post">
+    <form action="/directory/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/directory/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/directory/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/directory/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
 </div>
 <br>
 <br>
-<form action="/dashboard/" method="post">
-    {% csrf_token %}
-    <button type="submit" name="navigation" value="viewself" class="bluebutton">View My Account</button>
-</form>
 {% if role == "admin" %}
     <form action="/directory/" method="post">
         {% csrf_token %}
@@ -56,5 +52,6 @@
         </tr>
     {% endfor %}
 </table>
+{{ message }}
 </body>
 </html>
