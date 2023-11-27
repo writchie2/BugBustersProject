@@ -1,79 +1,102 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit User Page</title>
+    <meta name="viewport" content="width=device-width">
+    <title>Edit User</title>
+    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<h1>Edit User Page</h1>
-
-    <form action="/edituser/" method="post">
+<body id="wrapper">
+<div id="navlist">
+    <h1>Edit User</h1>
+    <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="logout">Logout</button>
+        <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
-    <form action="/edituser/" method="post">
+    <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+        <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
-    <form action="/edituser/" method="post">
+    <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+        <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
-    <form action="/edituser/" method="post">
+    <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="directory">View Directory</button>
+        <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
+</div>
 <br>
 <br>
-
-
-<table>
-    <tr><td>Current First Name</td><td>*variable*</td></tr>
-        <tr>
-            <td>New Value:</td>
-            <td><form action="/edituser/" method="post">
+<table id="myTable">
+    <tr>
+        <td class="label">Current First Name</td>
+        <td>*variable*</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="firstname"> <input type="submit"></form>
-            </td>
-        </tr>
-    <tr><td>Current Last Name:</td><td>*variable*</td></tr>
-        <tr>
-            <td>New Value:</td>
-            <td><form action="/edituser/" method="post">
+                <input type="text" name="firstname"> <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Last Name:</td>
+        <td>*variable*</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="lastname"> <input type="submit"></form>
-            </td>
-        </tr>
-    <tr><td>Current Phone Number:</td><td>*variable*</td></tr>
-        <tr>
-            <td>New Value:</td>
-            <td><form action="/edituser/" method="post">
+                <input type="text" name="lastname"> <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Phone Number:</td>
+        <td>*variable*</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="phonenumber"> <input type="submit"></form>
-            </td>
-        </tr>
-    <tr><td>Current Address:</td><td>*variable*</td></tr>
-        <tr>
-            <td>New Value:</td>
-            <td><form action="/edituser/" method="post">
+                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="phonenumber"> <input type="submit"
+                                                                                                  value="Save"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Address:</td>
+        <td>*variable*</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="address"> <input type="submit"></form>
-            </td>
-        </tr>
-    <tr><td>Current Role:</td><td>*variable*</td></tr>
-        <tr>
-            <td>New Value:</td>
-            <td><form action="/edituser/" method="post">
+                <input type="text" name="address"> <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Role:</td>
+        <td>*variable*</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/edituser/" method="post">
                 {% csrf_token %}
-                <select name ="role" id="role"required>
-                <option value="admin">Admin</option>
-                <option value="instructor">Instructor</option>
-                <option value="ta">TA</option>
+                <select name="role" id="role" required>
+                    <option value="admin">Admin</option>
+                    <option value="instructor">Instructor</option>
+                    <option value="ta">TA</option>
                 </select>
-                <input type="submit"></form>
-            </td>
-        </tr>
+                <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
 </table>
-
 </body>
 </html>
