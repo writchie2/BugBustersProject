@@ -213,7 +213,7 @@ def func_DeleteSection(request):
 MyUser validator functions used when creating or editing MyUser objects
 """
 def func_ValidateEmail(email):
-    return bool(re.fullmatch(r"[^@\s]{1,12}@uwm\.edu", email))
+    return bool(re.fullmatch(r"[^@\s.]{1,12}@uwm\.edu", email))
 
 def func_ValidatePassword(password,confirmPassword):
     if password != confirmPassword:

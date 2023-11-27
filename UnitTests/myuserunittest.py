@@ -18,7 +18,7 @@ class ValidateEmailTest(TestCase):
 
     long_email = "aaaaaaaaaaaaaaaaa" + "@uwm.edu"
 
-    valid_email = ["email@uwm.edu", "person2@uwm.edu", "some_body@gmail.com"]
+    valid_email = ["email@uwm.edu", "person2@uwm.edu", "some_body@uwm.edu"]
 
     def test_no_email(self):
         self.assertFalse(func_ValidateEmail(""), "Expected: False Actual: True")
@@ -33,7 +33,7 @@ class ValidateEmailTest(TestCase):
 
     def test_invalid_formats(self):
         for email in self.invalid_emails:
-            self.assertFalse(func_ValidateEmail(email), "Expected: False Actual: True")
+            result = bool(self.assertFalse(func_ValidateEmail(email), "Expected: False Actual: True"))
 
     def test_long_email(self):
         self.assertFalse(func_ValidateEmail(self.long_email), "Expected: False Actual: True")
