@@ -220,7 +220,7 @@ def func_ValidateEmail(email):
 def func_ValidatePassword(password,confirmPassword):
     if password != confirmPassword:
         return False
-    if len(password) < 8:
+    if len(password) < 8 or len(password) > 20:
         return False
 
     special = ["@", "#", "$", "%",
@@ -275,7 +275,7 @@ def func_ValidatePhoneNumber(phoneNumber):
     return bool(match1) or bool(match2) or bool(match3) or bool(match4)
 
 def func_ValidateStreetAddress(streetAddress):
-    pattern = re.compile(r'^\d+\s+[a-zA-Z\s]+$')
+    pattern = re.compile(r'^\d+\s+[a-zA-Z\s]{1,50}$')
     match = pattern.match(streetAddress)
     return bool(match)
 
