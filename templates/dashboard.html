@@ -1,35 +1,38 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
     <title>Dashboard</title>
+    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<h1>Dashboard</h1>
-
+<body id="wrapper">
+<div id="navlist">
+    <h1>Dashboard</h1>
     <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="logout">Logout</button>
+        <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
     <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+        <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
     <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+        <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
     <form action="/dashboard/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="directory">View Directory</button>
+        <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
+</div>
 <br>
 <br>
-    <form action="/dashboard/" method="post">
-        {% csrf_token %}
-        <button type = "submit" name="navigation" value="viewself">View My Account</button>
-    </form>
-</body>
-</html>
+<form action="/dashboard/" method="post">
+    {% csrf_token %}
+    <button type="submit" name="navigation" value="viewself" class="bluebutton">View My Account</button>
+</form>
 </body>
 </html>
