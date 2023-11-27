@@ -218,10 +218,33 @@ def func_ValidateEmail(email):
     else:
         return False
 def func_ValidatePassword(password,confirmPassword):
-    if password == confirmPassword:
-        return True
-    else:
+    if password != confirmPassword:
         return False
+    if len(password) < 8:
+        return False
+
+    special = ["@", "#", "$", "%",
+               "^", "&", "*", "`",
+               "(", ")", "-", "_",
+               "+", "=", "{", "}",
+               "|", "~", "/", "",
+               "<", ">", ",", ".",
+               ";", ":", "'", "?",
+               "!"]
+
+    if not any(char in special for char in password):
+        return False
+
+    if not any(char.isupper() for char in password):
+        return False
+
+    if not any(char.isdigit() for char in password):
+        return False
+
+    return True
+
+
+
 def func_ValidateFirstName(firstName):
     if all(c.isalpha or c == '' for c in firstName):
         if firstName[0].isupper():
