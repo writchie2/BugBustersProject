@@ -319,6 +319,8 @@ def func_ValidateDepartment(department):
     pass
 def func_ValidateCourseNumber(courseNumber):
     pass
+def func_ValidateSemester(Semester):
+    pass
 def func_ValidateYear(year):
     pass
 """
