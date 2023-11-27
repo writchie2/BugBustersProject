@@ -20,39 +20,57 @@ class ValidateEmailTest(TestCase):
 
     long_email = "a" * ((max_email_length - min_email_length) + 1) + "@uwm.edu"
 
+    valid_email = ["email@uwm.edu", "person2@uwm.edu", "some_body@gmail.com"]
+
     def test_no_email(self):
-        with self.assertRaises(ValueError):
-            func_ValidateEmail("")
+        self.assertFalse(func_ValidateEmail(""), "Expected: False Actual: True")
 
     def test_empty_email(self):
-        with self.assertRaises(ValueError):
-            func_ValidateEmail(" ")
+        self.assertFalse(func_ValidateEmail(" "), "Expected: False Actual: True")
 
     def test_valid_email(self):
-        email = "person@uwm.edu"
-        try:
-            func_ValidateEmail(email)
-        except Exception as e:
-            self.fail(f"func_ValidateEmail raised an exception: {e}")
+        for email in self.valid_email:
+            self.assertTrue(func_ValidateEmail(email), "Expected: True Actual: False")
+
 
     def test_invalid_formats(self):
         for email in self.invalid_emails:
-            with self.assertRaises(ValueError):
-                func_ValidateEmail(email)
+            self.assertFalse(func_ValidateEmail(email), "Expected: False Actual: True")
 
     def test_long_email(self):
-        with self.assertRaises(ValueError):
-            func_ValidateEmail(self.long_email)
+        self.assertFalse(func_ValidateEmail(self.long_email), "Expected: False Actual: True")
 
     def test_whitespace(self):
         for email in self.invalid_whitespace:
-            with self.assertRaises(ValueError):
-                func_ValidateEmail(email)
+            self.assertFalse(func_ValidateEmail(email), "Expected: False Actual: True")
 
 
 class ValidatePasswordTest(TestCase):
-    pass
+    invalid_password = ["12345678", "password!2", "a", "abcd"]
+    valid_passsword = ["P@assword2", "aN0ther_password", "g00d!pAss"]
+    almost_matching = ["P@assword", "an0ther_password", "gO0d!pASs"]
+    long_password = "L0ng#Passworddddddddd"
 
+    def test_no_password(self):
+        self.assertFalse(func_ValidatePassword("",""), "Expected: False Actual: True")
+
+    def test_empty_password(self):
+        self.assertFalse(func_ValidatePassword(" ", " "), "Expected: False Actual: True")
+
+    def test_invalid_password(self):
+        for password in self.invalid_password:
+            self.assertFalse(func_ValidatePassword(password, password), "Expected: False Actual: True")
+
+    def test_valid_password(self):
+        for password in self.valid_passsword:
+            self.assertTrue(func_ValidatePassword(password, password), "Expected: True Actual: False")
+
+    def test_mismatching_password(self):
+        for password1, password2 in self.valid_passsword, self.almost_matching:
+            self.assertFalse(func_ValidatePassword(password1, password2), "Expected: False Actual True")
+
+    def test_long_password(self):
+        self.assertFalse(func_ValidatePassword(self.long_password, self.long_password), "Expected: False Actual: True")
 
 class ValidateFirstNameTest(TestCase):
     invalid_names = ["a", "@d@m", "P3n3lop3", "R!ley", "Jak3"]
@@ -61,28 +79,22 @@ class ValidateFirstNameTest(TestCase):
                    "McDonald", "Edwards"]
 
     def test_no_name(self):
-        with self.assertRaises(ValueError):
-            func_ValidateFirstName("")
+        self.assertFalse(func_ValidateFirstName(""), "Expected: False Actual: True")
 
     def test_empty_name(self):
-        with self.assertRaises(ValueError):
-            func_ValidateFirstName(" ")
+        self.assertFalse(func_ValidateFirstName(" "), "Expected: False Actual: True")
 
     def test_valid_name(self):
-        try:
-            for name in self.valid_names:
-                func_ValidateFirstName(name)
-        except Exception as e:
-            self.fail(f"func_ValidateFirstName raised an exception: {e}")
+        for name in self.valid_names:
+            self.assertTrue(func_ValidateFirstName(name), "Expected: True Actual: False")
+
 
     def test_invalid_names(self):
         for name in self.invalid_names:
-            with self.assertRaises(ValueError):
-                func_ValidateFirstName(name)
+            self.assertFalse(func_ValidateFirstName(name), "Expected: False Actual: True")
 
     def test_long_name(self):
-        with self.assertRaises(ValueError):
-            func_ValidateFirstName(self.long_name)
+        self.assertFalse(func_ValidateFirstName(self.long_name), "Expected: False Actual: True")
 
 
 class ValidateLastNameTest(TestCase):
@@ -92,28 +104,21 @@ class ValidateLastNameTest(TestCase):
                    "McDonald", "Edwards"]
 
     def test_no_name(self):
-        with self.assertRaises(ValueError):
-            func_ValidateLastName("")
+        self.assertFalse(func_ValidateLastName(""), "Expected: False Actual: True")
 
     def test_empty_name(self):
-        with self.assertRaises(ValueError):
-            func_ValidateLastName(" ")
+        self.assertFalse(func_ValidateLastName(" "), "Expected: False Actual: True")
 
     def test_valid_name(self):
-        try:
-            for name in self.valid_names:
-                func_ValidateLastName(name)
-        except Exception as e:
-            self.fail(f"func_ValidateLastName raised an exception: {e}")
+        for name in self.valid_names:
+            self.assertTrue(func_ValidateLastName(name), "Expected: True Actual: False")
 
     def test_invalid_names(self):
         for name in self.invalid_names:
-            with self.assertRaises(ValueError):
-                func_ValidateLastName(name)
+            self.assertFalse(func_ValidateLastName(name), "Expected: False Actual: True")
 
     def test_long_name(self):
-        with self.assertRaises(ValueError):
-            func_ValidateLastName(self.long_name)
+        self.assertFalse(func_ValidateLastName(self.long_name), "Expected: False Actual: True")
 
 
 class ValidatePhoneNumberTest(TestCase):
@@ -130,32 +135,25 @@ class ValidatePhoneNumberTest(TestCase):
     long_number = 123456789012345678901
 
     def test_no_number(self):
-        with self.assertRaises(ValueError):
-            func_ValidatePhoneNumber("")
+        self.assertFalse(func_ValidatePhoneNumber(""), "Expected: False Actual: True")
 
     def test_empty_number(self):
-        with self.assertRaises(ValueError):
-            func_ValidatePhoneNumber(" ")
+        self.assertFalse(func_ValidatePhoneNumber(" "), "Expected: False Actual: True")
 
     def test_valid_numbers(self):
-        try:
-            for number in self.valid_phone_numbers:
-                func_ValidatePhoneNumber(number)
-        except Exception as e:
-            self.fail(f"func_ValidatePhoneNumber raised an exception: {e}")
+        for number in self.valid_phone_numbers:
+            self.assertTrue(func_ValidatePhoneNumber(number), "Expected: True Actual: False")
 
     def test_invalid_numbers(self):
         for number in self.invalid_phone_numbers:
-            with self.assertRaises(ValueError):
-                func_ValidatePhoneNumber(number)
+            self.assertFalse(func_ValidatePhoneNumber(number), "Expected: False Actual: True")
 
     def test_long_number(self):
-        with self.assertRaises(ValueError):
-            func_ValidatePhoneNumber(self.long_number)
+        self.assertFalse(func_ValidateState(self.long_number), "Expected: False Actual: True")
 
     def test_whitespace(self):
         for number in self.invalid_whitespace:
-            func_ValidatePhoneNumber(number)
+            self.assertFalse(func_ValidatePhoneNumber(number), "Expected: False Actual: True")
 
 
 class ValidateStreetAddressTest(TestCase):
@@ -172,26 +170,21 @@ class ValidateStreetAddressTest(TestCase):
     long_street = "1234567890 Soooooouth Rioooooooo Saladooooo Roooooooad"
 
     def test_no_address(self):
-        func_ValidateStreetAddress("")
+        self.assertFalse(func_ValidateStreetAddress(""), "Expected: False Actual: True")
 
     def test_empty_address(self):
-        func_ValidateStreetAddress(" ")
+        self.assertFalse(func_ValidateStreetAddress(" "), "Expected: False Actual: True")
 
     def test_valid_address(self):
-        try:
-            for address in self.valid_street:
-                func_ValidateStreetAddress(address)
-        except Exception as e:
-            self.fail(f"func_ValidatePhoneNumber raised an exception: {e}")
+        for address in self.valid_street:
+            self.assertTrue(func_ValidateStreetAddress(address), "Expected: True Actual: False")
 
     def test_invalid_address(self):
         for address in self.invalid_street:
-            with self.assertRaises(ValueError):
-                func_ValidateStreetAddress(address)
+            self.assertFalse(func_ValidateStreetAddress(address), "Expected: False Actual: True")
 
     def test_long_address(self):
-        with self.assertRaises(ValueError):
-            func_ValidateStreetAddress(self.long_street)
+        self.assertFalse(func_ValidateStreetAddress(self.long_street), "Expected: False Actual: True")
 
 
 class ValidateCityTest(TestCase):
@@ -205,33 +198,28 @@ class ValidateCityTest(TestCase):
     long_city = "A" * 20
 
     def test_no_city(self):
-        func_ValidateCity("")
+        self.assertFalse(func_ValidateCity(""), "Expected: False Actual: True")
 
     def test_empty_city(self):
-        func_ValidateCity(" ")
+        self.assertFalse(func_ValidateCity(" "), "Expected: False Actual: True")
 
     def test_valid_city(self):
-        try:
-            for city in self.valid_city:
-                func_ValidateCity(city)
-        except Exception as e:
-            self.fail(f"func_ValidateCity raised an exception: {e}")
+        for city in self.valid_city:
+            self.assertTrue(func_ValidateCity(city), "Expected: True Actual: False")
 
     def test_invalid_city(self):
         for city in self.invalid_city:
-            with self.assertRaises(ValueError):
-                func_ValidateCity(city)
+            self.assertFalse(func_ValidateCity(city), "Expected: False Actual: True")
 
     def test_long_city(self):
-        with self.assertRaises(ValueError):
-            func_ValidateCity(self.long_city)
+        self.assertFalse(func_ValidateCity(self.long_city), "Expected: False Actual: True")
 
 
 class ValidateStateTest(TestCase):
     valid_state = ["AL", "AK", "AZ", "AR",
-                   "CA","CO", "CT","DC",
-                   "DE", "FL", "GA","HI",
-                   "ID", "IL","IN", "IA",
+                   "CA", "CO", "CT", "DC",
+                   "DE", "FL", "GA", "HI",
+                   "ID", "IL", "IN", "IA",
                    "KS", "KY", "LA", "ME",
                    "MD", "MA", "MI", "MN",
                    "MS", "MO", "MT", "NE",
@@ -248,37 +236,31 @@ class ValidateStateTest(TestCase):
     invalid_whitespace = [" WI", "WI ", " WI "]
 
     def test_no_state(self):
-        func_ValidateState("")
+        self.assertFalse(func_ValidateState(""), "Expected: False Actual: True")
 
     def test_empty_state(self):
-        func_ValidateState(" ")
+        self.assertFalse(func_ValidateState(" "), "Expected: False Actual: True")
 
     def test_valid_state(self):
-        try:
-            for state in self.valid_state:
-                func_ValidateState(state)
-        except Exception as e:
-            self.fail(f"func_ValidateState raised an exception: {e}")
+        for state in self.valid_state:
+            self.assertTrue(func_ValidateState(state), "Expected: True Actual: False")
 
     def test_invalid_state(self):
         for state in self.invalid_state:
-            with self.assertRaises(ValueError):
-                func_ValidateState(state)
+            self.assertFalse(func_ValidateState(state), "Expected: False Actual: True")
+
 
 class ValidateZipCodeTest(TestCase):
     valid_zip = [53206, 12345, 53220]
     invalid_zip = [53, 2, -53220]
+
     def test_no_zip(self):
-        func_ValidateZipCode(0)
+        self.assertFalse(func_ValidateZipCode(0), "Expected: False Actual: True")
 
     def test_valid_zip(self):
-        try:
-            for zip_code in self.valid_zip:
-                func_ValidateZipCode(zip_code)
-        except Exception as e:
-            self.fail(f"func_ValidateZipCode raised an exception: {e}")
+        for zip_code in self.valid_zip:
+            self.assertTrue(func_ValidateZipCode(zip_code), "Expected: True Actual: False")
 
     def test_invalid_zip(self):
         for zip_code in self.invalid_zip:
-            with self.assertRaises(ValueError):
-                func_ValidateState(zip_code)
+            self.assertFalse(func_ValidateZipCode(zip_code), "Expected: False Actual: True")
