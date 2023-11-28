@@ -363,7 +363,6 @@ class SectionPage(View):
                 return render(request, "sectionpage.html", {"message": "Only admins can edit sections!","section": func_SectionAsDict(request.session['selectedsection'])})
             else:
                 return redirect("/editsection/")
-            return redirect("/editsection/")
         if request.POST['navigation'] == "deletesection":
             if request.session['role'] != 'admin':
                 return render(request, "sectionpage.html", {"message": "Only admins can delete sections!","user": func_SectionAsDict(request.session['selectedsection'])})
@@ -437,7 +436,7 @@ class EditSection(View):
                 return redirect("/directory/")
             if request.POST['navigation'] == "cancel":
                 return redirect('/sectionpage/')
-        message = func_EditUser(request)
+        message = func_EditSection(request)
         return render(request, "editsection.html",
                       {"section": func_SectionAsDict(request.session['selectedsection']), "message": message})
 

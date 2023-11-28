@@ -64,16 +64,17 @@
         <td>
             <form action="/editsection/" method="post">
                 {% csrf_token %}
-                <input type="checkbox" name="M" value="M" id="M"><label for="M">Monday</label>
-                <input type="checkbox" name="T" value="T" id="T"><label for="T">Tuesday</label>
-                <input type="checkbox" name="W" value="W" id="W"><label for="W">Wednesday</label>
-                <input type="checkbox" name="H" value="H" id="H"><label for="H">Thursday</label>
-                <input type="checkbox" name="F" value="F" id="F"><label for="F">Friday</label>
-                <input type="checkbox" name="S" value="S" id="S"><label for="S">Saturday</label>
-                <input type="checkbox" name="U" value="U" id="U"><label for="U">Sunday</label>
-                <input type="checkbox" name="A" value="A" id="A"><label for="A">No Meeting Pattern</label>
+                <input type="checkbox" name="daysmeeting" value="M" id="M"><label for="M">Monday</label>
+                <input type="checkbox" name="daysmeeting" value="T" id="T"><label for="T">Tuesday</label>
+                <input type="checkbox" name="daysmeeting" value="W" id="W"><label for="W">Wednesday</label>
+                <input type="checkbox" name="daysmeeting" value="H" id="H"><label for="H">Thursday</label>
+                <input type="checkbox" name="daysmeeting" value="F" id="F"><label for="F">Friday</label>
+                <input type="checkbox" name="daysmeeting" value="S" id="S"><label for="S">Saturday</label>
+                <input type="checkbox" name="daysmeeting" value="U" id="U"><label for="U">Sunday</label>
+                <input type="checkbox" name="daysmeeting" value="A" id="A"><label for="A">No Meeting Pattern</label>
                 <input type="submit" value="Save" class="greenbutton">
             </form>
+
         </td>
     </tr>
     <tr>
@@ -109,10 +110,10 @@
         <td>
             <form action="/editsection/" method="post">
                 {% csrf_token %}
-                <select name="semester" id="semester">
+                <select name="type" id="type">
                     <option value="lecture">Lecture</option>
                     <option value="grader">Grader</option>
-                    <option value="section">Section</option>
+                    <option value="lab">Lab</option>
                 </select>
                 <input type="submit" value="Save" class="greenbutton"></form>
         </td>

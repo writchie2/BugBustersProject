@@ -12,7 +12,7 @@ class CreatUserViewTest(TestCase):
         session["email"] = "writchie@uwm.edu"
         session["role"] = "admin"
         session.save()
-        self.henryRitchie = MyUser("writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+        self.henryRitchie = MyUser(1,"writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
                                        "Milwaukee", "WI", 53026, "admin")
 
         self.henryRitchie.save()

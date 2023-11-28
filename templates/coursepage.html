@@ -70,6 +70,7 @@ Sections
 <table id="myTable">
     {% for section in course.sections %}
         <tr>
+
             <td class="label">{{ section.title }}</td>
             <td>
                 <form action="/coursepage/" method="post">
@@ -77,6 +78,7 @@ Sections
                     <button type="submit" name="selectedsection" class="bluebutton" value={{ section.id }}>View Section</button>
                 </form>
             </td>
+
         </tr>
     {% endfor %}
 </table>
