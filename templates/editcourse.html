@@ -31,69 +31,81 @@
 <br>
 <br>
 <table>
-
-    <tr><td class="label">Current Course Name</td><td>{{course.name}}</td></tr>
-
-        <tr>
-            <td class="label">New Value:</td>
-            <td><form action="/editcourse/" method="post">
+    <tr>
+        <td class="label">Current Course Name</td>
+        <td>{{ course.name }}</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/editcourse/" method="post">
                 {% csrf_token %}
-                <input type="text" name="coursename"> <input type="submit"></form>
-            </td>
-        </tr>
-
-    <tr><td class="label">Current Department:</td><td>{{course.department}}</td></tr>
-
-        <tr>
-            <td class="label">New Value:</td>
-            <td><form action="/editcourse/" method="post">
+                <input type="text" name="coursename">
+                <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Department:</td>
+        <td>{{ course.department }}</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/editcourse/" method="post">
                 {% csrf_token %}
-                <input type="text" name="department"> <input type="submit"></form>
-            </td>
-        </tr>
-
-    <tr><td class="label">Current Course Number:</td><td>{{course.coursenumber}}</td></tr>
-
-        <tr>
-            <td class="label">New Value:</td>
-            <td><form action="/editcourse/" method="post">
+                <input type="text" name="department">
+                <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Course Number:</td>
+        <td>{{ course.coursenumber }}</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/editcourse/" method="post">
                 {% csrf_token %}
-                <input type="text"  name="coursenumber"> <input type="submit"></form>
-            </td>
-        </tr>
-
-    <tr><td class="label">Current Semester:</td><td>{{ course.semester }}</td></tr>
-
-        <tr>
-            <td class="label">New Value:</td>
-            <td><form action="/editcourse/" method="post">
+                <input type="text" name="coursenumber">
+                <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Semester:</td>
+        <td>{{ course.semester }}</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/editcourse/" method="post">
                 {% csrf_token %}
-                <select name ="semester" id="semester">
+                <select name="semester" id="semester">
                     <option value="fall">Fall</option>
                     <option value="spring">Spring</option>
                     <option value="summer">Summer</option>
                     <option value="winter">Winter</option>
                 </select>
-                <input type="submit"></form>
-            </td>
-        </tr>
-
-    <tr><td class="label">Current Year:</td><td>{{ course.year }}</td></tr>
-
-        <tr>
-            <td class="label">New Value:</td>
-            <td><form action="/editcourse/" method="post">
+                <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Current Year:</td>
+        <td>{{ course.year }}</td>
+    </tr>
+    <tr>
+        <td class="label">New Value:</td>
+        <td>
+            <form action="/editcourse/" method="post">
                 {% csrf_token %}
-                <input type="text" name="year"> <input type="submit"></form>
-            </td>
-        </tr>
+                <input type="text" name="year">
+                <input type="submit" value="Save" class="greenbutton"></form>
+        </td>
+    </tr>
 </table>
 {{ message }}
-
 <form action="/editcourse/" method="post">
-        {% csrf_token %}
-        <button type = "submit" name="navigation" value="cancel">Cancel</button>
+    {% csrf_token %}
+    <button type="submit" name="navigation" value="cancel" class="redbutton">Cancel</button>
 </form>
-
 </body>
 </html>

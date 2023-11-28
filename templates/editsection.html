@@ -10,7 +10,7 @@
 </head>
 <body id="wrapper">
 <div id="navlist">
-    <h1>Edit Section Page</h1>
+    <h1>Edit Section</h1>
     <form action="/editsection/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
@@ -30,8 +30,7 @@
 </div>
 <br>
 <br>
-<table>
-
+<table id="myTable">
     <tr>
         <td class="label">Current Section Number:</td>
         <td>{{ section.sectionnumber }}</td>
@@ -64,7 +63,6 @@
         <td class="label">New Value:</td>
         <td>
             <form action="/editsection/" method="post">
-
                 {% csrf_token %}
                 <input type="checkbox" name="M" value="M" id="M"><label for="M">Monday</label>
                 <input type="checkbox" name="T" value="T" id="T"><label for="T">Tuesday</label>
@@ -74,8 +72,8 @@
                 <input type="checkbox" name="S" value="S" id="S"><label for="S">Saturday</label>
                 <input type="checkbox" name="U" value="U" id="U"><label for="U">Sunday</label>
                 <input type="checkbox" name="A" value="A" id="A"><label for="A">No Meeting Pattern</label>
-
-                <input type="submit" value="Save" class="greenbutton"></form>
+                <input type="submit" value="Save" class="greenbutton">
+            </form>
         </td>
     </tr>
     <tr>
@@ -109,8 +107,7 @@
     <tr>
         <td class="label">New Value:</td>
         <td>
-            <form action="/editcourse/" method="post">
-
+            <form action="/editsection/" method="post">
                 {% csrf_token %}
                 <select name="semester" id="semester">
                     <option value="lecture">Lecture</option>
@@ -122,11 +119,9 @@
     </tr>
 </table>
 {{ message }}
-
 <form action="/editsection/" method="post">
-        {% csrf_token %}
-        <button type = "submit" name="navigation" value="cancel">Cancel</button>
+    {% csrf_token %}
+    <button type="submit" name="navigation" value="cancel" class="redbutton">Cancel</button>
 </form>
-
 </body>
 </html>

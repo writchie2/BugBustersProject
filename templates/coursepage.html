@@ -1,67 +1,82 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Course Page</title>
+    <meta name="viewport" content="width=device-width">
+    <title>Course Page - {{ course.title }}</title>
+    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<h1>Course Page - {{ course.title }}</h1>
-
+<body id="wrapper">
+<div id="navlist">
+    <h1>Course Page - {{ course.title }}</h1>
     <form action="/coursepage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="logout">Logout</button>
+        <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
     <form action="/coursepage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+        <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
     <form action="/coursepage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+        <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
     <form action="/coursepage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="directory">View Directory</button>
+        <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
+</div>
 <br>
 <br>
-    {% if role == 'admin' %}
+{% if role == 'admin' %}
     <form action="/coursepage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="createsection">Create New Section</button>
+        <button type="submit" name="navigation" value="createsection" class="greenbutton">Create New Section</button>
     </form>
     <form action="/coursepage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="editcourse">Edit This Course</button>
+        <button type="submit" name="navigation" value="editcourse" class="bluebutton">Edit This Course</button>
     </form>
     <form action="/coursepage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="deletecourse">Delete Course</button>
+        <button type="submit" name="navigation" value="deletecourse" class="redbutton">Delete Course</button>
     </form>
-    {% endif %}
+{% endif %}
 
-<table>
-    <tr><td>Course:</td><td>{{ course.title }}</td></tr>
-    <tr><td>Semester:</td><td>{{course.semester }} {{course.year }}</td></tr>
+<table id="myTable">
+    <tr>
+        <td class="label">Course:</td>
+        <td>{{ course.title }}</td>
+    </tr>
+    <tr>
+        <td class="label">Semester:</td>
+        <td>{{ course.semester }} {{ course.year }}</td>
+    </tr>
 </table>
 
 Assigned Users
-    <table>
-       <tr>
-           {% for user in course.users %}
-               <tr><td>{{ user.fullname }}</td></tr>
-           {% endfor %}
-       </tr>
-    </table>
+<table id="myTable">
+    <tr>
+        {% for user in course.users %}
+            <tr>
+                <td>{{ user.fullname }}</td>
+            </tr>
+        {% endfor %}
+    </tr>
+</table>
 Sections
-<table>
+<table id="myTable">
     {% for section in course.sections %}
         <tr>
-            <td>{{ section.title }}</td><td>{{ section.id }}</td>
-            <td><form action="/coursepage/" method="post">
-                {% csrf_token %}
-                <button type = "submit" name="selectedsection" value={{ section.id }}>View Section</button>
-            </form></td>
+            <td class="label">{{ section.title }}</td>
+            <td>
+                <form action="/coursepage/" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="selectedsection" class="bluebutton" value={{ section.id }}>View Section</button>
+                </form>
+            </td>
         </tr>
     {% endfor %}
 </table>

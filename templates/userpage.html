@@ -31,24 +31,40 @@
 </div>
 <br>
 <br>
-    {% if role == "admin" %}
+{% if role == "admin" %}
     <form action="/userpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
+        <button type="submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
     </form>
     <form action="/userpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser" class="redbutton">Delete User</button>
+        <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser"
+                class="redbutton">Delete User
+        </button>
     </form>
-    {% endif %}
-
-<table>
-    <tr><td>User:</td><td>{{ user.fullname }}</td></tr>
-    <tr><td>Email:</td><td>{{ user.email }}</td></tr>
-    <tr><td>Role:</td><td>{{ user.role }}</td></tr>
+{% endif %}
+<table id="myTable">
+    <tr>
+        <td class="label">User:</td>
+        <td>{{ user.fullname }}</td>
+    </tr>
+    <tr>
+        <td class="label">Email:</td>
+        <td>{{ user.email }}</td>
+    </tr>
+    <tr>
+        <td class="label">Role:</td>
+        <td>{{ user.role }}</td>
+    </tr>
     {% if role == "admin" %}
-        <tr><td>Phone Number:</td><td>{{ user.phonenumber }}</td></tr>
-        <tr><td>Address:</td><td>{{ user.streetaddress }}. {{ user.city }}, {{ user.state }} {{ user.zipcode}}</td></tr>
+        <tr>
+            <td class="label">Phone Number:</td>
+            <td>{{ user.phonenumber }}</td>
+        </tr>
+        <tr>
+            <td class="label">Address:</td>
+            <td>{{ user.streetaddress }}. {{ user.city }}, {{ user.state }} {{ user.zipcode }}</td>
+        </tr>
     {% endif %}
 </table>
 </body>
