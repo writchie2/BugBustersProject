@@ -128,35 +128,56 @@ and create an object and returns a render of a page with a success message
 If a validator function fails then no object is created and a render is returned with a failure method.   
 """
 def func_CreateUser(request):
-    email = request.POST.get("email", "")
-    pw = request.POST.get("password", "")
-    pwc = request.POST.get("confirmedpassword", "")
-    first = request.POST.get("firstname", "")
-    last = request.POST.get("lastname", "")
-    phone = request.POST.get("phonenumber", "")
-    street = request.POST.get("streetaddress", "")
-    city = request.POST.get("city", "")
-    state = request.POST.get("state", "")
-    zip = request.POST.get("zipcode", "")
-    role = request.POST.get("role", "")
-
-    if (
-        func_ValidateEmail(email) and func_ValidatePassword(pw, pwc) and
-        func_ValidateFirstName(first) and func_ValidateLastName(last) and
-        func_ValidatePhoneNumber(phone) and func_ValidateStreetAddress(street) and
-        func_ValidateCity(city) and func_ValidateState(state) and
-        func_ValidateZipCode(zip) and func_ValidateRole(role)
+    if(
+        'email' not in request.POST or 'password' not in request.POST or
+        'confirmpassword' not in request.POST or 'firstname' not in request.POST or
+        'lastname' not in request.POST or 'phonenumber' not in request.POST or
+        'streetaddress' not in request.POST or 'city' not in request.POST or
+        'state' not in request.POST or 'zipcode' not in request.POST or
+        'role' not in request.POST
     ):
-        user = MyUser.objects.create(email=email, password=pw,
-                                     firstName=first, lastName=last,
-                                     phoneNumber=phone, streetAddress=street,
-                                     city=city, state=state,
-                                     zipcode=zip, role=role)
-        #messages.success(request, "User created successfully!")  might be good to have?
-        return render(request, "dashboard.html", {'user': user})
-    else:
-        #messages.error(request, "Unable to create user. Please check your input")
-        return redirect("/login")
+        return "Please fill out all fields!"
+    email = request.POST["email"]
+    pw = request.POST["password"]
+    pwc = request.POST["confirmpassword"]
+    first = request.POST["firstname"]
+    last = request.POST["lastname"]
+    phone = request.POST["phonenumber"]
+    street = request.POST["streetaddress"]
+    city = request.POST["city"]
+    state = request.POST["state"]
+    zip = int(request.POST["zipcode"])
+    role = request.POST["role"]
+
+    if not func_ValidateEmail(email):
+        return "Non-unique username. Please try again."
+    if not func_ValidatePassword(pw, pwc):
+        return "Passwords do not match. Please try again."
+    if not func_ValidateFirstName(first):
+        return "Invalid first name. Must start with a capital and have no spaces. Please try again."
+    if not func_ValidateLastName(last):
+        return "Invalid last name. Must start with a capital and have no spaces. Please try again."
+    if not func_ValidatePhoneNumber(phone):
+        return "Invalid phone number. Must be 9 numbers 0-9. Please try again."
+    if not func_ValidateStreetAddress(street):
+        return "Invalid street address. Please try again."
+    if not func_ValidateCity(city):
+        return "Invalid city. Please try again."
+    if not func_ValidateState(state):
+        return "Invalid state. Please try again."
+    if not func_ValidateZipCode(zip):
+        return "Invalid zipcode. Please try again."
+    if not func_ValidateRole(role):
+        return "Invalid role. Please try again."
+
+    user = MyUser.objects.create(email=email, password=pw,
+                                 firstName=first, lastName=last,
+                                 phoneNumber=phone, streetAddress=street,
+                                 city=city, state=state,
+                                 zipcode=zip, role=role)
+    user.save()
+    return "User created successfully"
+
 def func_EditUser(request):
     if 'firstname' in request.POST:
         if func_ValidateFirstName(request.POST['firstname']):

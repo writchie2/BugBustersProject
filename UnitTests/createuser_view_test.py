@@ -6,16 +6,16 @@ from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
 
 class DirectoryViewTest(TestCase):
-    def setUp(self):
-        self.client = Client()
-        session = self.client.session
-        session["email"] = "writchie@uwm.edu"
-        session["role"] = "admin"
-        session.save()
-        self.henryRitchie = MyUser("writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
-                                       "Milwaukee", "WI", 53026, "admin")
-
-        self.henryRitchie.save()
+    # def setUp(self):
+    #     self.client = Client()
+    #     session = self.client.session
+    #     session["email"] = "writchie@uwm.edu"
+    #     session["role"] = "admin"
+    #     session.save()
+    #     self.henryRitchie = MyUser(email="writchie@uwm.edu", password="password", firstName="Henry", lastName="Ritchie", phoneNumber="5555555555", streetAddress="1234 main st",
+    #                                    city="Milwaukee", state="WI", zipcode=53026, role="admin")
+    #
+    #     self.henryRitchie.save()
 
     def test_GetTemplate(self):
         response = self.client.get('/createuser/')
@@ -111,8 +111,8 @@ class DirectoryViewTest(TestCase):
     def test_CreateUserInvalid(self):
         response = self.client.post("/createuser/",
                                     {"email": "writchie@uwm.edu",
-                                     "password": "password",
-                                     "confirmpassword": "password",
+                                     "password": "Password!1",
+                                     "confirmpassword": "Password!1",
                                      "firstname": "First",
                                      "lastname": "Last",
                                      "phonenumber": "5555555555",
