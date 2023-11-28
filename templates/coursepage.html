@@ -40,6 +40,11 @@
     </form>
     {% endif %}
 
+<table>
+    <tr><td>Course:</td><td>{{ course.title }}</td></tr>
+    <tr><td>Semester:</td><td>{{course.semester }} {{course.year }}</td></tr>
+</table>
+
 Assigned Users
     <table>
        <tr>
@@ -52,7 +57,7 @@ Sections
 <table>
     {% for section in course.sections %}
         <tr>
-            <td>{{ section.title }}</td><td>{{ section.id }}</td>
+            <td>{{ section.title }}</td>
             <td><form action="/coursepage/" method="post">
                 {% csrf_token %}
                 <button type = "submit" name="selectedsection" value={{ section.id }}>View Section</button>

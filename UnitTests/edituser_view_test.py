@@ -4,7 +4,7 @@ sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
-class UserPageTest(TestCase):
+class EditUserPageTest(TestCase):
     def setUp(self):
         self.client = Client()
         session = self.client.session
@@ -112,7 +112,7 @@ class UserPageTest(TestCase):
         self.assertEqual(self.emmaSonnen.firstName, "Emma",
                          "firstname is edited in edituser when invalid")
         self.assertEqual(response.context["message"], "Invalid First Name",
-                         "success message does not show for successful edit")
+                         "error message does not show for unsuccessful edit")
 
     def test_PostEditLastNameValid(self):
         response = self.client.post("/edituser/", {"lastname": "Drew"}, follow=True)
@@ -140,7 +140,7 @@ class UserPageTest(TestCase):
         self.assertEqual(self.emmaSonnen.lastName, "Sonnen",
                          "lastname is edited in edituser when invalid")
         self.assertEqual(response.context["message"], "Invalid Last Name",
-                         "success message does not show for successful edit")
+                         "error message does not show for unsuccessful edit")
 
     def test_PostEditPhoneNumberValid(self):
         response = self.client.post("/edituser/", {"phonenumber": "4145555555"}, follow=True)
@@ -168,7 +168,7 @@ class UserPageTest(TestCase):
         self.assertEqual(self.emmaSonnen.phoneNumber, "5555555555",
                          "phonenumber is edited in edituser when invalid")
         self.assertEqual(response.context["message"], "Invalid Phone Number",
-                         "success message does not show for successful edit")
+                         "error message does not show for unsuccessful edit")
 
     def test_PostEditStreetAddressValid(self):
         response = self.client.post("/edituser/", {"streetaddress": "324 Maple rd"}, follow=True)
@@ -196,7 +196,7 @@ class UserPageTest(TestCase):
         self.assertEqual(self.emmaSonnen.streetAddress, "1234 Street rd",
                          "streetaddress is edited in edituser when invalid")
         self.assertEqual(response.context["message"], "Invalid Street Address",
-                         "success message does not show for successful edit")
+                         "error message does not show for unsuccessful edit")
 
     def test_PostEditCityValid(self):
         response = self.client.post("/edituser/", {"city": "Chicago"}, follow=True)
@@ -224,7 +224,7 @@ class UserPageTest(TestCase):
         self.assertEqual(self.emmaSonnen.city, "Milwaukee",
                          "city is edited in edituser when invalid")
         self.assertEqual(response.context["message"], "Invalid City",
-                         "success message does not show for successful edit")
+                         "error message does not show for unsuccessful edit")
 
     def test_PostEditStateValid(self):
         response = self.client.post("/edituser/", {"state": "IL"}, follow=True)
@@ -252,7 +252,7 @@ class UserPageTest(TestCase):
         self.assertEqual(self.emmaSonnen.state, "WI",
                          "state is edited in edituser when invalid")
         self.assertEqual(response.context["message"], "Invalid State",
-                         "success message does not show for successful edit")
+                         "error message does not show for unsuccessful edit")
 
     def test_PostEditZipcodeValid(self):
         response = self.client.post("/edituser/", {"zipcode": "53022"}, follow=True)
@@ -268,7 +268,7 @@ class UserPageTest(TestCase):
         self.assertEqual(response.context["message"], "Zipcode changed successfully",
                          "success message does not show for successful edit")
 
-    def test_PostEditStateInvalid(self):
+    def test_PostEditZipcodeInvalid(self):
         response = self.client.post("/edituser/", {"zipcode": "1234"}, follow=True)
         self.assertTemplateUsed(response, 'edituser.html')
         self.assertEqual("writchie@uwm.edu", self.client.session["email"],
@@ -280,7 +280,7 @@ class UserPageTest(TestCase):
         self.assertEqual(self.emmaSonnen.zipcode, "53026",
                          "zipcode is edited in edituser when invalid")
         self.assertEqual(response.context["message"], "Invalid Zipcode",
-                         "success message does not show for successful edit")
+                         "error message does not show for unsuccessful edit")
 
     def test_PostEditRoleValid(self):
         response = self.client.post("/edituser/", {"role": "ta"}, follow=True)
@@ -308,4 +308,4 @@ class UserPageTest(TestCase):
         self.assertEqual(self.emmaSonnen.role, "admin",
                          "role is edited in edituser when invalid")
         self.assertEqual(response.context["message"], "Invalid Role",
-                         "success message does not show for successful edit")
+                         "error message does not show for unsuccessful edit")

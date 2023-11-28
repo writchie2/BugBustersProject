@@ -1,73 +1,87 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Course PAge</title>
+    <meta name="viewport" content="width=device-width">
+    <title>Edit Course Page</title>
+    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<h1>Edit Course Page</h1>
-
+<body id="wrapper">
+<div id="navlist">
+    <h1>Edit Course Page</h1>
     <form action="/editcourse/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="logout">Logout</button>
+        <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
     <form action="/editcourse/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+        <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
     <form action="/editcourse/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+        <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
     <form action="/editcourse/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="directory">View Directory</button>
+        <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
+</div>
 <br>
 <br>
-
 <table>
-    <tr><td>Current Course Name</td><td>{{course.name}}</td></tr>
+
+    <tr><td class="label">Current Course Name</td><td>{{course.name}}</td></tr>
+
         <tr>
-            <td>New Value:</td>
+            <td class="label">New Value:</td>
             <td><form action="/editcourse/" method="post">
                 {% csrf_token %}
                 <input type="text" name="coursename"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Department:</td><td>{{course.department}}</td></tr>
+
+    <tr><td class="label">Current Department:</td><td>{{course.department}}</td></tr>
+
         <tr>
-            <td>New Value:</td>
+            <td class="label">New Value:</td>
             <td><form action="/editcourse/" method="post">
                 {% csrf_token %}
                 <input type="text" name="department"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Course Number:</td><td>{{course.coursenumber}}</td></tr>
+
+    <tr><td class="label">Current Course Number:</td><td>{{course.coursenumber}}</td></tr>
+
         <tr>
-            <td>New Value:</td>
+            <td class="label">New Value:</td>
             <td><form action="/editcourse/" method="post">
                 {% csrf_token %}
                 <input type="text"  name="coursenumber"> <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Semester:</td><td>{{ course.semester }}</td></tr>
+
+    <tr><td class="label">Current Semester:</td><td>{{ course.semester }}</td></tr>
+
         <tr>
-            <td>New Value:</td>
+            <td class="label">New Value:</td>
             <td><form action="/editcourse/" method="post">
                 {% csrf_token %}
                 <select name ="semester" id="semester">
-                <option value="fall">Fall</option>
-                <option value="spring">Spring</option>
-                <option value="summer">Summer</option>
-                <option value="winter">Winter</option>
+                    <option value="fall">Fall</option>
+                    <option value="spring">Spring</option>
+                    <option value="summer">Summer</option>
+                    <option value="winter">Winter</option>
                 </select>
                 <input type="submit"></form>
             </td>
         </tr>
-    <tr><td>Current Year:</td><td>{{ course.year }}</td></tr>
+
+    <tr><td class="label">Current Year:</td><td>{{ course.year }}</td></tr>
+
         <tr>
-            <td>New Value:</td>
+            <td class="label">New Value:</td>
             <td><form action="/editcourse/" method="post">
                 {% csrf_token %}
                 <input type="text" name="year"> <input type="submit"></form>
@@ -75,9 +89,11 @@
         </tr>
 </table>
 {{ message }}
+
 <form action="/editcourse/" method="post">
         {% csrf_token %}
         <button type = "submit" name="navigation" value="cancel">Cancel</button>
 </form>
+
 </body>
 </html>

@@ -13,10 +13,10 @@ class UserPageTest(TestCase):
         session["role"] = "admin"
         session["selecteduser"] = "esonnen@uwm.edu"
         session.save()
-        self.henryRitchie = MyUser("writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+        self.henryRitchie = MyUser(1,"writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
                                        "Milwaukee", "WI", 53026, "instructor")
         self.henryRitchie.save()
-        self.emmaSonnen = MyUser("esonnen@uwm.edu", "password", "Emma", "Sonnen", "5555555555", "1234 main st",
+        self.emmaSonnen = MyUser(1,"esonnen@uwm.edu", "password", "Emma", "Sonnen", "5555555555", "1234 main st",
                                  "Milwaukee", "WI", 53026, "admin")
 
         self.emmaSonnen.save()
@@ -117,7 +117,7 @@ class UserPageTest(TestCase):
         self.assertNotIn("selectedCourse", self.client.session, "Session has selected course saved at createuser.")
         self.assertNotIn("selectedSection", self.client.session, "Session has selected section saved at createuser.")
 
-    def test_PostEditUserNotAdmin(self):
+    def test_PostDeleteUserNotAdmin(self):
         session = self.client.session
         session["email"] = "ballen@uwm.edu"
         session["role"] = "ta"

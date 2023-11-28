@@ -41,7 +41,7 @@ class Section(models.Model):
     TYPE_CHOICES = [
         ("lecture", "Lecture"),
         ("grader", "Grader"),
-        ("section", "Section")
+        ("lab", "Lab")
     ]
     type = models.CharField(max_length=7, choices=TYPE_CHOICES, default="le", editable=True)
     location = models.CharField(max_length=50, default="defaultlocation", editable=True)
@@ -52,4 +52,4 @@ class Section(models.Model):
     assignedUser = models.ForeignKey(MyUser, on_delete=models.PROTECT, null=True)
 
     def __str__(self):
-        return str(self.sectionNumber) + " " + self.type
+        return str(self.sectionNumber) + " " + self.type.capitalize()

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import Course, MyUser, Section
+from .models import Section, MyUser, Course
 from django.http import HttpResponseRedirect
 from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection, func_Login, func_AlphabeticalMyUserList, func_UserAsDict, func_AlphabeticalCourseList, func_CourseAsDict, func_AscendingSectionList, func_SectionAsDict
 
@@ -110,7 +110,7 @@ class UserPage(View):
                 return redirect("/edituser/")
         if request.POST['navigation'] == "deleteuser":
             if request.session['role'] != 'admin':
-                return redirect('/userpage/')
+                return render(request, "userpage.html", {"message": "Only admins can delete users!","user": func_UserAsDict(request.session['selecteduser'])})
             else:
                 func_DeleteUser(request)
                 del request.session["selecteduser"]
@@ -239,18 +239,19 @@ class CoursePage(View):
                 return redirect("/directory/")
             if request.POST['navigation'] == "createsection":
                 if request.session['role'] != 'admin':
-                    return render(request, "courselist.html", {"message": "Only admins can create courses!"})
+                    return render(request, "coursepage.html", {"message": "Only admins can create sections!"})
                 else:
                     return redirect("/createsection/")
             if request.POST['navigation'] == "editcourse":
                 if request.session['role'] != 'admin':
                     return render(request, "coursepage.html", {"message": "Only admins can edit courses!",
-                                                             "course": func_UserAsDict(request.session['selectedcourse'])})
+                                                             "course": func_CourseAsDict(request.session['selectedcourse'])})
                 else:
                     return redirect("/editcourse/")
             if request.POST['navigation'] == "deletecourse":
                 if request.session['role'] != 'admin':
-                    return redirect('/coursepage/')
+                    return render(request, "coursepage.html", {"message": "Only admins can delete courses!",
+                                                               "course": func_CourseAsDict(request.session['selectedcourse'])})
                 else:
                     func_DeleteCourse(request)
                     del request.session["selectedcourse"]
@@ -362,10 +363,9 @@ class SectionPage(View):
                 return render(request, "sectionpage.html", {"message": "Only admins can edit sections!","section": func_SectionAsDict(request.session['selectedsection'])})
             else:
                 return redirect("/editsection/")
-            return redirect("/editsection/")
         if request.POST['navigation'] == "deletesection":
             if request.session['role'] != 'admin':
-                return redirect('/sectionpage/')
+                return render(request, "sectionpage.html", {"message": "Only admins can delete sections!","user": func_SectionAsDict(request.session['selectedsection'])})
             else:
                 func_DeleteSection(request)
                 del request.session["selectedsection"]
@@ -434,7 +434,9 @@ class EditSection(View):
                 del request.session["selectedcourse"]
                 del request.session["selectedsection"]
                 return redirect("/directory/")
-        message = func_EditUser(request)
+            if request.POST['navigation'] == "cancel":
+                return redirect('/sectionpage/')
+        message = func_EditSection(request)
         return render(request, "editsection.html",
                       {"section": func_SectionAsDict(request.session['selectedsection']), "message": message})
 
