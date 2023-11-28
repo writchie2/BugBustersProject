@@ -61,3 +61,79 @@ class TestCreateCourse(TestCase):
         self.assertTrue(validYear, f"The year '{self.validCourse.year}' should be considered valid.")
         invalidYear = func_ValidateYear(self.invalidCourse.year)
         self.assertFalse(invalidYear, f"The year '{self.invalidCourse.year}' should be considered invalid.")
+
+class ValidateCourseNameTest(TestCase):
+    def test_Valid(self):
+        result = func_ValidateCourseName("Intro To Software Engineering")
+        self.assertTrue(result, "Intro To Software Engineering returns False (Invalid).")
+        result = func_ValidateCourseName("Computer Architecture")
+        self.assertTrue(result, "Computer Architecture returns False (Invalid).")
+        result = func_ValidateCourseName("Survey Of College Math")
+        self.assertTrue(result, "Survey of College Math returns False (Invalid).")
+
+    def test_Empty(self):
+        result = func_ValidateCourseName("")
+        self.assertFalse(result, "Empty name returns True (Valid).")
+
+    def test_HasNumbers(self):
+        result = func_ValidateCourseName("12 Computer")
+        self.assertFalse(result, "Name with only numbers returns True (Valid).")
+
+
+
+    def test_IncorrectSpacing(self):
+        result = func_ValidateCourseName(" Math 101")
+        self.assertFalse(result, "Name with leading space returns True (Valid).")
+        result = func_ValidateCourseName("Computer Science ")
+        self.assertFalse(result, "Name with trailing space returns True (Valid).")
+        result = func_ValidateCourseName("Computers   Yay")
+        self.assertFalse(result, "Name with more than one inner space returns True (Valid).")
+
+    def test_invalidArg(self):
+        result = func_ValidateCourseName(1)
+        self.assertFalse(result, "Name that is a string returns True (Valid).")
+        result = func_ValidateCourseName(2.5)
+        self.assertFalse(result, "Name number that is a float returns True (Valid).")
+
+
+class ValidateDepartmentTests(TestCase):
+    def test_Valid(self):
+        result = func_ValidateDepartment("COMPSCI")
+        self.assertTrue(result, "COMPSCI returns False (Invalid).")
+        result = func_ValidateDepartment("ANTHRO")
+        self.assertTrue(result, "ANTHRO returns False (Invalid).")
+        result = func_ValidateDepartment("PHYSICS")
+        self.assertTrue(result, "PHYSICS returns False (Invalid).")
+
+    def test_Empty(self):
+        result = func_ValidateDepartment("")
+        self.assertFalse(result, "Empty department returns True (Valid).")
+
+    def test_HasNumbers(self):
+        result = func_ValidateDepartment("12COMPSCI")
+        self.assertFalse(result, "Department with numbers returns True (Valid).")
+    def test_HasLowerCase(self):
+        result = func_ValidateDepartment("compsci")
+        self.assertFalse(result, "Department with lowercase letters returns True (Valid).")
+
+    def test_IncorrectSpacing(self):
+        result = func_ValidateDepartment(" MATH")
+        self.assertFalse(result, "Department with leading space returns True (Valid).")
+        result = func_ValidateDepartment("COMPSCI ")
+        self.assertFalse(result, "Department with trailing space returns True (Valid).")
+        result = func_ValidateDepartment("GEO  SCI")
+        self.assertFalse(result, "Department with more than one inner space returns True (Valid).")
+
+    def test_invalidArg(self):
+        result = func_ValidateDepartment(1)
+        self.assertFalse(result, "Department that is a string returns True (Valid).")
+        result = func_ValidateDepartment(2.5)
+        self.assertFalse(result, "Department number that is a float returns True (Valid).")
+
+class ValidateCourseNumberTests:
+    pass
+
+class ValidateSemesterTests:
+    pass
+class ValidateYearTests:
+    pass

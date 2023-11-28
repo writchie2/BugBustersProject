@@ -70,8 +70,8 @@ class CreateCourseViewTest(TestCase):
         self.assertNotIn("selectedSection", self.client.session, "Session has selected section saved at courselist.")
 
     def test_CreateCourseValid(self):
-        response = self.client.post("/createuser/",
-                                    {"name": "Intro to Software Engineering",
+        response = self.client.post("/createcourse/",
+                                    {"coursename": "Intro to Software Engineering",
                                      "department": "COMPCSI",
                                      "coursenumber": 361,
                                      "semester": "spring",
@@ -83,11 +83,11 @@ class CreateCourseViewTest(TestCase):
         self.assertEqual(newCourse.courseNumber, 361, "Course saved with wrong coursenumber")
         self.assertEqual(newCourse.semester, "spring", "User saved with wrong email")
         self.assertEqual(newCourse.year, 2023, "Course saved with wrong year")
-        self.assertTemplateUsed(response, 'courselist.html')
+        self.assertTemplateUsed(response, 'createcourse.html')
 
 
     def test_CreateCourseInvalid(self):
-        response = self.client.post("/createuser/",
+        response = self.client.post("/createcourse/",
                                     {"name": "",
                                      "department": "COMPCSI",
                                      "coursenumber": 361,
@@ -95,5 +95,5 @@ class CreateCourseViewTest(TestCase):
                                      "year": 2023,
                                      }, follow=True)
         self.assertTemplateUsed(response, 'createcourse.html')
-        self.assertEqual(response.context["message"], "Invalid Course Name. Please try again.",
+        self.assertEqual(response.context["message"], "Please fill out all fields!",
                          "Error not played if nonunique usernames")

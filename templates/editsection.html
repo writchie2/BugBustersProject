@@ -110,13 +110,13 @@
     <tr>
         <td class="label">New Value:</td>
         <td>
-            <form action="/editcourse/" method="post">
+            <form action="/editsection/" method="post">
 
                 {% csrf_token %}
-                <select name="semester" id="semester">
+                <select name="type" id="type">
                     <option value="lecture">Lecture</option>
                     <option value="grader">Grader</option>
-                    <option value="section">Section</option>
+                    <option value="lab">Lab</option>
                 </select>
                 <input type="submit" value="Save" class="greenbutton"></form>
         </td>
