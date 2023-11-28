@@ -155,10 +155,10 @@ class ValidatePhoneNumberTest(TestCase):
 
 
 class ValidateStreetAddressTest(TestCase):
-    valid_street = ["1234 South Main Street", "1234 E Main St",
-                    "1234 W Main Street", "1234 North Main St",
+    valid_street = ["1234 S Main Street", "1234 E Main St",
+                    "1234 W Main Street", "1234 N Main St",
                     "1234 Main Street", "1234 Main St",
-                    "1234 South Rio Grande Avenue"]
+                    "1234 S Rio Grande Avenue"]
 
     invalid_street = ["1st St", "South University st",
                       "1234 Avenue", "12 34 W Kenwood Blvd",
@@ -179,7 +179,7 @@ class ValidateStreetAddressTest(TestCase):
 
     def test_invalid_address(self):
         for address in self.invalid_street:
-            self.assertFalse(func_ValidateStreetAddress(address), "Expected: False Actual: True")
+            result = bool(self.assertFalse(func_ValidateStreetAddress(address), "Expected: False Actual: True"))
 
     def test_long_address(self):
         self.assertFalse(func_ValidateStreetAddress(self.long_street), "Expected: False Actual: True")

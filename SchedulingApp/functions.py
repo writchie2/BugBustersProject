@@ -128,7 +128,35 @@ and create an object and returns a render of a page with a success message
 If a validator function fails then no object is created and a render is returned with a failure method.   
 """
 def func_CreateUser(request):
-    return redirect("/login")
+    email = request.POST.get("email", "")
+    pw = request.POST.get("password", "")
+    pwc = request.POST.get("confirmedpassword", "")
+    first = request.POST.get("firstname", "")
+    last = request.POST.get("lastname", "")
+    phone = request.POST.get("phonenumber", "")
+    street = request.POST.get("streetaddress", "")
+    city = request.POST.get("city", "")
+    state = request.POST.get("state", "")
+    zip = request.POST.get("zipcode", "")
+    role = request.POST.get("role", "")
+
+    if (
+        func_ValidateEmail(email) and func_ValidatePassword(pw, pwc) and
+        func_ValidateFirstName(first) and func_ValidateLastName(last) and
+        func_ValidatePhoneNumber(phone) and func_ValidateStreetAddress(street) and
+        func_ValidateCity(city) and func_ValidateState(state) and
+        func_ValidateZipCode(zip) and func_ValidateRole(role)
+    ):
+        user = MyUser.objects.create(email=email, password=pw,
+                                     firstName=first, lastName=last,
+                                     phoneNumber=phone, streetAddress=street,
+                                     city=city, state=state,
+                                     zipcode=zip, role=role)
+        #messages.success(request, "User created successfully!")  might be good to have?
+        return render(request, "dashboard.html", {'user': user})
+    else:
+        #messages.error(request, "Unable to create user. Please check your input")
+        return redirect("/login")
 def func_EditUser(request):
     if 'firstname' in request.POST:
         if func_ValidateFirstName(request.POST['firstname']):
@@ -273,7 +301,7 @@ def func_ValidatePhoneNumber(phoneNumber):
     return bool(match1) or bool(match2) or bool(match3) or bool(match4)
 
 def func_ValidateStreetAddress(streetAddress):
-    pattern = re.compile(r'^\d+\s+[a-zA-Z\s]{1,50}$')
+    pattern = re.compile((r'^\d+\s*[NSEW]?(\s+[a-zA-Z\s]+)\s+[a-zA-Z]$'))
     match = pattern.match(streetAddress)
     return bool(match)
 
@@ -299,8 +327,7 @@ def func_ValidateState(state):
     return state in valid_state
 
 def func_ValidateZipCode(zip):
-    pattern = re.compile(r'^\d{5}$')
-    return bool(pattern.match(zip))
+    return isinstance(zip, int) and 10000 <= zip <= 99999
 def func_ValidateRole(role):
     ROLE_CHOICES = [
         ("admin", "Admin"),
