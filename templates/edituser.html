@@ -73,7 +73,7 @@
         </tr>
     <tr><td class="label">Current State:</td><td>{{user.state}}</td></tr>
         <tr>
-            <td>New Value:</td>
+            <td class="label">New Value:</td>
             <td><form action="/edituser/" method="post">
                 {% csrf_token %}
                 <input type="text" name="state"> <input type="submit" value="Save" class="greenbutton"></form>
