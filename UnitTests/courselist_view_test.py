@@ -37,18 +37,18 @@ class CourseListViewTest(TestCase):
         courseList = response.context["list"]
         self.assertEqual(courseList[0].get("title"), self.swe.__str__(), "Title displayed does not match stored value")
         self.assertEqual(courseList[0].get("id"), self.swe.id, "ID displayed doesn't match stored value ")
-        self.assertEqual(courseList[0].get("semester"), self.swe.semester, "Semester displayed doesn't match stored value")
+        self.assertEqual(courseList[0].get("semester"), self.swe.semester.capitalize(), "Semester displayed doesn't match stored value")
         self.assertEqual(courseList[0].get("year"), self.swe.year, "Year displayed doesn't match stored value")
 
         self.assertEqual(courseList[1].get("title"), self.ca.__str__(), "Title displayed does not match stored value")
         self.assertEqual(courseList[1].get("id"), self.ca.id, "ID displayed doesn't match stored value ")
-        self.assertEqual(courseList[1].get("semester"), self.ca.semester,
+        self.assertEqual(courseList[1].get("semester"), self.ca.semester.capitalize(),
                          "Semester displayed doesn't match stored value")
         self.assertEqual(courseList[1].get("year"), self.ca.year, "Year displayed doesn't match stored value")
 
         self.assertEqual(courseList[2].get("title"), self.geo.__str__(), "Title displayed does not match stored value")
         self.assertEqual(courseList[2].get("id"), self.geo.id, "ID displayed doesn't match stored value ")
-        self.assertEqual(courseList[2].get("semester"), self.geo.semester,
+        self.assertEqual(courseList[2].get("semester"), self.geo.semester.capitalize(),
                          "Semester displayed doesn't match stored value")
         self.assertEqual(courseList[2].get("year"), self.geo.year, "Year displayed doesn't match stored value")
 

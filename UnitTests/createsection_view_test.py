@@ -5,12 +5,13 @@ from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
 
-class CreateCourseViewTest(TestCase):
+class CreateSectionViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         session = self.client.session
         session["email"] = "writchie@uwm.edu"
         session["role"] = "admin"
+        session["selectedcourse"] = 1
         session.save()
         self.swe = Course(1, "SWE", "COMPSCI", 361, "spring", 2023)
         self.swe.save()
@@ -23,7 +24,7 @@ class CreateCourseViewTest(TestCase):
     def test_GetSessionVars(self):
         response = self.client.get('/createsection/')
         self.assertNotIn("selecteduser", self.client.session, "Session has selected user saved at createsection screen.")
-        self.assertEqual("selectedcourse", 1,
+        self.assertEqual(self.client.session["selectedcourse"], 1,
                          "selectedcourse  not saved when navigating to createsection")
         self.assertNotIn("selectedsection", self.client.session,
                          "Session has selected section saved at createsection screen.")
@@ -68,31 +69,30 @@ class CreateCourseViewTest(TestCase):
                          "Email not saved when navigating to courselist")
         self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to courselist")
         self.assertNotIn("selectedUser", self.client.session, "Session has selected user saved at courselist.")
-        self.assertEqual("selectedcourse", 1,
+        self.assertEqual(self.client.session["selectedcourse"], 1,
                          "selectedcourse  not saved when canceling section creation")
         self.assertNotIn("selectedSection", self.client.session, "Session has selected section saved at courselist.")
 
-    def test_CreateCourseValid(self):
+    def test_CreateSectionValid(self):
         response = self.client.post("/createsection/",
                                     {"sectionnumber": 100,
                                      "type": "lecture",
-                                     "location": "Chemistry BLDG 180",
+                                     "location": "180 Chemistry BLDG",
                                      "daysmeeting": "TH",
                                      "starttime": "09:30",
                                      "endtime": "10:20",
-                                     "course": self.client.session['selectedcourse'],
                                      }, follow=True)
         newSection = Section.objects.filter().first()
         self.assertEqual(newSection.sectionNumber, 100, "Section saved with wrong sectionnumber")
         self.assertEqual(newSection.type, "lecture", "Section saved with wrong type")
-        self.assertEqual(newSection.location, "Chemistry BLDG 180", "Section saved with wrong location")
+        self.assertEqual(newSection.location, "180 Chemistry BLDG", "Section saved with wrong location")
         self.assertEqual(newSection.daysMeeting, "TH", "Section saved with wrong daysMeeting")
         self.assertEqual(newSection.startTime, "09:30", "Section saved with wrong startTime")
         self.assertEqual(newSection.endTime, "10:20", "Section saved with wrong endTime")
         self.assertEqual(newSection.course, self.swe, "Section saved with wrong course")
-        self.assertTemplateUsed(response, 'coursepage.html')
+        self.assertTemplateUsed(response, 'createsection.html')
 
-    def test_CreateCourseInvalid(self):
+    def test_CreateSectionInvalid(self):
         response = self.client.post("/createsection/",
                                     {"sectionnumber": -100,
                                      "type": "lecture",
@@ -103,5 +103,5 @@ class CreateCourseViewTest(TestCase):
                                      "course": self.client.session['selectedcourse'],
                                      }, follow=True)
         self.assertTemplateUsed(response, 'createsection.html')
-        self.assertEqual(response.context["message"], "Invalid Section Number. Please try again.",
+        self.assertEqual(response.context["message"], "Invalid Section Number. Must be between 100 and 999 and unique!",
                          "Error not played if nonunique usernames")

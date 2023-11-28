@@ -8,7 +8,7 @@ from django.test import TestCase, Client
 class UserAsDictTest(TestCase):
 
     def setUp(self):
-        self.henry = MyUser("writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+        self.henry = MyUser(1,"writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
                                    "Milwaukee", "WI", 53026, "admin")
         self.henry.save()
 
@@ -22,7 +22,7 @@ class UserAsDictTest(TestCase):
         self.assertEqual(dict.get("city"), self.henry.city, "city is not the same")
         self.assertEqual(dict.get("state"), self.henry.state, "state is not the same")
         self.assertEqual(dict.get("zipcode"), self.henry.zipcode, "zipcode is not the same")
-        self.assertEqual(dict.get("role"), self.henry.role, "role is not the same")
+        self.assertEqual(dict.get("role"), self.henry.role.capitalize(), "role is not the same")
         self.assertEqual(dict.get("fullname"), self.henry.__str__(), "fullname is not the same")
     def test_DictionaryUnCreatedUser(self):
         with self.assertRaises(Exception):

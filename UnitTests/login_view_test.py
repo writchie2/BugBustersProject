@@ -7,7 +7,7 @@ from django.test import TestCase, Client, RequestFactory
 class LoginViewTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.henry = MyUser("writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+        self.henry = MyUser(1,"writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
                             "Milwaukee", "WI", 53026, "admin")
         self.henry.save()
 

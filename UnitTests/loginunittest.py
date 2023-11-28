@@ -9,7 +9,7 @@ class LoginTest(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.henry = MyUser("writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st", "Milwaukee", "WI", 53026, "ad")
+        self.henry = MyUser(1,"writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st", "Milwaukee", "WI", 53026, "ad")
         self.henry.save()
     def test_ValidLogin(self):
         response = func_Login(self.factory.post("/", {"email":"writchie@uwm.edu","password":"password"}, follow=True))

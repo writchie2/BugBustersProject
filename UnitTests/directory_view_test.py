@@ -12,19 +12,19 @@ class DirectoryViewTest(TestCase):
         session["email"] = "writchie@uwm.edu"
         session["role"] = "admin"
         session.save()
-        self.emmaSonnen = MyUser("esonnen@uwm.edu", "password", "Emma", "Sonnen", "5555555555", "1234 main st",
+        self.emmaSonnen = MyUser(1,"esonnen@uwm.edu", "password", "Emma", "Sonnen", "5555555555", "1234 main st",
                                      "Milwaukee", "WI", 53026, "admin")
 
         self.emmaSonnen.save()
-        self.henryRitchie = MyUser("writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+        self.henryRitchie = MyUser(2,"writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
                                        "Milwaukee", "WI", 53026, "admin")
 
         self.henryRitchie.save()
-        self.sarahCramer = MyUser("scramer@uwm.edu", "password", "Sarah", "Cramer", "5555555555", "1234 main st",
+        self.sarahCramer = MyUser(3,"scramer@uwm.edu", "password", "Sarah", "Cramer", "5555555555", "1234 main st",
                                       "Milwaukee", "WI", 53026, "instructor")
 
         self.sarahCramer.save()
-        self.bobAllen = MyUser("ballen@uwm.edu", "password", "Bob", "Allen", "5555555555", "1234 main st",
+        self.bobAllen = MyUser(4,"ballen@uwm.edu", "password", "Bob", "Allen", "5555555555", "1234 main st",
                                    "Milwaukee", "WI", 53026, "ta")
 
         self.bobAllen.save()
@@ -48,22 +48,22 @@ class DirectoryViewTest(TestCase):
         self.assertEqual(userList[0].get("lastname"), "Allen", "First alphabetical last name is not Allen")
         self.assertEqual(userList[0].get("fullname"), "Bob Allen", "First alphabetical name is not Bob Allen")
         self.assertEqual(userList[0].get("email"), "ballen@uwm.edu", "First alphabetical email is not ballen@uwm.edu")
-        self.assertEqual(userList[0].get("role"), "ta", "First alphabetical role is not ta")
+        self.assertEqual(userList[0].get("role"), "Ta", "First alphabetical role is not ta")
 
         self.assertEqual(userList[1].get("lastname"), "Cramer", "First alphabetical last name is not Cramer")
         self.assertEqual(userList[1].get("fullname"), "Sarah Cramer", "First alphabetical name is not Sarah Cramer")
         self.assertEqual(userList[1].get("email"), "scramer@uwm.edu", "First alphabetical email is not scramer@uwm.edu")
-        self.assertEqual(userList[1].get("role"), "instructor", "First alphabetical role is not instructor")
+        self.assertEqual(userList[1].get("role"), "Instructor", "First alphabetical role is not instructor")
 
         self.assertEqual(userList[2].get("lastname"), "Ritchie", "First alphabetical last name is not Ritchie")
         self.assertEqual(userList[2].get("fullname"), "Henry Ritchie", "First alphabetical name is not Henry Ritchie")
         self.assertEqual(userList[2].get("email"), "writchie@uwm.edu", "First alphabetical email is not writchie@uwm.edu")
-        self.assertEqual(userList[2].get("role"), "admin", "First alphabetical role is not admin")
+        self.assertEqual(userList[2].get("role"), "Admin", "First alphabetical role is not admin")
 
         self.assertEqual(userList[3].get("lastname"), "Sonnen", "First alphabetical last name is not Sonnen")
         self.assertEqual(userList[3].get("fullname"), "Emma Sonnen", "First alphabetical name is not Emma Sonnen")
         self.assertEqual(userList[3].get("email"), "esonnen@uwm.edu", "First alphabetical email is not esonnen@uwm.edu")
-        self.assertEqual(userList[3].get("role"), "admin", "First alphabetical role is not admin")
+        self.assertEqual(userList[3].get("role"), "Admin", "First alphabetical role is not admin")
 
     def test_PostLogout(self):
         response = self.client.post("/directory/", {"navigation": "logout"}, follow=True)

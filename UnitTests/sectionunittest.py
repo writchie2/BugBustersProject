@@ -11,29 +11,33 @@ class ValidateSectionNumberTest(TestCase):
         self.newCourse.save()
         self.newSection = Section.objects.create(id=2, sectionNumber=200, type="section", location="1020 Kenwood", daysMeeting="M", startTime="15:00", endTime="16:00", assignedUser=None, course=self.newCourse)
         self.newSection.save()
+        self.client = Client()
+        session = self.client.session
+        session['selectedcourse'] = 1
+        session.save()
     def test_ValidNumber(self):
-        result = func_ValidateSectionNumber(100)
+        result = func_ValidateSectionNumber(100, self.client.session['selectedcourse'])
         self.assertTrue(result, "Section number of 100 returns False (Invalid).")
-        result = func_ValidateSectionNumber(201)
+        result = func_ValidateSectionNumber(201, self.client.session['selectedcourse'])
         self.assertTrue(result, "Section number of 1 returns False (Invalid).")
-        result = func_ValidateSectionNumber(999)
+        result = func_ValidateSectionNumber(999, self.client.session['selectedcourse'])
         self.assertTrue(result, "Section number of 999 returns False (Invalid).")
     def test_NonUnique(self):
-        result = func_ValidateSectionNumber(200)
+        result = func_ValidateSectionNumber(200, self.client.session['selectedcourse'])
         self.assertFalse(result, "Section number that is not unique returns True (Valid).")
     def test_Zero(self):
-        result = func_ValidateSectionNumber(20)
+        result = func_ValidateSectionNumber(20, self.client.session['selectedcourse'])
         self.assertFalse(result, "Section number of 0 returns True (Valid).")
     def test_Negative(self):
-        result = func_ValidateSectionNumber(-1)
+        result = func_ValidateSectionNumber(-1, self.client.session['selectedcourse'])
         self.assertFalse(result, "Section number of -1 returns True (Valid).")
     def test_TenThousand(self):
-        result = func_ValidateSectionNumber(10000)
+        result = func_ValidateSectionNumber(10000, self.client.session['selectedcourse'])
         self.assertFalse(result, "Section number of 10000 returns True (Valid).")
     def test_invalidArg(self):
-        result = func_ValidateSectionNumber("Bob")
+        result = func_ValidateSectionNumber("Bob", self.client.session['selectedcourse'])
         self.assertFalse(result, "Section number that is a string returns True (Valid).")
-        result = func_ValidateSectionNumber(2.5)
+        result = func_ValidateSectionNumber(2.5, self.client.session['selectedcourse'])
         self.assertFalse(result, "Section number that is a float returns True (Valid).")
 
 

@@ -217,13 +217,88 @@ def func_EditUser(request):
 def func_DeleteUser(request):
     return redirect("/login")
 def func_CreateCourse(request):
-    return redirect("/login")
+    if ('coursename' not in request.POST or 'department' not in request.POST or
+            'coursenumber' not in request.POST
+            or 'semester' not in request.POST or 'year' not in request.POST):
+        return "Please fill out all fields!"
+    newCourseName = request.POST['coursename']
+    newCourseDepartment = request.POST['department']
+    newCourseNumber = int(request.POST['coursenumber'])
+    newCourseSemester = request.POST['semester']
+    newCourseYear = int(request.POST['year'])
+    if func_ValidateCourseName(newCourseName) == False:
+        return "Invalid Course Name. Only letters and single spaces are allowed."
+    if func_ValidateDepartment(newCourseDepartment) == False:
+        return "Invalid Department. All Departments come from the UWM course cataloge."
+    if func_ValidateCourseNumber(newCourseNumber, newCourseDepartment) == False:
+        return "Invalid Course Number. Must be between 100 and 999 and unique."
+    if func_ValidateSemester(newCourseSemester) == False:
+        return "Invalid semester. Acceptable values are fall, spring, winter, and summer"
+    if func_ValidateYear(newCourseYear) == False:
+        return "Invalid Year. Must be later than 1956 and cannot be greater than 2025"
+    newCourse = Course.objects.create(name=newCourseName, department=newCourseDepartment,
+                                      courseNumber=newCourseNumber, semester=newCourseSemester,
+                                      year=newCourseYear)
+    newCourse.save()
+    return "Course created successfully!"
+
 def func_EditCourse(request):
-    return redirect("/login")
+    chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
+    if 'coursename' in request.POST:
+        newCourseName = request.POST["coursename"]
+        if func_ValidateCourseName(newCourseName) == False:
+            return "Invalid Course Name. Only letters and single spaces are allowed."
+        else:
+            chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
+            chosen.name = newCourseName
+            chosen.save()
+            return "Course Name edited successfully!"
+
+    if 'department' in request.POST:
+        newDepartment = request.POST["department"]
+        if func_ValidateDepartment(newDepartment) == False:
+            return "Invalid Department. All Departments come from the UWM course cataloge."
+        else:
+            chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
+            chosen.department = newDepartment
+            chosen.save()
+            return "Department edited successfully!"
+
+    if 'coursenumber' in request.POST:
+        newCourseNumber = int(request.POST["coursenumber"])
+        chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
+        if func_ValidateCourseNumber(newCourseNumber, chosen.department) == False:
+            return "Invalid Course Number. Must be between 100 and 999 and unique."
+        else:
+            chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
+            chosen.courseNumber = newCourseNumber
+            chosen.save()
+            return "Course Number edited successfully!"
+
+    if 'semester' in request.POST:
+        newSemester = request.POST["semester"]
+        if func_ValidateSemester(newSemester) == False:
+            return "Invalid semester. Acceptable values are fall, spring, winter, and summer"
+        else:
+            chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
+            chosen.semester = newSemester
+            chosen.save()
+            return "Semester edited successfully!"
+
+    if 'year' in request.POST:
+        newYear = int(request.POST["year"])
+        if func_ValidateYear(newYear) == False:
+            return "Invalid Year. Must be later than 1956 and cannot be greater than 2025"
+        else:
+            chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
+            chosen.year = newYear
+            chosen.save()
+            return "Year edited successfully!"
+
+
 def func_DeleteCourse(request):
-    return redirect("/login")
+    Course.objects.filter(id=request.session['selectedcourse']).first().delete()
 def func_CreateSection(request):
-    #return request.POST['sectionnumber'] + request.POST['location'] + request.POST['starttime'] + request.POST['endtime'] + request.POST['daysmeeting'] + request.POST['type']
     if ('sectionnumber' not in request.POST or 'location' not in request.POST or
             'starttime' not in request.POST
             or'endtime' not in request.POST or 'type' not in request.POST):
@@ -236,7 +311,7 @@ def func_CreateSection(request):
     newStartTime = request.POST["starttime"]
     newEndTime = request.POST["endtime"]
     newType = request.POST['type']
-    if func_ValidateSectionNumber(newSectionNumber) == False:
+    if func_ValidateSectionNumber(newSectionNumber, request.session['selectedcourse']) == False:
         return "Invalid Section Number. Must be between 100 and 999 and unique!"
     if func_ValidateDaysMeeting(newDaysMeeting) == False:
         return "Invalid Days Meeting. Must be in order MTWHFSU, 'No Meeting Pattern' cannot be selected with other days."
@@ -259,13 +334,13 @@ def func_EditSection(request):
     chosen = Section.objects.filter(id=request.session['selectedsection']).first()
     if 'sectionnumber' in request.POST:
         newSectionNumber = int(request.POST["sectionnumber"])
-        if func_ValidateSectionNumber(newSectionNumber) == False:
+        if func_ValidateSectionNumber(newSectionNumber, request.session['selectedcourse']) == False:
             return "Invalid Section Number. Must be between 100 and 999 and unique!"
         else:
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.sectionNumber = newSectionNumber
             chosen.save()
-            return("Section Number edited successfully!")
+            return "Section Number edited successfully!"
 
     if 'location' in request.POST:
         newLocation = request.POST["location"]
@@ -275,7 +350,7 @@ def func_EditSection(request):
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.location = newLocation
             chosen.save()
-            return ("Location edited successfully!")
+            return "Location edited successfully!"
 
     if 'daysmeeting' in request.POST:
         newDaysMeeting = ''
@@ -287,7 +362,7 @@ def func_EditSection(request):
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.daysMeeting= newDaysMeeting
             chosen.save()
-            return ("Days Meeting edited successfully!")
+            return "Days Meeting edited successfully!"
 
     if 'starttime' in request.POST:
         newStartTime = request.POST["starttime"]
@@ -297,7 +372,7 @@ def func_EditSection(request):
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.startTime= newStartTime
             chosen.save()
-            return ("Start Time edited successfully!")
+            return "Start Time edited successfully!"
 
     if 'endtime' in request.POST:
         newEndTime = request.POST["endtime"]
@@ -307,7 +382,7 @@ def func_EditSection(request):
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.endTime= newEndTime
             chosen.save()
-            return ("End Time edited successfully!")
+            return "End Time edited successfully!"
 
     if 'type' in request.POST:
         newType = request.POST['type']
@@ -317,7 +392,7 @@ def func_EditSection(request):
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.type= newType
             chosen.save()
-            return ("Type edited successfully!")
+            return "Type edited successfully!"
 
 def func_DeleteSection(request):
     Section.objects.filter(id=request.session['selectedsection']).first().delete()
@@ -426,23 +501,81 @@ def func_ValidateRole(role):
 Course validator functions used when creating or editing Course objects
 """
 def func_ValidateCourseName(name):
-    pass
+    if not isinstance(name, str):
+        return False
+    if name == '':
+        return False
+    if (all(c.isalpha() or c.isspace() for c in name)):
+        if (name[-1].isspace() or name[0].isspace()):
+            return False
+        else:
+            if name.strip().count('  ')+1 == len(name.split()):
+                if name.isalpha():
+                    return True
+                else:
+                    return False
+            else:
+                return True
+    else:
+        return False
 def func_ValidateDepartment(department):
-    pass
-def func_ValidateCourseNumber(courseNumber):
-    pass
-def func_ValidateSemester(Semester):
-    pass
+    if not isinstance(department, str):
+        return False
+    if department == '':
+        return False
+    if (all(c.isalpha() or c.isspace() for c in department)):
+        if (department[-1].isspace() or department[0].isspace()):
+            return False
+        else:
+            if department.strip().count('  ') + 1 == len(department.split()):
+                if department.isupper():
+                    return True
+                else:
+                    return False
+            else:
+                return True
+    else:
+        return False
+def func_ValidateCourseNumber(courseNumber, department):
+    if isinstance(courseNumber, int):
+        if courseNumber < 99 or courseNumber > 999:
+            return False
+        if (Course.objects.filter(courseNumber=courseNumber).first() == None):
+            return True
+        else:
+            for course in Course.objects.filter(courseNumber=courseNumber):
+                if course.department == department:
+                    return False
+            return True
+
+    else:
+        return False
+def func_ValidateSemester(semester):
+    if semester == 'fall' or semester == 'winter' or semester == 'spring' or semester == 'summer':
+        return True
+    else:
+        return False
 def func_ValidateYear(year):
-    pass
+    if isinstance(year, int):
+        if year < 1955 or year > 2026:
+            return False
+        else:
+            return True
+    else:
+        return False
 """
 Section validator functions used when creating or editing Section objects
 """
-def func_ValidateSectionNumber(sectionNumber):
+def func_ValidateSectionNumber(sectionNumber, courseID):
     if isinstance(sectionNumber, int):
         if sectionNumber < 99 or sectionNumber > 999:
             return False
-        if(Section.objects.filter(sectionNumber = sectionNumber).first() == None):
+        if(Section.objects.filter(sectionNumber=sectionNumber).first() == None):
+            return True
+        else:
+            for section in Section.objects.filter(sectionNumber=sectionNumber):
+                if section.course == Course.objects.get(id=courseID):
+                    return False
             return True
 
     else:
@@ -450,7 +583,7 @@ def func_ValidateSectionNumber(sectionNumber):
 def func_ValidateLocation(location):
     if not isinstance(location, str):
         return False
-    location_pattern = "^([A-Z]?)(\\d{1,}) [a-zA-Z0-9\\s]"
+    location_pattern = "^([A-Z]?)(\\d{1,})([A-Z]?) [a-zA-Z0-9\\s]"
     match = re.match(location_pattern, location)
     if (match != None):
         if (location[-1].isspace()  ):
