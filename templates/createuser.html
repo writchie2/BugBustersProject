@@ -30,7 +30,8 @@
 </div>
 <br>
 <br>
-<form action="/createuser/" method="post" id="loginform">
+{{ message }}
+<form action="/createuser/" method="post">
     {% csrf_token %}
     <table id="myTable">
         <tr>
@@ -85,8 +86,7 @@
     </table>
     <input type="submit" value="Create" class="greenbutton">
 </form>
-{{ message }}
-<form action="/createuser/" method="post" id="loginform">
+<form action="/createuser/" method="post">
     {% csrf_token %}
     <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="Cancel" class="redbutton">
         Cancel

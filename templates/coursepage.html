@@ -34,17 +34,12 @@
     <form action="/coursepage/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="createsection" class="greenbutton">Create New Section</button>
-    </form>
-    <form action="/coursepage/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="editcourse" class="bluebutton">Edit This Course</button>
-    </form>
-    <form action="/coursepage/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="deletecourse" class="redbutton">Delete Course</button>
     </form>
 {% endif %}
-
 <table id="myTable">
     <tr>
         <td class="label">Course:</td>
@@ -54,31 +49,29 @@
         <td class="label">Semester:</td>
         <td>{{ course.semester }} {{ course.year }}</td>
     </tr>
-</table>
-
-Assigned Users
-<table id="myTable">
     <tr>
-        {% for user in course.users %}
-            <tr>
-                <td>{{ user.fullname }}</td>
-            </tr>
-        {% endfor %}
+        <td class="label" colspan="2">Assigned Users</td>
     </tr>
-</table>
-Sections
-<table id="myTable">
+    {% for user in course.users %}
+        <tr>
+            <td>{{ user.fullname }}</td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td class="label" colspan="2">Sections</td>
+        <td></td>
+    </tr>
     {% for section in course.sections %}
         <tr>
-
-            <td class="label">{{ section.title }}</td>
+            <td>{{ section.title }}</td>
             <td>
                 <form action="/coursepage/" method="post">
                     {% csrf_token %}
-                    <button type="submit" name="selectedsection" class="bluebutton" value={{ section.id }}>View Section</button>
+                    <button type="submit" name="selectedsection" class="bluebutton" value={{ section.id }}>View
+                        Section
+                    </button>
                 </form>
             </td>
-
         </tr>
     {% endfor %}
 </table>

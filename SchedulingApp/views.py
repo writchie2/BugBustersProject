@@ -35,6 +35,7 @@ class Dashboard(View):
                 del request.session['selectedcourse']
             if 'selectedsection' in request.session:
                 del request.session['selectedsection']
+
             return render(request, "dashboard.html", {"user":func_UserAsDict(request.session['email'])})
         else:
             return redirect("/")
