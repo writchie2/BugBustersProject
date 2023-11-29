@@ -30,6 +30,7 @@
 </div>
 <br>
 <br>
+{{ message }}
 <table>
     <tr>
         <td class="label">Current Course Name</td>
@@ -102,7 +103,6 @@
         </td>
     </tr>
 </table>
-{{ message }}
 <form action="/editcourse/" method="post">
     {% csrf_token %}
     <button type="submit" name="navigation" value="cancel" class="redbutton">Cancel</button>

@@ -10,7 +10,7 @@
 </head>
 <body id="wrapper">
 <div id="navlist">
-    <h1>Section Page - {{ section.sectionnumber }}. Assigned to {{ section.assigneduser.fullname }}</h1>
+    <h1>Section Page - {{ section.sectionnumber }}</h1>
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
@@ -33,19 +33,15 @@
 <form action="/sectionpage/" method="post">
     {% csrf_token %}
     <button type="submit" name="navigation" value="viewcourse" class="bluebutton">Back To Course</button>
-</form>
-{% if role == 'admin' %}
-    <form action="/sectionpage/" method="post">
+    {% if role == 'admin' %}
         {% csrf_token %}
         <button type="submit" name="navigation" value="editsection" class="bluebutton">Edit This Section</button>
-    </form>
-    <form action="/sectionpage/" method="post">
         {% csrf_token %}
         <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deletesection"
                 class="redbutton">Delete This Section
         </button>
-    </form>
-{% endif %}
+    {% endif %}
+</form>
 <table id="myTable">
     <tr>
         <td class="label">Section Number:</td>

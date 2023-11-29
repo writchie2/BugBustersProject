@@ -26,7 +26,7 @@ class Login(View):
 class Dashboard(View):
     def get(self, request):
         if "email" and "role" in request.session:
-            return render(request, "dashboard.html")
+            return render(request, "dashboard.html", {"user":func_UserAsDict(request.session['email'])})
         else:
             return redirect("/login/")
 
