@@ -11,29 +11,27 @@
 <body id="wrapper">
 <div id="navlist">
     <h1>Edit User</h1>
-    <form action="/dashboard/" method="post">
+    <form action="/edituser/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/edituser/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/edituser/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/edituser/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
 </div>
 <br>
 <br>
-
 <table id="myTable">
-
-    <tr><td>Current First Name:</td><td>{{user.firstname}}</td></tr>
+    <tr><td class="label">Current First Name:</td><td>{{user.firstname}}</td></tr>
         <tr>
             <td class="label">New Value:</td>
             <td><form action="/edituser/" method="post">
@@ -41,9 +39,7 @@
                 <input type="text" name="firstname"> <input type="submit" value="Save" class="greenbutton"></form>
             </td>
         </tr>
-
     <tr><td class="label">Current Last Name:</td><td>{{user.lastname}}</td></tr>
-
         <tr>
             <td class="label">New Value:</td>
             <td><form action="/edituser/" method="post">
@@ -51,19 +47,15 @@
                 <input type="text" name="lastname"> <input type="submit" value="Save" class="greenbutton"></form>
             </td>
         </tr>
-
     <tr><td class="label">Current Phone Number:</td><td>{{user.phonenumber}}</td></tr>
-
         <tr>
             <td class="label">New Value:</td>
             <td><form action="/edituser/" method="post">
                 {% csrf_token %}
-              
                 <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" name="phonenumber"> <input type="submit" value="Save" class="greenbutton"></form>
             </td>
         </tr>
     <tr><td class="label">Current Street Address:</td><td>{{user.streetaddress}}</td></tr>
-
         <tr>
             <td class="label">New Value:</td>
             <td><form action="/edituser/" method="post">
@@ -76,14 +68,12 @@
             <td class="label">New Value:</td>
             <td><form action="/edituser/" method="post">
                 {% csrf_token %}
-
                 <input type="text" name="city"> <input type="submit" value="Save" class="greenbutton"></form>
             </td>
         </tr>
     <tr><td class="label">Current State:</td><td>{{user.state}}</td></tr>
-
         <tr>
-            <td>New Value:</td>
+            <td class="label">New Value:</td>
             <td><form action="/edituser/" method="post">
                 {% csrf_token %}
                 <input type="text" name="state"> <input type="submit" value="Save" class="greenbutton"></form>
@@ -112,10 +102,9 @@
     </tr>
 </table>
 {{ message }}
-
 <form action="/edituser/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="cancel">Cancel</button>
+        <button type = "submit" name="navigation" value="cancel" class="redbutton">Cancel</button>
 </form>
 </body>
 </html>

@@ -51,7 +51,7 @@ class SectionCreateTest(TestCase):
                                 {"sectionnumber": '200', "type": 'le', "location": 'S195 Lubar Hall',
                                  "daysmeeting": 'T', "starttime": "14:30", "endtime": "16:20"}, follow=True)
         self.assertTemplateUsed(response, 'createsection.html')
-        self.assertEqual(response.context["message"], "Invalid Type. Must be lecture, section, or grader.",
+        self.assertEqual(response.context["message"], "Invalid Type. Must be lecture, lab, or grader.",
                      "Error message not displayed after section creation failure")
         self.assertEqual(None, Section.objects.filter(sectionNumber=200).first(), "Section added to database after invalid creation.")
 
@@ -208,7 +208,7 @@ class SectionEditTest(TestCase):
         editSection = Section.objects.filter(id=2).first()
         self.assertTemplateUsed(response, 'editsection.html')
         self.assertEqual(editSection.type, 'lecture', "Lecture edited when invalid")
-        self.assertEqual(response.context['message'], "Invalid Type. Must be lecture, section, or grader.")
+        self.assertEqual(response.context['message'], "Invalid Type. Must be lecture, lab, or grader.")
 
 class SectionDeleteTest(TestCase):
     def setUp(self):

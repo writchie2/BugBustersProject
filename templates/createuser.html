@@ -11,52 +11,86 @@
 <body id="wrapper">
 <div id="navlist">
     <h1>Create User</h1>
-    <form action="/dashboard/" method="post">
+    <form action="/createuser/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/createuser/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/createuser/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
-    <form action="/dashboard/" method="post">
+    <form action="/createuser/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
 </div>
 <br>
 <br>
-    <form action="/createuser/" method="post" id="loginform">
-        {% csrf_token %}
-        <table>
-            <tr><td>Email: </td><td><input type="email" name="email" placeholder="user@email.com" required></td></tr>
-            <tr><td>Password: </td><td><input type="password" name="password" required></td></tr>
-            <tr><td>Confirm password: </td><td><input type="password" name="confirmpassword" required></td></tr>
-            <tr><td>First name: </td><td><input type="text" name="firstname" required></td></tr>
-            <tr><td>Last name: </td><td><input type="text" name="lastname" required></td></tr>
-            <tr><td>Phone number: </td><td><input type="tel" name="phonenumber" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required></td></tr>
-            <tr><td>Street address: </td><td><input type="text" name="streetaddress" required></td></tr>
-            <tr><td>City: </td><td><input type="text" name="city" required></td></tr>
-            <tr><td>State: </td><td><input type="text" name="state" placeholder="CA, NY, FL, etc." required></td></tr>
-            <tr><td>Zipcode: </td><td><input type="text" name="zipcode" placeholder="#####" required></td></tr>
-            <tr><td>Role: </td><td><select name ="role" id="role" required>
+<form action="/createuser/" method="post" id="loginform">
+    {% csrf_token %}
+    <table id="myTable">
+        <tr>
+            <td class="label">Email:</td>
+            <td><input type="email" name="email" placeholder="user@email.com" required></td>
+        </tr>
+        <tr>
+            <td class="label">Password:</td>
+            <td><input type="password" name="password" required></td>
+        </tr>
+        <tr>
+            <td class="label">Confirm password:</td>
+            <td><input type="password" name="confirmpassword" required></td>
+        </tr>
+        <tr>
+            <td class="label">First name:</td>
+            <td><input type="text" name="firstname" required></td>
+        </tr>
+        <tr>
+            <td class="label">Last name:</td>
+            <td><input type="text" name="lastname" required></td>
+        </tr>
+        <tr>
+            <td class="label">Phone number:</td>
+            <td><input type="tel" name="phonenumber" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                       required></td>
+        </tr>
+        <tr>
+            <td class="label">Street address:</td>
+            <td><input type="text" name="streetaddress" required></td>
+        </tr>
+        <tr>
+            <td class="label">City:</td>
+            <td><input type="text" name="city" required></td>
+        </tr>
+        <tr>
+            <td class="label">State:</td>
+            <td><input type="text" name="state" placeholder="CA, NY, FL, etc." required></td>
+        </tr>
+        <tr>
+            <td class="label">Zipcode:</td>
+            <td><input type="text" name="zipcode" placeholder="#####" required></td>
+        </tr>
+        <tr>
+            <td class="label">Role:</td>
+            <td><select name="role" id="role" required>
                 <option value="admin">Admin</option>
                 <option value="instructor">Instructor</option>
                 <option value="ta">TA</option>
-            </select></td></tr>
-            </table>
-            <input type="submit" value="Create" class="greenbutton">
-    </form>
-    {{ message }}
-
-    <form action="/createuser/" method="post" id="loginform">
-
-        {% csrf_token %}
-        <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="Cancel" class="redbutton">Cancel</button>
-    </form>
+            </select></td>
+        </tr>
+    </table>
+    <input type="submit" value="Create" class="greenbutton">
+</form>
+{{ message }}
+<form action="/createuser/" method="post" id="loginform">
+    {% csrf_token %}
+    <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="Cancel" class="redbutton">
+        Cancel
+    </button>
+</form>
 </body>
 </html>
