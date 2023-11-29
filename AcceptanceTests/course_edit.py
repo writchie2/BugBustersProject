@@ -15,8 +15,15 @@ class EditCourseTest(TestCase):
         self.swe = Course(1, "Intro to Software Engineering", "COMPSCI", 361, "spring", 2023)
         self.swe.save()
 
-    def test_EditCourseNotAdmin(self):
-        pass
+    def test_GetEditCourseNotAdmin(self):
+        session = self.client.session
+        session["email"] = "tballen@uwm.edu"
+        session["role"] = "ta"
+        session.save()
+
+        response = self.client.get("/editcourse/", follow=True)
+        self.assertTemplateUsed(response, 'courselist.html', 'Non-admin able to access createcourse')
+
     def test_EditNameValid(self):
         response = self.client.post("/editcourse/", {"coursename": "Programming Languages"}, follow=True)
         self.swe = Course.objects.filter(id=1).first()
@@ -134,7 +141,7 @@ class EditCourseTest(TestCase):
                          "selected course not saved when editing semester")
         self.assertEqual(self.swe.semester, "spring",
                          "Semester edited in editcourse when invalid")
-        self.assertEqual(response.context["message"], "Invalid semester. Acceptable values are fall, spring, winter, and summer",
+        self.assertEqual(response.context["message"], "Invalid Semester. Acceptable values are fall, spring, winter, and summer",
                          "error message does not show for unsuccessful edit")
 
     def test_EditYearValid(self):

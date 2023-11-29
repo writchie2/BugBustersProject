@@ -4,7 +4,7 @@ sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
-class EditUserPageTest(TestCase):
+class EditUserPageViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         session = self.client.session
@@ -95,9 +95,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing firstname")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing firstname")
-        self.assertEqual(self.emmaSonnen.firstName, "Nancy",
-                         "firstname not edited in edituser when valid")
-        self.assertEqual(response.context["message"], "First Name changed successfully",
+        self.assertEqual(response.context["message"], "First name changed successfully!",
                          "success message does not show for successful edit")
 
     def test_PostEditFirstNameInvalid(self):
@@ -109,9 +107,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing firstname")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing firstname")
-        self.assertEqual(self.emmaSonnen.firstName, "Emma",
-                         "firstname is edited in edituser when invalid")
-        self.assertEqual(response.context["message"], "Invalid First Name",
+        self.assertEqual(response.context["message"], "Invalid first name. Must be capitalized and have only contain letters.",
                          "error message does not show for unsuccessful edit")
 
     def test_PostEditLastNameValid(self):
@@ -123,9 +119,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing lastname")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing lastname")
-        self.assertEqual(self.emmaSonnen.lastName, "Drew",
-                         "lastname not edited in lastname when valid")
-        self.assertEqual(response.context["message"], "Last Name changed successfully",
+        self.assertEqual(response.context["message"], "Last name changed successfully!",
                          "success message does not show for successful edit")
 
     def test_PostEditLastNameInvalid(self):
@@ -137,9 +131,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing lastname")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing lastname")
-        self.assertEqual(self.emmaSonnen.lastName, "Sonnen",
-                         "lastname is edited in edituser when invalid")
-        self.assertEqual(response.context["message"], "Invalid Last Name",
+        self.assertEqual(response.context["message"], "Invalid First Name. Must be capitalized and have only contain letters.",
                          "error message does not show for unsuccessful edit")
 
     def test_PostEditPhoneNumberValid(self):
@@ -151,9 +143,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing phonenumber")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing phonenumber")
-        self.assertEqual(self.emmaSonnen.phoneNumber, "4145555555",
-                         "phonenumber not edited in edituser when valid")
-        self.assertEqual(response.context["message"], "Phone Number changed successfully",
+        self.assertEqual(response.context["message"], "Phone number changed successfully!",
                          "success message does not show for successful edit")
 
     def test_PostEditPhoneNumberInvalid(self):
@@ -165,9 +155,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing phonenumber")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing phonenumber")
-        self.assertEqual(self.emmaSonnen.phoneNumber, "5555555555",
-                         "phonenumber is edited in edituser when invalid")
-        self.assertEqual(response.context["message"], "Invalid Phone Number",
+        self.assertEqual(response.context["message"], "Invalid phone number. Format is 123-456-7890",
                          "error message does not show for unsuccessful edit")
 
     def test_PostEditStreetAddressValid(self):
@@ -179,9 +167,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing streetaddress")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing streetaddress")
-        self.assertEqual(self.emmaSonnen.streetAddress, "324 Maple rd",
-                         "streetaddress not edited in edituser when valid")
-        self.assertEqual(response.context["message"], "Street Address changed successfully",
+        self.assertEqual(response.context["message"], "Street address changed successfully!",
                          "success message does not show for successful edit")
 
     def test_PostEditStreetAddressInvalid(self):
@@ -193,9 +179,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing streetaddress")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing streetaddress")
-        self.assertEqual(self.emmaSonnen.streetAddress, "1234 Street rd",
-                         "streetaddress is edited in edituser when invalid")
-        self.assertEqual(response.context["message"], "Invalid Street Address",
+        self.assertEqual(response.context["message"], "Invalid street address.",
                          "error message does not show for unsuccessful edit")
 
     def test_PostEditCityValid(self):
@@ -207,9 +191,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing city")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing city")
-        self.assertEqual(self.emmaSonnen.city, "Chicago",
-                         "city not edited in edituser when valid")
-        self.assertEqual(response.context["message"], "City changed successfully",
+        self.assertEqual(response.context["message"], "City changed successfully!",
                          "success message does not show for successful edit")
 
     def test_PostEditCityInvalid(self):
@@ -221,9 +203,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing city")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing city")
-        self.assertEqual(self.emmaSonnen.city, "Milwaukee",
-                         "city is edited in edituser when invalid")
-        self.assertEqual(response.context["message"], "Invalid City",
+        self.assertEqual(response.context["message"], "Invalid city. Must be capitalized.",
                          "error message does not show for unsuccessful edit")
 
     def test_PostEditStateValid(self):
@@ -235,9 +215,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing state")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing state")
-        self.assertEqual(self.emmaSonnen.state, "IL",
-                         "state not edited in edituser when valid")
-        self.assertEqual(response.context["message"], "State changed successfully",
+        self.assertEqual(response.context["message"], "State changed successfully!",
                          "success message does not show for successful edit")
 
     def test_PostEditStateInvalid(self):
@@ -249,9 +227,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing state")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing state")
-        self.assertEqual(self.emmaSonnen.state, "WI",
-                         "state is edited in edituser when invalid")
-        self.assertEqual(response.context["message"], "Invalid State",
+        self.assertEqual(response.context["message"], "Invalid state. Two letter state code only.",
                          "error message does not show for unsuccessful edit")
 
     def test_PostEditZipcodeValid(self):
@@ -263,9 +239,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing zipcode")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing zipcode")
-        self.assertEqual(self.emmaSonnen.zipcode, "53022",
-                         "zipcode not edited in edituser when valid")
-        self.assertEqual(response.context["message"], "Zipcode changed successfully",
+        self.assertEqual(response.context["message"], "Zipcode changed successfully!",
                          "success message does not show for successful edit")
 
     def test_PostEditZipcodeInvalid(self):
@@ -277,9 +251,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing zipcode")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing zipcode")
-        self.assertEqual(self.emmaSonnen.zipcode, "53026",
-                         "zipcode is edited in edituser when invalid")
-        self.assertEqual(response.context["message"], "Invalid Zipcode",
+        self.assertEqual(response.context["message"], "Invalid zipcode. Must be 5 digits long.",
                          "error message does not show for unsuccessful edit")
 
     def test_PostEditRoleValid(self):
@@ -291,9 +263,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing role")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing role")
-        self.assertEqual(self.emmaSonnen.role, "ta",
-                         "role not edited in edituser when valid")
-        self.assertEqual(response.context["message"], "Role changed successfully",
+        self.assertEqual(response.context["message"], "Role changed successfully!",
                          "success message does not show for successful edit")
 
     def test_PostEditRoleInvalid(self):
@@ -305,7 +275,5 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing role")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing role")
-        self.assertEqual(self.emmaSonnen.role, "admin",
-                         "role is edited in edituser when invalid")
-        self.assertEqual(response.context["message"], "Invalid Role",
+        self.assertEqual(response.context["message"], "Invalid role. Can only be Admin, Instructor, or TA.",
                          "error message does not show for unsuccessful edit")

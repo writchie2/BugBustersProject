@@ -41,6 +41,8 @@ class Dashboard(View):
             return redirect("/")
 
     def post(self, request):
+        if 'email' not in request.session:
+            return redirect('/')
         if request.POST['navigation'] == "logout":
             request.session.flush()
             return redirect("/")
@@ -71,6 +73,8 @@ class Directory(View):
 
 
     def post(self, request):
+        if 'email' not in request.session:
+            return redirect('/')
         if 'navigation' in request.POST:
             if request.POST['navigation'] == "logout":
                 request.session.flush()
@@ -108,6 +112,8 @@ class UserPage(View):
             return redirect("/")
 
     def post(self, request):
+        if 'email' not in request.session:
+            return redirect('/')
         if request.POST['navigation'] == "logout":
             request.session.flush()
             return redirect("/")
@@ -150,6 +156,8 @@ class CreateUser(View):
         else:
             return redirect("/")
     def post(self, request):
+        if 'email' not in request.session:
+            return redirect('/')
         if 'navigation' in request.POST:
             if request.POST['navigation'] == "logout":
                 request.session.flush()
@@ -183,6 +191,8 @@ class EditUser(View):
             return redirect("/")
 
     def post(self, request):
+        if 'email' not in request.session:
+            return redirect('/')
         if 'navigation' in request.POST:
             if request.POST['navigation'] == "logout":
                 request.session.flush()
@@ -220,6 +230,8 @@ class CourseList(View):
 
 
     def post(self, request):
+        if 'email' not in request.session:
+            return redirect('/')
         if 'navigation' in request.POST:
             if request.POST['navigation'] == "logout":
                 request.session.flush()
@@ -257,6 +269,8 @@ class CoursePage(View):
             return redirect("/")
 
     def post(self, request):
+        if 'email' not in request.session:
+            return redirect('/')
         if 'navigation' in request.POST:
             if request.POST['navigation'] == "logout":
                 request.session.flush()
@@ -311,6 +325,8 @@ class CreateCourse(View):
             return redirect("/")
 
     def post(self, request):
+        if 'email' not in request.session:
+            return redirect('/')
         if 'navigation' in request.POST:
             if request.POST['navigation'] == "logout":
                 request.session.flush()
@@ -344,6 +360,8 @@ class EditCourse(View):
 
 
     def post(self, request):
+        if 'email' not in request.session:
+            return redirect('/')
         if 'navigation' in request.POST:
             if request.POST['navigation'] == "logout":
                 request.session.flush()
@@ -380,6 +398,8 @@ class SectionPage(View):
         else:
             return redirect("/")
     def post(self, request):
+        if 'email' not in request.session:
+            return redirect('/')
         if request.POST['navigation'] == "logout":
             request.session.flush()
             return redirect("/")
@@ -428,6 +448,8 @@ class CreateSection(View):
 
     def post(self, request):
         if 'navigation' in request.POST:
+            if 'email' not in request.session:
+                return redirect('/')
             if request.POST['navigation'] == "logout":
                 request.session.flush()
                 return redirect("/")
@@ -460,6 +482,8 @@ class EditSection(View):
         else:
             return redirect("/")
     def post(self, request):
+        if 'email' not in request.session:
+            return redirect('/')
         if 'navigation' in request.POST:
             if request.POST['navigation'] == "logout":
                 request.session.flush()

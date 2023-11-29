@@ -9,7 +9,7 @@ from .models import Course, MyUser, Section
 """
 Login verifies the user has an account created and all inputs are valid. Adds their username
  to a session token as well as if they're an admin and redirects to the dashboard
-Failure returns a render with a failure method    
+Failure returns a render with a failure message    
 """
 
 
@@ -32,12 +32,10 @@ def func_Login(request):
     else:
         return "success."
 
-
 """
-Logout redirects the page to the login page and flushes the session of any tokens
+Takes a list of MyUser objects and returns a list of dictionaries created for each user.
+List is sorted by last name.
 """
-
-
 def func_AlphabeticalMyUserList(user_bin):
     userList = []
     for user in user_bin:
@@ -51,9 +49,13 @@ def func_AlphabeticalMyUserList(user_bin):
     alphabetical = sorted(userList, key=itemgetter('lastname'))
     return alphabetical
 
-
+"""
+Input is a string that represents a MyUser object email
+If email is blank or not associated with a user an exception is raised
+Returns a dictionary with all of the fields of the MyUser
+"""
 def func_UserAsDict(userEmail):
-    if userEmail is None:
+    if userEmail is None or MyUser.objects.filter(email=userEmail).first() is None:
         raise Exception("User does not exist!")
     user = MyUser.objects.filter(email=userEmail).first()
     dict = {
@@ -71,7 +73,10 @@ def func_UserAsDict(userEmail):
     }
     return dict
 
-
+"""
+Takes a list of Course objects and returns a list of dictionaries created for each course.
+List is sorted by title (department + courseNumber).
+"""
 def func_AlphabeticalCourseList(course_bin):
     courseList = []
     for course in course_bin:
@@ -85,9 +90,13 @@ def func_AlphabeticalCourseList(course_bin):
     alphabetical = sorted(courseList, key=itemgetter('title'))
     return alphabetical
 
-
+"""
+Input is an int that represents a Course object id
+If id is blank or not associated with a user an exception is raised
+Returns a dictionary with all of the fields of the Course
+"""
 def func_CourseAsDict(courseID):
-    if courseID is None:
+    if courseID is None or Course.objects.filter(id=courseID).first() is None:
         raise Exception("Course does not exist!")
     course = Course.objects.filter(id=courseID).first()
     dict = {
@@ -103,7 +112,10 @@ def func_CourseAsDict(courseID):
     }
     return dict
 
-
+"""
+Takes a list of Section objects and returns a list of dictionaries created for each section.
+List is sorted by title (sectionNumber + type).
+"""
 def func_AscendingSectionList(section_bin):
     sectionList = []
     for section in section_bin:
@@ -115,9 +127,13 @@ def func_AscendingSectionList(section_bin):
     alphabetical = sorted(sectionList, key=itemgetter('title'))
     return alphabetical
 
-
+"""
+Input is an int that represents a Section object id
+If id is blank or not associated with a user an exception is raised
+Returns a dictionary with all of the fields of the Section
+"""
 def func_SectionAsDict(sectionID):
-    if sectionID is None:
+    if sectionID is None or Section.objects.filter(id=sectionID).first() is None:
         raise Exception("Section does not exist!")
     section = Section.objects.filter(id=sectionID).first()
     start_t = time.strptime(section.startTime, "%H:%M")
@@ -156,8 +172,8 @@ def func_SectionAsDict(sectionID):
 """
 POST Functions. These happen from button presses and form submissions.
 Check if all the context variables from request.POST['variable'] are valid using validator functions
-and create an object and returns a render of a page with a success message
-If a validator function fails then no object is created and a render is returned with a failure method.   
+If validators pass function creates an object and returns with a success message
+If a validator function fails then no object is created and returns with a failure message.   
 """
 
 
@@ -183,26 +199,29 @@ def func_CreateUser(request):
     zip = int(request.POST["zipcode"])
     role = request.POST["role"]
 
-    if (not func_ValidateEmail(email)) or (MyUser.objects.filter(email=email).exists()):
-        return "Non-unique username. Please try again."
+    if not func_ValidateEmail(email):
+        return "Invalid email. Must be a UWM email."
+    if MyUser.objects.filter(email=email).exists():
+        return "Non-unique email. Please try again."
     if not func_ValidatePassword(pw, pwc):
-        return "Passwords do not match. Please try again."
+        return ("Passwords must match and contain one lowercase letter, one uppercase letter,"
+                " a digit, and a special character. Please try again.")
     if not func_ValidateFirstName(first):
-        return "Invalid first name. Must start with a capital and have no spaces. Please try again."
+        return "Invalid first name. Must be capitalized and have only contain letters."
     if not func_ValidateLastName(last):
-        return "Invalid last name. Must start with a capital and have no spaces. Please try again."
+        return "Invalid last name. Must be capitalized and have only contain letters."
     if not func_ValidatePhoneNumber(phone):
-        return "Invalid phone number. Must be 9 numbers 0-9. Please try again."
+        return "Invalid phone number. Format is 123-456-7890"
     if not func_ValidateStreetAddress(street):
-        return "Invalid street address. Please try again."
+        return "Invalid street address."
     if not func_ValidateCity(city):
-        return "Invalid city. Please try again."
+        return "Invalid city. Must be capitalized."
     if not func_ValidateState(state):
-        return "Invalid state. Please try again."
+        return "Invalid state. Two letter state code only."
     if not func_ValidateZipCode(zip):
-        return "Invalid zipcode. Please try again."
+        return "Invalid zipcode. Must be 5 digits long"
     if not func_ValidateRole(role):
-        return "Invalid role. Please try again."
+        return "Invalid role. Can only be Admin, Instructor, or TA."
 
     user = MyUser.objects.create(email=email, password=pw,
                                  firstName=first, lastName=last,
@@ -218,69 +237,69 @@ def func_EditUser(request):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.firstName = request.POST['firstname']
             changeUser.save()
-            return "First Name changed successfully"
+            return "First name changed successfully!"
         else:
-            return "Invalid First Name"
+            return "Invalid first name. Must be capitalized and have only contain letters."
     if 'lastname' in request.POST:
         if func_ValidateLastName(request.POST['lastname']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.lastName = request.POST['lastname']
             changeUser.save()
-            return "Last Name changed successfully"
+            return "Last name changed successfully!"
         else:
-            return "Invalid Last Name"
+            return "Invalid First Name. Must be capitalized and have only contain letters."
     if 'phonenumber' in request.POST:
         if func_ValidatePhoneNumber(request.POST['phonenumber']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.phoneNumber = request.POST['phonenumber']
             changeUser.save()
-            return "Phone Number changed successfully"
+            return "Phone number changed successfully!"
         else:
-            return "Invalid Phone Number"
+            return "Invalid phone number. Format is 123-456-7890"
     if 'streetaddress' in request.POST:
         if func_ValidateStreetAddress(request.POST['streetaddress']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.streetAddress = request.POST['streetaddress']
             changeUser.save()
-            return "Street Address changed successfully"
+            return "Street address changed successfully!"
         else:
-            return "Invalid Street Address"
+            return "Invalid street address."
     if 'city' in request.POST:
         if func_ValidateCity(request.POST['city']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.city = request.POST['city']
             changeUser.save()
-            return "City changed successfully"
+            return "City changed successfully!"
         else:
-            return "Invalid City"
+            return "Invalid city. Must be capitalized."
     if 'state' in request.POST:
         if func_ValidateState(request.POST['state']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.state = request.POST['state']
             changeUser.save()
-            return "State changed successfully"
+            return "State changed successfully!"
         else:
-            return "Invalid State"
+            return "Invalid state. Two letter state code only."
     if 'zipcode' in request.POST:
-        if func_ValidateZipCode(request.POST['zipcode']):
+        if func_ValidateZipCode(int(request.POST['zipcode'])):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.zipcode = request.POST['zipcode']
             changeUser.save()
-            return "Zipcode changed successfully"
+            return "Zipcode changed successfully!"
         else:
-            return "Invalid Zipcode"
+            return "Invalid zipcode. Must be 5 digits long."
     if 'role' in request.POST:
         if func_ValidateRole(request.POST['role']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.role = request.POST['role']
             changeUser.save()
-            return "Role changed successfully"
+            return "Role changed successfully!"
         else:
-            return "Invalid Role"
+            return "Invalid role. Can only be Admin, Instructor, or TA."
 
 
 def func_DeleteUser(request):
-    MyUser.objects.filter(id=request.session['selecteduser']).first().delete()
+    MyUser.objects.filter(email=request.session['selecteduser']).first().delete()
   
 def func_CreateCourse(request):
     if ('coursename' not in request.POST or 'department' not in request.POST or
@@ -472,10 +491,18 @@ def func_DeleteSection(request):
 MyUser validator functions used when creating or editing MyUser objects
 """
 
-
+"""
+Input: string - an email
+Output: True if it is a UWM email. False otherwise.
+"""
 def func_ValidateEmail(email):
     return bool(re.fullmatch(r"[^@\s.]{1,12}@uwm\.edu", email))
 
+"""
+Input: string, string - two matching passwords
+Output: True if passwords match and have one lowercase letter, one uppercase letter,
+one digit, one special character, and at least 8 chars long. False otherwise
+"""
 def func_ValidatePassword(password,confirmPassword):
 
     if password != confirmPassword:
@@ -498,32 +525,56 @@ def func_ValidatePassword(password,confirmPassword):
     if not any(char.isupper() for char in password):
         return False
 
+    if not any(char.islower() for char in password):
+        return False
+
     if not any(char.isdigit() for char in password):
         return False
 
     return True
 
-
+"""
+Input: string - a name.
+Output: True if it is capatalized, has no spaces, and only contains letters. False otherwise.
+"""
 def func_ValidateFirstName(firstName):
-    if all(c.isalpha or c == '' for c in firstName):
-        if firstName[0].isupper():
-            return True
-        else:
+    if not isinstance(firstName, str):
+        return False
+    if len(firstName) > 20:
+        return False
+    if firstName == '':
+        return False
+    if (all(c.isalpha() and not c.isspace() for c in firstName)):
+        if firstName[0].islower():
             return False
+        else:
+                return True
     else:
         return False
 
-
+"""
+Input: string - a name.
+Output: True if it is capatalized, has no spaces, and only contains letters. False otherwise.
+"""
 def func_ValidateLastName(lastName):
-    if all(c.isalpha or c == '' for c in lastName):
-        if lastName[0].isupper():
-            return True
-        else:
+    if not isinstance(lastName, str):
+        return False
+    if len(lastName) > 20:
+        return False
+    if lastName == '':
+        return False
+    if (all(c.isalpha() and not c.isspace() for c in lastName)):
+        if lastName[0].islower():
             return False
+        else:
+            return True
     else:
         return False
 
-
+"""
+Input: string - a phone number.
+Output: True if in the format 123-456-7890. False otherwise.
+"""
 def func_ValidatePhoneNumber(phoneNumber):
     pattern1 = re.compile(r'^\(\d{3}\)\d{3}-\d{4}$')
     pattern2 = re.compile(r'^\d{3}-\d{3}-\d{4}$')
@@ -537,24 +588,38 @@ def func_ValidatePhoneNumber(phoneNumber):
 
     return bool(match1) or bool(match2) or bool(match3) or bool(match4)
 
-
+"""
+Input: string - an address.
+Output: True if at least three words. First Word must contain numbers False otherwise.
+"""
 def func_ValidateStreetAddress(streetAddress):
+    if streetAddress == '' or streetAddress.isspace():
+        return False
     s = streetAddress.split()
-
+    if any(not char.isdigit() for char in s[0]):
+        return False
     if len(s) < 3 or len(streetAddress) > 50:
         return False
     else:
         return True
 
-
+"""
+Input: string - a city.
+Output: True if capitalized and only contains letters and spaces. False otherwise.
+"""
 def func_ValidateCity(city):
+    if city == '' or city.isspace():
+        return False
     if not city[0].isupper():
         return False
     pattern = re.compile(r'^[a-zA-Z\s]{2,20}$')
     match = pattern.match(city)
     return bool(match)
 
-
+"""
+Input: string - a state.
+Output: True if one of the state postal codes. False otherwise.
+"""
 def func_ValidateState(state):
     valid_state = ["AL", "AK", "AZ", "AR",
                    "CA", "CO", "CT", "DC",
@@ -572,10 +637,16 @@ def func_ValidateState(state):
 
     return state in valid_state
 
-
+"""
+Input: int - a zipcode.
+Output: True if 5 digits long. False otherwise.
+"""
 def func_ValidateZipCode(zip):
     return isinstance(zip, int) and 10000 <= zip <= 99999
-  
+"""
+Input: string - a role.
+Output: True 'admin', 'instructor', or 'ta'. False otherwise.
+"""
 def func_ValidateRole(role):
     ROLE_CHOICES = [
         ("admin", "Admin"),
@@ -588,13 +659,16 @@ def func_ValidateRole(role):
 Course validator functions used when creating or editing Course objects
 """
 
-
+"""
+Input: string - a name.
+Output: True if it is capatalized, has no spaces, and only contains letters. False otherwise.
+"""
 def func_ValidateCourseName(name):
     if not isinstance(name, str):
         return False
     if name == '':
         return False
-    if (all(c.isalpha() or c.isspace() for c in name)):
+    if (all(c.isalpha() or c.isspace() or c == '\'' for c in name)):
         if (name[-1].isspace() or name[0].isspace() or name[0].islower()):
             return False
         else:
@@ -608,7 +682,10 @@ def func_ValidateCourseName(name):
     else:
         return False
 
-
+"""
+Input: string - a department.
+Output: True if it is one of UWM departments. False otherwise.
+"""
 def func_ValidateDepartment(department):
     if not isinstance(department, str):
         return False
@@ -636,7 +713,11 @@ def func_ValidateDepartment(department):
                    'URBPLAN', 'UWS NSG', 'UWX', 'WGS']
     return department in dept_list
 
-
+"""
+Input: int, string - course number and a department.
+Output: True the course number has 3 digits and no other course with 
+that number exists in the department. If all conditions met returns True. Otherwise False otherwise.
+"""
 def func_ValidateCourseNumber(courseNumber, department):
 
     if isinstance(courseNumber, int) and func_ValidateDepartment(department):
@@ -653,14 +734,20 @@ def func_ValidateCourseNumber(courseNumber, department):
     else:
         return False
 
-
+"""
+Input: string - a semester.
+Output: True 'fall', 'winter', 'spring' or 'summer'. False otherwise.
+"""
 def func_ValidateSemester(semester):
     if semester == 'fall' or semester == 'winter' or semester == 'spring' or semester == 'summer':
         return True
     else:
         return False
 
-
+"""
+Input: int - a year.
+Output: True if between 1957 and 2025. False otherwise.
+"""
 def func_ValidateYear(year):
     if isinstance(year, int):
         if year < 1957 or year > 2025:
@@ -675,7 +762,11 @@ def func_ValidateYear(year):
 Section validator functions used when creating or editing Section objects
 """
 
-
+"""
+Input: int, int - section number and course id.
+Output: True the section number has 3 digits and no other section with 
+that number exists in the course. If all conditions met returns True. Otherwise False otherwise.
+"""
 def func_ValidateSectionNumber(sectionNumber, courseID):
     if isinstance(sectionNumber, int):
         if sectionNumber < 99 or sectionNumber > 999:
@@ -691,7 +782,11 @@ def func_ValidateSectionNumber(sectionNumber, courseID):
     else:
         return False
 
-
+"""
+Input: string - a location.
+Output: True in the format #### Building Name. Room numbers need to be at least 1 digit and can
+ start or end with a letter (i.e. S195). If all conditions met returns True. Otherwise False otherwise.
+"""
 def func_ValidateLocation(location):
     if not isinstance(location, str):
         return False
@@ -711,7 +806,12 @@ def func_ValidateLocation(location):
         else:
             return False
 
-
+"""
+Input: string - Days the section meet.
+Output: True if in chronological order (i.e. M before T).
+'A' represent Asynchronous and cannot be in a string with any other days.
+If all conditions met returns True. Otherwise False otherwise.
+"""
 def func_ValidateDaysMeeting(daysMeeting):
     order = {
         'M': 0,
@@ -739,7 +839,12 @@ def func_ValidateDaysMeeting(daysMeeting):
                 if next <= current:
                     return False
 
-
+"""
+Input: string, string - Start time and End Time for section.
+Output: Start must be before end. Start must not be earlier than '08:00' and cannot be
+later than '17:59' (5:59pm). End time cannot be later than '19:59' (7:59pm). If all 
+conditions met returns True. Otherwise returns False.
+"""
 def func_ValidateStartAndEndTime(startTime, endTime):
     if not isinstance(startTime, str) or not isinstance(endTime, str):
         return False
@@ -770,7 +875,10 @@ def func_ValidateStartAndEndTime(startTime, endTime):
     else:
         return False
 
-
+"""
+Input: string - a section type.
+Output: True 'lecture', 'grader',or  'lab'. False otherwise.
+"""
 def func_ValidateSectionType(type):
     if type == 'lecture' or type == 'grader' or type == 'lab':
         return True

@@ -42,6 +42,20 @@ class CreateSectionViewTest(TestCase):
         self.assertEqual(newSection.course, self.swe, "Section saved with wrong course")
         self.assertTemplateUsed(response, 'createsection.html')
 
+    def test_CreateSectionIsDisplayed(self):
+        response = self.client.post("/createsection/",
+                                    {"sectionnumber": 100,
+                                     "type": "lecture",
+                                     "location": "180 Chemistry BLDG",
+                                     "daysmeeting": "TH",
+                                     "starttime": "09:30",
+                                     "endtime": "10:20",
+                                     }, follow=True)
+        response = self.client.get('/coursepage', follow=True)
+        displayed = any(section['title'] == "100 Lecture" for section in response.context['course']['sections'])
+        self.assertTrue(displayed, "New section not displayed in course page")
+
+
     def test_CreateSectionInvalidName(self):
         response = self.client.post("/createsection/",
                                     {"sectionnumber": -100,

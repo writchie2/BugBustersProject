@@ -63,7 +63,7 @@ class CourseCreateTest(TestCase):
                                     {"coursenumber": '120', "coursename": 'Our Physical Geography',
                                      "department": 'GEO SCI',
                                      "semester": 'autumn', "year": "2023"}, follow=True)
-        self.assertEqual(response.context["message"], "Invalid semester. Acceptable values are fall, spring, winter, and summer",
+        self.assertEqual(response.context["message"], "Invalid Semester. Acceptable values are fall, spring, winter, and summer",
                      "Error message not displayed after course creation failure")
         self.assertEqual(None, Course.objects.filter(courseNumber=0).first(), "Course added to database after invalid creation.")
 
@@ -77,7 +77,7 @@ class CourseCreateTest(TestCase):
         self.assertEqual(None, Course.objects.filter(courseNumber=0).first(), "Course added to database after invalid creation.")
 
 
-class SectionEditTest(TestCase):
+class CourseEditTest(TestCase):
     def setUp(self):
         self.client = Client()
         session = self.client.session
@@ -142,7 +142,7 @@ class SectionEditTest(TestCase):
         editCourse = Course.objects.filter(id=1).first()
         self.assertTemplateUsed(response, 'editcourse.html')
         self.assertEqual(editCourse.semester, 'spring', "Semester edited when invalid")
-        self.assertEqual(response.context['message'], "Invalid semester. Acceptable values are fall, spring, winter, and summer")
+        self.assertEqual(response.context['message'], "Invalid Semester. Acceptable values are fall, spring, winter, and summer")
 
     def test_EditYearValid(self):
         response = self.client.post('/editcourse/', {"year": "2024"}, follow=True)
