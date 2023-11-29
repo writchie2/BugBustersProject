@@ -168,7 +168,7 @@ def func_CreateUser(request):
     zip = int(request.POST["zipcode"])
     role = request.POST["role"]
 
-    if not func_ValidateEmail(email):
+    if (not func_ValidateEmail(email)) or (MyUser.objects.filter(email=email).exists()):
         return "Non-unique username. Please try again."
     if not func_ValidatePassword(pw, pwc):
         return "Passwords do not match. Please try again."
@@ -195,7 +195,7 @@ def func_CreateUser(request):
                                  city=city, state=state,
                                  zipcode=zip, role=role)
     user.save()
-    return "User created successfully"
+    return "User created successfully!"
 
 def func_EditUser(request):
     if 'firstname' in request.POST:
@@ -509,11 +509,16 @@ def func_ValidatePhoneNumber(phoneNumber):
     return bool(match1) or bool(match2) or bool(match3) or bool(match4)
 
 def func_ValidateStreetAddress(streetAddress):
-    pattern = re.compile((r'^\d+\s*[NSEW]?(\s+[a-zA-Z\s]+)\s+[a-zA-Z]$'))
-    match = pattern.match(streetAddress)
-    return bool(match)
+    s = streetAddress.split()
+
+    if len(s) < 3 or len(streetAddress) > 50:
+        return False
+    else:
+        return True
 
 def func_ValidateCity(city):
+    if not city[0].isupper():
+        return False
     pattern = re.compile(r'^[a-zA-Z\s]{2,20}$')
     match = pattern.match(city)
     return bool(match)
@@ -542,7 +547,7 @@ def func_ValidateRole(role):
         ("instructor", "Instructor"),
         ("ta", "TA")
     ]
-    return role in ROLE_CHOICES
+    return any(role in choice for choice in ROLE_CHOICES)
 """
 Course validator functions used when creating or editing Course objects
 """

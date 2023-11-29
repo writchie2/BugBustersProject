@@ -4,12 +4,11 @@ sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.functions import func_ValidateEmail, func_ValidatePassword, func_ValidateFirstName, \
     func_ValidateLastName, func_ValidatePhoneNumber, func_ValidateStreetAddress, func_ValidateCity, func_ValidateState, \
-    func_ValidateZipCode
+    func_ValidateZipCode, func_ValidateRole
 from django.test import TestCase, Client
 
 
 class ValidateEmailTest(TestCase):
-
     invalid_emails = ["invalid_email", "user@edu", "user@.edu", "a",
                       "user.edu", "@uwm.edu", "person 1@uwm.edu",
                       ".person@uwm.edu", "per..son@uwm.edu"]
@@ -30,7 +29,6 @@ class ValidateEmailTest(TestCase):
         for email in self.valid_email:
             self.assertTrue(func_ValidateEmail(email), "Expected: True Actual: False")
 
-
     def test_invalid_formats(self):
         for email in self.invalid_emails:
             result = bool(self.assertFalse(func_ValidateEmail(email), "Expected: False Actual: True"))
@@ -50,7 +48,7 @@ class ValidatePasswordTest(TestCase):
     long_password = "L0ng#Passworddddddddd"
 
     def test_no_password(self):
-        self.assertFalse(func_ValidatePassword("",""), "Expected: False Actual: True")
+        self.assertFalse(func_ValidatePassword("", ""), "Expected: False Actual: True")
 
     def test_empty_password(self):
         self.assertFalse(func_ValidatePassword(" ", " "), "Expected: False Actual: True")
@@ -70,6 +68,7 @@ class ValidatePasswordTest(TestCase):
     def test_long_password(self):
         self.assertFalse(func_ValidatePassword(self.long_password, self.long_password), "Expected: False Actual: True")
 
+
 class ValidateFirstNameTest(TestCase):
     invalid_names = ["a", "@d@m", "P3n3lop3", "R!ley", "Jak3"]
     long_name = "A" * 21
@@ -85,7 +84,6 @@ class ValidateFirstNameTest(TestCase):
     def test_valid_name(self):
         for name in self.valid_names:
             self.assertTrue(func_ValidateFirstName(name), "Expected: True Actual: False")
-
 
     def test_invalid_names(self):
         for name in self.invalid_names:
@@ -262,3 +260,26 @@ class ValidateZipCodeTest(TestCase):
     def test_invalid_zip(self):
         for zip_code in self.invalid_zip:
             self.assertFalse(func_ValidateZipCode(zip_code), "Expected: False Actual: True")
+
+
+class ValidateRoleTest(TestCase):
+    ROLE_CHOICES = ["admin", "Admin",
+                    "instructor", "Instructor",
+                    "ta", "TA"]
+
+    invalid_role = ["user", "Teacher", "Professor",
+                    "DR", "PHD"]
+
+    def test_no_role(self):
+        self.assertFalse(func_ValidateRole(""), "Expected: False Actual: True")
+
+    def test_empty_role(self):
+        self.assertFalse(func_ValidateRole(" "), "Expected: False Actual: True")
+
+    def test_valid_role(self):
+        for role in self.ROLE_CHOICES:
+            self.assertTrue(func_ValidateRole(role), "Expected: True Actual: False")
+
+    def test_invalid_role(self):
+        for role in self.invalid_role:
+            self.assertFalse(func_ValidateState(role), "Expected: False Actual: True")
