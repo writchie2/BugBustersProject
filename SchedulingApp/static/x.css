@@ -6,8 +6,6 @@ html {
 
 .label { font-weight: bold; }
 
-.warning { color: #e06666; font-weight: bold; font-style: italic; }
-
 .redbutton {
   background-color: #ea9999;
   border: 3px solid #e06666;
