@@ -264,7 +264,7 @@ def func_EditUser(request):
             return "Invalid Role"
 
 def func_DeleteUser(request):
-    return redirect("/login")
+    MyUser.objects.filter(id=request.session['selecteduser']).first().delete()
 def func_CreateCourse(request):
     if ('coursename' not in request.POST or 'department' not in request.POST or
             'coursenumber' not in request.POST
@@ -454,7 +454,7 @@ def func_ValidateEmail(email):
 def func_ValidatePassword(password,confirmPassword):
     if password != confirmPassword:
         return False
-    if len(password) < 8 or len(password) > 20 :
+    if len(password) < 8 or len(password) > 20:
         return False
 
     special = ["@", "#", "$", "%",
