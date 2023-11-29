@@ -96,7 +96,7 @@ def func_CourseAsDict(courseID):
         "name": course.name,
         "department": course.department,
         "coursenumber": course.courseNumber,
-        "semester": course.semester,
+        "semester": course.semester.capitalize(),
         "year": course.year,
         "users": func_AlphabeticalMyUserList(MyUser.objects.filter(course__id=courseID)),
         "sections": func_AscendingSectionList(Section.objects.filter(course=courseID))
@@ -341,7 +341,7 @@ def func_CreateSection(request):
     if func_ValidateLocation(newLocation) == False:
         return "Invalid Location. Format: Room# Building Name"
     if func_ValidateSectionType(newType) == False:
-        return "Invalid Type. Must be lecture, section, or grader."
+        return "Invalid Type. Must be lecture, lab, or grader."
     if func_ValidateStartAndEndTime(newStartTime, newEndTime) == False:
         return "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end."
 
@@ -410,7 +410,7 @@ def func_EditSection(request):
     if 'type' in request.POST:
         newType = request.POST['type']
         if func_ValidateSectionType(newType) == False:
-            return "Invalid Type. Must be lecture, section, or grader."
+            return "Invalid Type. Must be lecture, lab, or grader."
         else:
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.type = newType

@@ -287,5 +287,5 @@ class EditUserPageTest(TestCase):
                          "selected section not saved when editing type")
         self.assertEqual(self.section.type, "lecture",
                          "Type edited in editsection when invalid")
-        self.assertEqual(response.context["message"], "Invalid Type. Must be lecture, section, or grader.",
+        self.assertEqual(response.context["message"], "Invalid Type. Must be lecture, lab, or grader.",
                          "error message does not show for unsuccessful edit")
