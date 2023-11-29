@@ -31,18 +31,6 @@
 </div>
 <br>
 <br>
-{% if role == "admin" %}
-    <form action="/userpage/" method="post">
-        {% csrf_token %}
-        <button type="submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
-    </form>
-    <form action="/userpage/" method="post">
-        {% csrf_token %}
-        <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser"
-                class="redbutton">Delete User
-        </button>
-    </form>
-{% endif %}
 <table id="myTable">
     <tr>
         <td class="label">User:</td>
@@ -67,5 +55,15 @@
         </tr>
     {% endif %}
 </table>
+{% if role == "admin" %}
+    <form action="/userpage/" method="post">
+        {% csrf_token %}
+        <button type="submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
+        {% csrf_token %}
+        <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser"
+                class="redbutton">Delete User
+        </button>
+    </form>
+{% endif %}
 </body>
 </html>
