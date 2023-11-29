@@ -1,49 +1,71 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Course Page</title>
+    <meta name="viewport" content="width=device-width">
+    <title>Create Course</title>
+    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<h1>Create Course Page</h1>
-
+<body id="wrapper">
+<div id="navlist">
+    <h1>Create Course</h1>
     <form action="/createcourse/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="logout">Logout</button>
+        <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
     <form action="/createcourse/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+        <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
     <form action="/createcourse/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+        <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
     <form action="/createcourse/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="directory">View Directory</button>
+        <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
+</div>
 <br>
 <br>
-    <form action="/createcourse/" method="post">
-        {% csrf_token %}
-        <table>
-            <tr><td>Course Name: </td><td><input type="text" name="coursename"required></td></tr>
-            <tr><td>Department: </td><td><input type="text" name="department"required></td></tr>
-            <tr><td>Course Number: </td><td><input type="text" name="coursenumber"required></td></tr>
-            <tr><td>semester: </td><td><select name ="semester" id="semester"required>
+<form action="/createcourse/" method="post">
+    {% csrf_token %}
+    <table id="myTable">
+        <tr>
+            <td class="label">Course Name:</td>
+            <td><input type="text" name="coursename" required></td>
+        </tr>
+        <tr>
+            <td class="label">Department:</td>
+            <td><input type="text" name="department" required></td>
+        </tr>
+        <tr>
+            <td class="label">Course Number:</td>
+            <td><input type="text" name="coursenumber" required></td>
+        </tr>
+        <tr>
+            <td class="label">semester:</td>
+            <td><select name="semester" id="semester" required>
                 <option value="fall">Fall</option>
                 <option value="spring">Spring</option>
                 <option value="summer">Summer</option>
                 <option value="winter">Winter</option>
-            </select></td></tr>
-            <tr><td>Year: </td><td><input type="text" name="year"required></td></tr>
-        </table>
-        <input type="submit">
-    </form>
-    <form action="/createcourse/" method="post">
-        {% csrf_token %}
-        <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="cancel">Cancel</button>
-    </form>
+            </select></td>
+        </tr>
+        <tr>
+            <td class="label">Year:</td>
+            <td><input type="text" name="year" required></td>
+        </tr>
+    </table>
+    <input type="submit" value="Create" class="greenbutton">
+</form>
+<form action="/createcourse/" method="post">
+    {% csrf_token %}
+    <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="Cancel" class="redbutton">
+        Cancel
+    </button>
+</form>
 </body>
 </html>

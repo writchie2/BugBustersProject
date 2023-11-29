@@ -1,46 +1,53 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
     <title>Course List</title>
+    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<h1>Course List Page</h1>
-
+<body id="wrapper">
+<div id="navlist">
+    <h1>Course List</h1>
     <form action="/courselist/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="logout">Logout</button>
+        <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
     </form>
     <form action="/courselist/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="dashboard">View Dashboard</button>
+        <button type="submit" name="navigation" value="dashboard" class="bluebutton">View Dashboard</button>
     </form>
     <form action="/courselist/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="courselist">View Course List</button>
+        <button type="submit" name="navigation" value="courselist" class="bluebutton">View Course List</button>
     </form>
     <form action="/courselist/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="directory">View Directory</button>
+        <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
+</div>
 <br>
 <br>
-    {% if role == "admin" %}
+{% if role == "admin" %}
     <form action="/courselist/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="createcourse">Create New Course</button>
+        <button type="submit" name="navigation" value="createcourse" class="greenbutton">Create New Course</button>
     </form>
-    {% endif %}
+{% endif %}
 {{ message }}
-<table>
+<table id="myTable">
     {% for course in list %}
         <tr>
             <td>{{ course.title }}</td>
             <td>{{ course.semester }}, {{ course.year }}</td>
-            <td><form action="/courselist/" method="post">
-                {% csrf_token %}
-                <button type = "submit" name="selectedcourse" value={{ course.id }}>View Course</button>
-            </form></td>
+            <td>
+                <form action="/courselist/" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="selectedcourse" class="bluebutton" value={{ course.id }}>View Course</button>
+                </form>
+            </td>
         </tr>
     {% endfor %}
 </table>

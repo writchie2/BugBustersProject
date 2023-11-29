@@ -8,11 +8,9 @@
     <title>Section Page</title>
     <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
 </head>
-
 <body id="wrapper">
 <div id="navlist">
     <h1>Section Page - {{ section.sectionnumber }}. Assigned to {{ section.assigneduser.fullname }}</h1>
-
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
@@ -32,32 +30,51 @@
 </div>
 <br>
 <br>
+<form action="/sectionpage/" method="post">
+    {% csrf_token %}
+    <button type="submit" name="navigation" value="viewcourse" class="bluebutton">Back To Course</button>
+</form>
+{% if role == 'admin' %}
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
-        <button type = "submit" name="navigation" value="viewcourse" class="bluebutton">Back To Course</button>
-    </form>
-    {% if role == 'admin' %}
-    <form action="/sectionpage/" method="post">
-        {% csrf_token %}
-        <button type = "submit" name="navigation" value="editsection" class="bluebutton">Edit This Section</button>
+        <button type="submit" name="navigation" value="editsection" class="bluebutton">Edit This Section</button>
     </form>
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
-
-        <button type = "submit" onclick="return confirm('Are you sure?')" name="navigation" value="deletesection" class="redbutton">Delete This Section</button>
+        <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deletesection"
+                class="redbutton">Delete This Section
+        </button>
     </form>
-    {% endif %}
-
-
-<table>
-    <tr><td>Section Number:</td><td>{{ section.sectionnumber }}</td></tr>
-    <tr><td>Type:</td><td>{{section.type }}</td></tr>
-    <tr><td>Location:</td><td>{{ section.location }}</td></tr>
-    <tr><td>Start Time:</td><td>{{ section.starttime }}</td></tr>
-    <tr><td>End Time:</td><td>{{ section.endtime }}</td></tr>
-    <tr><td>Course:</td><td>{{ section.course.title }}</td></tr>
-    <tr><td>Instructor:</td><td>{{ section.assigneduser.fullname }}</td></tr>
+{% endif %}
+<table id="myTable">
+    <tr>
+        <td class="label">Section Number:</td>
+        <td>{{ section.sectionnumber }}</td>
+    </tr>
+    <tr>
+        <td class="label">Type:</td>
+        <td>{{ section.type }}</td>
+    </tr>
+    <tr>
+        <td class="label">Location:</td>
+        <td>{{ section.location }}</td>
+    </tr>
+    <tr>
+        <td class="label">Start Time:</td>
+        <td>{{ section.starttime }}</td>
+    </tr>
+    <tr>
+        <td class="label">End Time:</td>
+        <td>{{ section.endtime }}</td>
+    </tr>
+    <tr>
+        <td class="label">Course:</td>
+        <td>{{ section.course.title }}</td>
+    </tr>
+    <tr>
+        <td class="label">Instructor:</td>
+        <td>{{ section.assigneduser.fullname }}</td>
+    </tr>
 </table>
-
 </body>
 </html>
