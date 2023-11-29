@@ -253,7 +253,7 @@ def func_CreateCourse(request):
     if func_ValidateCourseNumber(newCourseNumber, newCourseDepartment) == False:
         return "Invalid Course Number. Must be between 100 and 999 and unique."
     if func_ValidateSemester(newCourseSemester) == False:
-        return "Invalid semester. Acceptable values are fall, spring, winter, and summer"
+        return "Invalid Semester. Acceptable values are fall, spring, winter, and summer"
     if func_ValidateYear(newCourseYear) == False:
         return "Invalid Year. Must be later than 1956 and cannot be greater than 2025"
     newCourse = Course.objects.create(name=newCourseName, department=newCourseDepartment,
@@ -299,7 +299,7 @@ def func_EditCourse(request):
     if 'semester' in request.POST:
         newSemester = request.POST["semester"]
         if func_ValidateSemester(newSemester) == False:
-            return "Invalid semester. Acceptable values are fall, spring, winter, and summer"
+            return "Invalid Semester. Acceptable values are fall, spring, winter, and summer"
         else:
             chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
             chosen.semester = newSemester
@@ -550,7 +550,7 @@ def func_ValidateCourseName(name):
     if name == '':
         return False
     if (all(c.isalpha() or c.isspace() for c in name)):
-        if (name[-1].isspace() or name[0].isspace()):
+        if (name[-1].isspace() or name[0].isspace() or name[0].islower()):
             return False
         else:
             if name.strip().count('  ') + 1 == len(name.split()):
@@ -567,26 +567,35 @@ def func_ValidateCourseName(name):
 def func_ValidateDepartment(department):
     if not isinstance(department, str):
         return False
-    if department == '':
-        return False
-    if (all(c.isalpha() or c.isspace() for c in department)):
-        if (department[-1].isspace() or department[0].isspace()):
-            return False
-        else:
-            if department.strip().count('  ') + 1 == len(department.split()):
-                if department.isupper():
-                    return True
-                else:
-                    return False
-            else:
-                return True
-    else:
-        return False
+    dept_list = ['AMLLC', 'ACTSCI', 'AD LDSP', 'AFAS', 'AFRIC', 'AIS', 'ANTHRO', 'ARABIC',
+                   'ARCH', 'ART', 'ART ED', 'ARTHIST', 'ASTRON', 'ATM SCI', 'ATRAIN', 'BIO SCI',
+                   'BME', 'BMS', 'BUS ADM', 'BUSMGMT', 'CELTIC', 'CES', 'CGS AIS', 'CGS ANT',
+                   'CGS ART', 'CGS AST', 'CGS BIO', 'CGS BUS', 'CGS CHE', 'CGS CPS', 'CGS CTA',
+                   'CGS ECO', 'CGS EDU', 'CGS EGR', 'CGS ENG', 'CGS ESL', 'CGS FRE', 'CGS GEO',
+                   'CGS GER', 'CGS GLG', 'CGS GSW', 'CGS HES', 'CGS HIS', 'CGS INT', 'CGS IST',
+                   'CGS ITA', 'CGS LEA', 'CGS LEA', 'CGS LEC', 'CGS MAT', 'CGS MLG', 'CGS MUA',
+                   'CGS MUS', 'CGS PHI', 'CGS PHY', 'CGS POL', 'CGS PSY', 'CGS REL', 'CGS SOC',
+                   'CGS SPA', 'CHEM', 'CHINESE', 'CHS', 'CIV ENG', 'CLASSIC', 'COMMUN', 'COMPLIT',
+                   'COMPSCI', 'COMPST', 'COMSDIS', 'COUNS', 'CRM JST', 'CURRINS', 'DAC', 'DANCE',
+                   'DMI', 'EAP', 'EAS', 'ECON', 'ED POL', 'ED PSY', 'EDUC', 'ELECENG', 'ENGLISH',
+                   'ETHNIC', 'EXCEDUC', 'FILM', 'FILMSTD', 'FINEART', 'FOODBEV', 'FRENCH',
+                   'FRSHWTR', 'GEO SCI', 'GEOG', 'GERMAN', 'GLOBAL', 'GARD', 'GREEK', 'HCA',
+                   'HEBREW', 'HI', 'HIST', 'HMONG', 'HONORS', 'HS', 'IEP', 'IND ENG', 'IND REL',
+                   'INFOST', 'INTLST', 'ITALIAN', 'JAMS', 'JAPAN', 'JEWISH', 'KIN', 'KOREAN',
+                   'L&S HUM', 'L&S NS', 'L&S SS', 'LACS', 'LACUSL', 'LATIN', 'LATINX', 'LGBT',
+                   'LIBRLST', 'LINGUIS', 'MALLT', 'MATH', 'MATLENG', 'MECHENG', 'MIL SCI',
+                   'MSP', 'MTHSTAT', 'MUS ED', 'MUSIC', 'MUSPERF', 'MEURO', 'NONPROF', 'NURS',
+                   'OCCTHPY', 'PEACEST', 'PH', 'PHILOS', 'PHYSICS', 'POL SCI', 'POLISH', 'PORTUGS',
+                   'PRPP', 'PSYCH', 'PT', 'PUB ADM', 'RELIGST', 'RUSSIAN', 'SCNDVST', 'SOC WRK',
+                   'SOCIOL', 'SPANISH', 'SPT&REC', 'TCH LRN', 'THEATRE', 'THERREC', 'TRNSLTN', 'URB STD',
+                   'URBPLAN', 'UWS NSG', 'UWX', 'WGS']
+    return department in dept_list
 
 
 def func_ValidateCourseNumber(courseNumber, department):
-    if isinstance(courseNumber, int):
-        if courseNumber < 99 or courseNumber > 999:
+
+    if isinstance(courseNumber, int) and func_ValidateDepartment(department):
+        if courseNumber < 100 or courseNumber > 999:
             return False
         if (Course.objects.filter(courseNumber=courseNumber).first() == None):
             return True
@@ -609,7 +618,7 @@ def func_ValidateSemester(semester):
 
 def func_ValidateYear(year):
     if isinstance(year, int):
-        if year < 1955 or year > 2026:
+        if year < 1957 or year > 2025:
             return False
         else:
             return True
