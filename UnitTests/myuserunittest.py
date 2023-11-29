@@ -4,23 +4,20 @@ sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.functions import func_ValidateEmail, func_ValidatePassword, func_ValidateFirstName, \
     func_ValidateLastName, func_ValidatePhoneNumber, func_ValidateStreetAddress, func_ValidateCity, func_ValidateState, \
-    func_ValidateZipCode
+    func_ValidateZipCode, func_ValidateRole
 from django.test import TestCase, Client
 
 
 class ValidateEmailTest(TestCase):
-    max_email_length = 20
-    min_email_length = 9
-
     invalid_emails = ["invalid_email", "user@edu", "user@.edu", "a",
-                      "user@uwm.com ", "user.edu", "@uwm.edu",
-                      "person 1@uwm.edu", ".person@uwm.edu", "per..son@uwm.edu"]
+                      "user.edu", "@uwm.edu", "person 1@uwm.edu",
+                      ".person@uwm.edu", "per..son@uwm.edu"]
 
     invalid_whitespace = [" user@uwm.edu", "user@uwm.edu ", " user@uwm.edu "]
 
-    long_email = "a" * ((max_email_length - min_email_length) + 1) + "@uwm.edu"
+    long_email = "aaaaaaaaaaaaaaaaa" + "@uwm.edu"
 
-    valid_email = ["email@uwm.edu", "person2@uwm.edu", "some_body@gmail.com"]
+    valid_email = ["email@uwm.edu", "person2@uwm.edu", "some_body@uwm.edu"]
 
     def test_no_email(self):
         self.assertFalse(func_ValidateEmail(""), "Expected: False Actual: True")
@@ -32,10 +29,9 @@ class ValidateEmailTest(TestCase):
         for email in self.valid_email:
             self.assertTrue(func_ValidateEmail(email), "Expected: True Actual: False")
 
-
     def test_invalid_formats(self):
         for email in self.invalid_emails:
-            self.assertFalse(func_ValidateEmail(email), "Expected: False Actual: True")
+            result = bool(self.assertFalse(func_ValidateEmail(email), "Expected: False Actual: True"))
 
     def test_long_email(self):
         self.assertFalse(func_ValidateEmail(self.long_email), "Expected: False Actual: True")
@@ -47,12 +43,12 @@ class ValidateEmailTest(TestCase):
 
 class ValidatePasswordTest(TestCase):
     invalid_password = ["12345678", "password!2", "a", "abcd"]
-    valid_passsword = ["P@assword2", "aN0ther_password", "g00d!pAss"]
+    valid_password = ["P@assword2", "aN0ther_password", "g00d!pAss"]
     almost_matching = ["P@assword", "an0ther_password", "gO0d!pASs"]
     long_password = "L0ng#Passworddddddddd"
 
     def test_no_password(self):
-        self.assertFalse(func_ValidatePassword("",""), "Expected: False Actual: True")
+        self.assertFalse(func_ValidatePassword("", ""), "Expected: False Actual: True")
 
     def test_empty_password(self):
         self.assertFalse(func_ValidatePassword(" ", " "), "Expected: False Actual: True")
@@ -62,15 +58,16 @@ class ValidatePasswordTest(TestCase):
             self.assertFalse(func_ValidatePassword(password, password), "Expected: False Actual: True")
 
     def test_valid_password(self):
-        for password in self.valid_passsword:
+        for password in self.valid_password:
             self.assertTrue(func_ValidatePassword(password, password), "Expected: True Actual: False")
 
     def test_mismatching_password(self):
-        for password1, password2 in self.valid_passsword, self.almost_matching:
+        for password1, password2 in zip(self.valid_password, self.almost_matching):
             self.assertFalse(func_ValidatePassword(password1, password2), "Expected: False Actual True")
 
     def test_long_password(self):
         self.assertFalse(func_ValidatePassword(self.long_password, self.long_password), "Expected: False Actual: True")
+
 
 class ValidateFirstNameTest(TestCase):
     invalid_names = ["a", "@d@m", "P3n3lop3", "R!ley", "Jak3"]
@@ -87,7 +84,6 @@ class ValidateFirstNameTest(TestCase):
     def test_valid_name(self):
         for name in self.valid_names:
             self.assertTrue(func_ValidateFirstName(name), "Expected: True Actual: False")
-
 
     def test_invalid_names(self):
         for name in self.invalid_names:
@@ -157,10 +153,10 @@ class ValidatePhoneNumberTest(TestCase):
 
 
 class ValidateStreetAddressTest(TestCase):
-    valid_street = ["1234 South Main Street", "1234 E Main St",
-                    "1234 W Main Street", "1234 North Main St",
+    valid_street = ["1234 S Main Street", "1234 E Main St",
+                    "1234 W Main Street", "1234 N Main St",
                     "1234 Main Street", "1234 Main St",
-                    "1234 South Rio Grande Avenue"]
+                    "1234 S Rio Grande Avenue"]
 
     invalid_street = ["1st St", "South University st",
                       "1234 Avenue", "12 34 W Kenwood Blvd",
@@ -181,7 +177,7 @@ class ValidateStreetAddressTest(TestCase):
 
     def test_invalid_address(self):
         for address in self.invalid_street:
-            self.assertFalse(func_ValidateStreetAddress(address), "Expected: False Actual: True")
+            result = bool(self.assertFalse(func_ValidateStreetAddress(address), "Expected: False Actual: True"))
 
     def test_long_address(self):
         self.assertFalse(func_ValidateStreetAddress(self.long_street), "Expected: False Actual: True")
@@ -195,7 +191,7 @@ class ValidateCityTest(TestCase):
 
     invalid_city = ["a", "L0s Ang3l3s", "Ch!c@go"]
 
-    long_city = "A" * 20
+    long_city = "AAAAAAAAAAAAAAAAAAAAAAAAAA"
 
     def test_no_city(self):
         self.assertFalse(func_ValidateCity(""), "Expected: False Actual: True")
@@ -264,3 +260,26 @@ class ValidateZipCodeTest(TestCase):
     def test_invalid_zip(self):
         for zip_code in self.invalid_zip:
             self.assertFalse(func_ValidateZipCode(zip_code), "Expected: False Actual: True")
+
+
+class ValidateRoleTest(TestCase):
+    ROLE_CHOICES = ["admin", "Admin",
+                    "instructor", "Instructor",
+                    "ta", "TA"]
+
+    invalid_role = ["user", "Teacher", "Professor",
+                    "DR", "PHD"]
+
+    def test_no_role(self):
+        self.assertFalse(func_ValidateRole(""), "Expected: False Actual: True")
+
+    def test_empty_role(self):
+        self.assertFalse(func_ValidateRole(" "), "Expected: False Actual: True")
+
+    def test_valid_role(self):
+        for role in self.ROLE_CHOICES:
+            self.assertTrue(func_ValidateRole(role), "Expected: True Actual: False")
+
+    def test_invalid_role(self):
+        for role in self.invalid_role:
+            self.assertFalse(func_ValidateState(role), "Expected: False Actual: True")

@@ -84,8 +84,8 @@ class CreatUserViewTest(TestCase):
     def test_CreateUserValid(self):
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
-                                     "password": "password",
-                                     "confirmpassword": "password",
+                                     "password": "Password!1",
+                                     "confirmpassword": "Password!1",
                                      "firstname": "First",
                                      "lastname": "Last",
                                      "phonenumber": "5555555555",
@@ -102,7 +102,7 @@ class CreatUserViewTest(TestCase):
         self.assertEqual(newUser.streetAddress, "1234 Street rd", "User saved with wrong email")
         self.assertEqual(newUser.city, "Milwaukee", "User saved with wrong email")
         self.assertEqual(newUser.state, "WI", "User saved with wrong email")
-        self.assertEqual(newUser.zipcode, "53026", "User saved with wrong email")
+        self.assertEqual(newUser.zipcode, 53026, "User saved with wrong email")
         self.assertEqual(newUser.role, "ta", "User saved with wrong email")
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"], "User created successfully!",
@@ -111,8 +111,8 @@ class CreatUserViewTest(TestCase):
     def test_CreateUserInvalid(self):
         response = self.client.post("/createuser/",
                                     {"email": "writchie@uwm.edu",
-                                     "password": "password",
-                                     "confirmpassword": "password",
+                                     "password": "Password!1",
+                                     "confirmpassword": "Password!1",
                                      "firstname": "First",
                                      "lastname": "Last",
                                      "phonenumber": "5555555555",
@@ -141,8 +141,8 @@ class CreatUserViewTest(TestCase):
                          "Error not played if not matching passwords")
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
-                                     "password": "password",
-                                     "confirmpassword": "password",
+                                     "password": "Password1!",
+                                     "confirmpassword": "Password1!",
                                      "firstname": "first",
                                      "lastname": "Last",
                                      "phonenumber": "5555555555",
@@ -157,8 +157,8 @@ class CreatUserViewTest(TestCase):
                          "Error not played if invalid firstname")
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
-                                     "password": "password",
-                                     "confirmpassword": "password",
+                                     "password": "Password!1",
+                                     "confirmpassword": "Password!1",
                                      "firstname": "First",
                                      "lastname": "last",
                                      "phonenumber": "5555555555",
@@ -173,8 +173,8 @@ class CreatUserViewTest(TestCase):
                          "Error not played if invalid lastname")
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
-                                     "password": "password",
-                                     "confirmpassword": "password",
+                                     "password": "Password!1",
+                                     "confirmpassword": "Password!1",
                                      "firstname": "First",
                                      "lastname": "Last",
                                      "phonenumber": "555555555",
@@ -189,8 +189,8 @@ class CreatUserViewTest(TestCase):
                          "Error not played if invalid phonenumber")
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
-                                     "password": "password",
-                                     "confirmpassword": "password",
+                                     "password": "Password!1",
+                                     "confirmpassword": "Password!1",
                                      "firstname": "First",
                                      "lastname": "Last",
                                      "phonenumber": "5555555555",
@@ -205,8 +205,8 @@ class CreatUserViewTest(TestCase):
                          "Error not played if invalid address")
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
-                                     "password": "password",
-                                     "confirmpassword": "password",
+                                     "password": "Password!1",
+                                     "confirmpassword": "Password!1",
                                      "firstname": "First",
                                      "lastname": "Last",
                                      "phonenumber": "5555555555",
@@ -221,8 +221,8 @@ class CreatUserViewTest(TestCase):
                          "Error not played if invalid city")
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
-                                     "password": "password",
-                                     "confirmpassword": "password",
+                                     "password": "Password!1",
+                                     "confirmpassword": "Password!1",
                                      "firstname": "First",
                                      "lastname": "Last",
                                      "phonenumber": "5555555555",
@@ -237,8 +237,8 @@ class CreatUserViewTest(TestCase):
                          "Error not played if invalid state")
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
-                                     "password": "password",
-                                     "confirmpassword": "password",
+                                     "password": "Password!1",
+                                     "confirmpassword": "Password!1",
                                      "firstname": "First",
                                      "lastname": "Last",
                                      "phonenumber": "5555555555",
@@ -253,14 +253,14 @@ class CreatUserViewTest(TestCase):
                          "Error not played if invalid zipcode")
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
-                                     "password": "password",
-                                     "confirmpassword": "password",
+                                     "password": "Password!1",
+                                     "confirmpassword": "Password!1",
                                      "firstname": "First",
                                      "lastname": "Last",
                                      "phonenumber": "5555555555",
                                      "streetaddress": "1234 Street rd",
                                      "city": "Milwaukee",
-                                     "state": "W",
+                                     "state": "WI",
                                      "zipcode": "53026",
                                      "role": "student"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')

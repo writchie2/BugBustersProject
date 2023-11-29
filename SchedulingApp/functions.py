@@ -162,8 +162,55 @@ If a validator function fails then no object is created and a render is returned
 
 
 def func_CreateUser(request):
-    return redirect("/login")
+    if(
+        'email' not in request.POST or 'password' not in request.POST or
+        'confirmpassword' not in request.POST or 'firstname' not in request.POST or
+        'lastname' not in request.POST or 'phonenumber' not in request.POST or
+        'streetaddress' not in request.POST or 'city' not in request.POST or
+        'state' not in request.POST or 'zipcode' not in request.POST or
+        'role' not in request.POST
+    ):
+        return "Please fill out all fields!"
+    email = request.POST["email"]
+    pw = request.POST["password"]
+    pwc = request.POST["confirmpassword"]
+    first = request.POST["firstname"]
+    last = request.POST["lastname"]
+    phone = request.POST["phonenumber"]
+    street = request.POST["streetaddress"]
+    city = request.POST["city"]
+    state = request.POST["state"]
+    zip = int(request.POST["zipcode"])
+    role = request.POST["role"]
 
+    if (not func_ValidateEmail(email)) or (MyUser.objects.filter(email=email).exists()):
+        return "Non-unique username. Please try again."
+    if not func_ValidatePassword(pw, pwc):
+        return "Passwords do not match. Please try again."
+    if not func_ValidateFirstName(first):
+        return "Invalid first name. Must start with a capital and have no spaces. Please try again."
+    if not func_ValidateLastName(last):
+        return "Invalid last name. Must start with a capital and have no spaces. Please try again."
+    if not func_ValidatePhoneNumber(phone):
+        return "Invalid phone number. Must be 9 numbers 0-9. Please try again."
+    if not func_ValidateStreetAddress(street):
+        return "Invalid street address. Please try again."
+    if not func_ValidateCity(city):
+        return "Invalid city. Please try again."
+    if not func_ValidateState(state):
+        return "Invalid state. Please try again."
+    if not func_ValidateZipCode(zip):
+        return "Invalid zipcode. Please try again."
+    if not func_ValidateRole(role):
+        return "Invalid role. Please try again."
+
+    user = MyUser.objects.create(email=email, password=pw,
+                                 firstName=first, lastName=last,
+                                 phoneNumber=phone, streetAddress=street,
+                                 city=city, state=state,
+                                 zipcode=zip, role=role)
+    user.save()
+    return "User created successfully!"
 
 def func_EditUser(request):
     if 'firstname' in request.POST:
@@ -233,9 +280,8 @@ def func_EditUser(request):
 
 
 def func_DeleteUser(request):
-    return redirect("/login")
-
-
+    MyUser.objects.filter(id=request.session['selecteduser']).first().delete()
+  
 def func_CreateCourse(request):
     if ('coursename' not in request.POST or 'department' not in request.POST or
             'coursenumber' not in request.POST
@@ -428,13 +474,10 @@ MyUser validator functions used when creating or editing MyUser objects
 
 
 def func_ValidateEmail(email):
-    if re.findall("[^@\s]+@[^@\s]+\.[^@\s]+", email):
-        return True
-    else:
-        return False
+    return bool(re.fullmatch(r"[^@\s.]{1,12}@uwm\.edu", email))
 
+def func_ValidatePassword(password,confirmPassword):
 
-def func_ValidatePassword(password, confirmPassword):
     if password != confirmPassword:
         return False
     if len(password) < 8 or len(password) > 20:
@@ -496,13 +539,18 @@ def func_ValidatePhoneNumber(phoneNumber):
 
 
 def func_ValidateStreetAddress(streetAddress):
-    pattern = re.compile(r'^\d+\s+[a-zA-Z\s]{1,50}$')
-    match = pattern.match(streetAddress)
-    return bool(match)
+    s = streetAddress.split()
+
+    if len(s) < 3 or len(streetAddress) > 50:
+        return False
+    else:
+        return True
 
 
 def func_ValidateCity(city):
-    pattern = re.compile(r'^[a-zA-Z\s]{1,20}$')
+    if not city[0].isupper():
+        return False
+    pattern = re.compile(r'^[a-zA-Z\s]{2,20}$')
     match = pattern.match(city)
     return bool(match)
 
@@ -526,18 +574,15 @@ def func_ValidateState(state):
 
 
 def func_ValidateZipCode(zip):
-    pattern = re.compile(r'^\d{5}$')
-    return bool(pattern.match(zip))
-
-
+    return isinstance(zip, int) and 10000 <= zip <= 99999
+  
 def func_ValidateRole(role):
     ROLE_CHOICES = [
         ("admin", "Admin"),
         ("instructor", "Instructor"),
         ("ta", "TA")
     ]
-    return role in ROLE_CHOICES
-
+    return any(role in choice for choice in ROLE_CHOICES)
 
 """
 Course validator functions used when creating or editing Course objects
