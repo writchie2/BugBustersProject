@@ -1,14 +1,18 @@
-from django.shortcuts import render, redirect
-from django.views import View
-from .models import Course, MyUser, Section
-from django.http import HttpResponseRedirect
+import re
+import time
 from operator import itemgetter
-import re, time
+
+from django.shortcuts import redirect
+
+from .models import Course, MyUser, Section
+
 """
-Login verifies the user has an account created and all inputs are valid. Adds their username to a session token as well as if they're an admin 
-and redirects to the dashboard
+Login verifies the user has an account created and all inputs are valid. Adds their username
+ to a session token as well as if they're an admin and redirects to the dashboard
 Failure returns a render with a failure method    
 """
+
+
 def func_Login(request):
     noSuchUser = False
     isWrongPassword = False
@@ -27,9 +31,12 @@ def func_Login(request):
         return "Incorrect password."
     else:
         return "success."
+
+
 """
 Logout redirects the page to the login page and flushes the session of any tokens
 """
+
 
 def func_AlphabeticalMyUserList(user_bin):
     userList = []
@@ -43,6 +50,7 @@ def func_AlphabeticalMyUserList(user_bin):
         userList.append(thisdict)
     alphabetical = sorted(userList, key=itemgetter('lastname'))
     return alphabetical
+
 
 def func_UserAsDict(userEmail):
     if userEmail is None:
@@ -63,6 +71,7 @@ def func_UserAsDict(userEmail):
     }
     return dict
 
+
 def func_AlphabeticalCourseList(course_bin):
     courseList = []
     for course in course_bin:
@@ -70,11 +79,12 @@ def func_AlphabeticalCourseList(course_bin):
             "title": course.__str__(),
             "id": course.id,
             "semester": course.semester.capitalize(),
-            "year":course.year
+            "year": course.year
         }
         courseList.append(thisdict)
     alphabetical = sorted(courseList, key=itemgetter('title'))
     return alphabetical
+
 
 def func_CourseAsDict(courseID):
     if courseID is None:
@@ -93,6 +103,7 @@ def func_CourseAsDict(courseID):
     }
     return dict
 
+
 def func_AscendingSectionList(section_bin):
     sectionList = []
     for section in section_bin:
@@ -103,6 +114,7 @@ def func_AscendingSectionList(section_bin):
         sectionList.append(thisdict)
     alphabetical = sorted(sectionList, key=itemgetter('title'))
     return alphabetical
+
 
 def func_SectionAsDict(sectionID):
     if sectionID is None:
@@ -140,14 +152,19 @@ def func_SectionAsDict(sectionID):
         }
     return dict
 
+
 """
 POST Functions. These happen from button presses and form submissions.
 Check if all the context variables from request.POST['variable'] are valid using validator functions
 and create an object and returns a render of a page with a success message
 If a validator function fails then no object is created and a render is returned with a failure method.   
 """
+
+
 def func_CreateUser(request):
     return redirect("/login")
+
+
 def func_EditUser(request):
     if 'firstname' in request.POST:
         if func_ValidateFirstName(request.POST['firstname']):
@@ -214,8 +231,11 @@ def func_EditUser(request):
         else:
             return "Invalid Role"
 
+
 def func_DeleteUser(request):
     return redirect("/login")
+
+
 def func_CreateCourse(request):
     if ('coursename' not in request.POST or 'department' not in request.POST or
             'coursenumber' not in request.POST
@@ -241,6 +261,7 @@ def func_CreateCourse(request):
                                       year=newCourseYear)
     newCourse.save()
     return "Course created successfully!"
+
 
 def func_EditCourse(request):
     chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
@@ -298,10 +319,12 @@ def func_EditCourse(request):
 
 def func_DeleteCourse(request):
     Course.objects.filter(id=request.session['selectedcourse']).first().delete()
+
+
 def func_CreateSection(request):
     if ('sectionnumber' not in request.POST or 'location' not in request.POST or
             'starttime' not in request.POST
-            or'endtime' not in request.POST or 'type' not in request.POST):
+            or 'endtime' not in request.POST or 'type' not in request.POST):
         return "Please fill out all fields!"
     newSectionNumber = int(request.POST["sectionnumber"])
     newLocation = request.POST["location"]
@@ -319,13 +342,13 @@ def func_CreateSection(request):
         return "Invalid Location. Format: Room# Building Name"
     if func_ValidateSectionType(newType) == False:
         return "Invalid Type. Must be lecture, section, or grader."
-    if func_ValidateStartAndEndTime(newStartTime,newEndTime) == False:
+    if func_ValidateStartAndEndTime(newStartTime, newEndTime) == False:
         return "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end."
 
     newSection = Section.objects.create(sectionNumber=newSectionNumber, type=newType,
                                         location=newLocation, daysMeeting=newDaysMeeting,
                                         startTime=newStartTime, endTime=newEndTime,
-                                        course= Course.objects.filter(id=request.session['selectedcourse']).first())
+                                        course=Course.objects.filter(id=request.session['selectedcourse']).first())
     newSection.save()
     return "Section created successfully!"
 
@@ -360,7 +383,7 @@ def func_EditSection(request):
             return "Invalid Days Meeting. Must be in order MTWHFSU, 'No Meeting Pattern' cannot be selected with other days."
         else:
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
-            chosen.daysMeeting= newDaysMeeting
+            chosen.daysMeeting = newDaysMeeting
             chosen.save()
             return "Days Meeting edited successfully!"
 
@@ -370,7 +393,7 @@ def func_EditSection(request):
             return "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end."
         else:
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
-            chosen.startTime= newStartTime
+            chosen.startTime = newStartTime
             chosen.save()
             return "Start Time edited successfully!"
 
@@ -380,7 +403,7 @@ def func_EditSection(request):
             return "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end."
         else:
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
-            chosen.endTime= newEndTime
+            chosen.endTime = newEndTime
             chosen.save()
             return "End Time edited successfully!"
 
@@ -390,21 +413,28 @@ def func_EditSection(request):
             return "Invalid Type. Must be lecture, section, or grader."
         else:
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
-            chosen.type= newType
+            chosen.type = newType
             chosen.save()
             return "Type edited successfully!"
 
+
 def func_DeleteSection(request):
     Section.objects.filter(id=request.session['selectedsection']).first().delete()
+
+
 """
 MyUser validator functions used when creating or editing MyUser objects
 """
+
+
 def func_ValidateEmail(email):
     if re.findall("[^@\s]+@[^@\s]+\.[^@\s]+", email):
         return True
     else:
         return False
-def func_ValidatePassword(password,confirmPassword):
+
+
+def func_ValidatePassword(password, confirmPassword):
     if password != confirmPassword:
         return False
     if len(password) < 8 or len(password) > 20:
@@ -431,7 +461,6 @@ def func_ValidatePassword(password,confirmPassword):
     return True
 
 
-
 def func_ValidateFirstName(firstName):
     if all(c.isalpha or c == '' for c in firstName):
         if firstName[0].isupper():
@@ -440,6 +469,8 @@ def func_ValidateFirstName(firstName):
             return False
     else:
         return False
+
+
 def func_ValidateLastName(lastName):
     if all(c.isalpha or c == '' for c in lastName):
         if lastName[0].isupper():
@@ -448,6 +479,8 @@ def func_ValidateLastName(lastName):
             return False
     else:
         return False
+
+
 def func_ValidatePhoneNumber(phoneNumber):
     pattern1 = re.compile(r'^\(\d{3}\)\d{3}-\d{4}$')
     pattern2 = re.compile(r'^\d{3}-\d{3}-\d{4}$')
@@ -461,15 +494,19 @@ def func_ValidatePhoneNumber(phoneNumber):
 
     return bool(match1) or bool(match2) or bool(match3) or bool(match4)
 
+
 def func_ValidateStreetAddress(streetAddress):
     pattern = re.compile(r'^\d+\s+[a-zA-Z\s]{1,50}$')
     match = pattern.match(streetAddress)
     return bool(match)
 
+
 def func_ValidateCity(city):
     pattern = re.compile(r'^[a-zA-Z\s]{1,20}$')
     match = pattern.match(city)
     return bool(match)
+
+
 def func_ValidateState(state):
     valid_state = ["AL", "AK", "AZ", "AR",
                    "CA", "CO", "CT", "DC",
@@ -487,9 +524,12 @@ def func_ValidateState(state):
 
     return state in valid_state
 
+
 def func_ValidateZipCode(zip):
     pattern = re.compile(r'^\d{5}$')
     return bool(pattern.match(zip))
+
+
 def func_ValidateRole(role):
     ROLE_CHOICES = [
         ("admin", "Admin"),
@@ -497,9 +537,13 @@ def func_ValidateRole(role):
         ("ta", "TA")
     ]
     return role in ROLE_CHOICES
+
+
 """
 Course validator functions used when creating or editing Course objects
 """
+
+
 def func_ValidateCourseName(name):
     if not isinstance(name, str):
         return False
@@ -509,7 +553,7 @@ def func_ValidateCourseName(name):
         if (name[-1].isspace() or name[0].isspace()):
             return False
         else:
-            if name.strip().count('  ')+1 == len(name.split()):
+            if name.strip().count('  ') + 1 == len(name.split()):
                 if name.isalpha():
                     return True
                 else:
@@ -518,6 +562,8 @@ def func_ValidateCourseName(name):
                 return True
     else:
         return False
+
+
 def func_ValidateDepartment(department):
     if not isinstance(department, str):
         return False
@@ -536,6 +582,8 @@ def func_ValidateDepartment(department):
                 return True
     else:
         return False
+
+
 def func_ValidateCourseNumber(courseNumber, department):
     if isinstance(courseNumber, int):
         if courseNumber < 99 or courseNumber > 999:
@@ -550,11 +598,15 @@ def func_ValidateCourseNumber(courseNumber, department):
 
     else:
         return False
+
+
 def func_ValidateSemester(semester):
     if semester == 'fall' or semester == 'winter' or semester == 'spring' or semester == 'summer':
         return True
     else:
         return False
+
+
 def func_ValidateYear(year):
     if isinstance(year, int):
         if year < 1955 or year > 2026:
@@ -563,14 +615,18 @@ def func_ValidateYear(year):
             return True
     else:
         return False
+
+
 """
 Section validator functions used when creating or editing Section objects
 """
+
+
 def func_ValidateSectionNumber(sectionNumber, courseID):
     if isinstance(sectionNumber, int):
         if sectionNumber < 99 or sectionNumber > 999:
             return False
-        if(Section.objects.filter(sectionNumber=sectionNumber).first() == None):
+        if (Section.objects.filter(sectionNumber=sectionNumber).first() == None):
             return True
         else:
             for section in Section.objects.filter(sectionNumber=sectionNumber):
@@ -580,16 +636,18 @@ def func_ValidateSectionNumber(sectionNumber, courseID):
 
     else:
         return False
+
+
 def func_ValidateLocation(location):
     if not isinstance(location, str):
         return False
     location_pattern = "^([A-Z]?)(\\d{1,})([A-Z]?) [a-zA-Z0-9\\s]"
     match = re.match(location_pattern, location)
     if (match != None):
-        if (location[-1].isspace()  ):
+        if (location[-1].isspace()):
             return False
         else:
-            if location.count('  ')==0:
+            if location.count('  ') == 0:
                 return True
             else:
                 return False
@@ -598,9 +656,11 @@ def func_ValidateLocation(location):
             return True
         else:
             return False
+
+
 def func_ValidateDaysMeeting(daysMeeting):
     order = {
-        'M':0,
+        'M': 0,
         'T': 1,
         'W': 2,
         'H': 3,
@@ -619,14 +679,15 @@ def func_ValidateDaysMeeting(daysMeeting):
         else:
             for index in range(0, len(daysMeeting)):
                 current = order.get(daysMeeting[index])
-                if index+1 == len(daysMeeting):
+                if index + 1 == len(daysMeeting):
                     return True
-                next = order.get(daysMeeting[index+1])
+                next = order.get(daysMeeting[index + 1])
                 if next <= current:
                     return False
 
+
 def func_ValidateStartAndEndTime(startTime, endTime):
-    if not isinstance(startTime, str) or not isinstance(endTime,str):
+    if not isinstance(startTime, str) or not isinstance(endTime, str):
         return False
     if startTime == endTime:
         return False
@@ -654,6 +715,7 @@ def func_ValidateStartAndEndTime(startTime, endTime):
         return True
     else:
         return False
+
 
 def func_ValidateSectionType(type):
     if type == 'lecture' or type == 'grader' or type == 'lab':
