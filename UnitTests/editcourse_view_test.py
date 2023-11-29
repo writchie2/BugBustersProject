@@ -4,7 +4,7 @@ sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
-class EditUserPageTest(TestCase):
+class EditCoursePageTest(TestCase):
     def setUp(self):
         self.client = Client()
         session = self.client.session
@@ -12,8 +12,11 @@ class EditUserPageTest(TestCase):
         session["role"] = "admin"
         session["selectedcourse"] = 1
         session.save()
-        self.swe = Course(1, "SWE", "COMPSCI", 361, "spring", 2023)
+        self.swe = Course(1, "Intro to Software Engineering", "COMPSCI", 361, "spring", 2023)
         self.swe.save()
+        self.henry = MyUser(1, "writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+                                   "Milwaukee", "WI", 53026, "admin")
+        self.henry.save()
 
     def test_GetTemplate(self):
         response = self.client.get('/editcourse/')
@@ -106,7 +109,7 @@ class EditUserPageTest(TestCase):
                          "Role not saved when editing name")
         self.assertEqual(self.client.session["selectedcourse"], 1,
                          "selected course not saved when editing name")
-        self.assertEqual(self.swe.name, "SWE",
+        self.assertEqual(self.swe.name, "Intro to Software Engineering",
                          "Name edited in editcourse when invalid")
         self.assertEqual(response.context["message"], "Invalid Course Name. Only letters and single spaces are allowed.",
                          "error message does not show for unsuccessful edit")
@@ -198,7 +201,7 @@ class EditUserPageTest(TestCase):
                          "selected course not saved when editing semester")
         self.assertEqual(self.swe.semester, "spring",
                          "Semester edited in editcourse when invalid")
-        self.assertEqual(response.context["message"], "Invalid semester. Acceptable values are fall, spring, winter, and summer",
+        self.assertEqual(response.context["message"], "Invalid Semester. Acceptable values are fall, spring, winter, and summer",
                          "error message does not show for unsuccessful edit")
 
     def test_PostEditYearValid(self):

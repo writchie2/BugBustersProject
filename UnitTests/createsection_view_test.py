@@ -13,8 +13,11 @@ class CreateSectionViewTest(TestCase):
         session["role"] = "admin"
         session["selectedcourse"] = 1
         session.save()
-        self.swe = Course(1, "SWE", "COMPSCI", 361, "spring", 2023)
+        self.swe = Course(1, "Software Engineering", "COMPSCI", 361, "spring", 2023)
         self.swe.save()
+        self.henry = MyUser(1, "writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+                            "Milwaukee", "WI", 53026, "admin")
+        self.henry.save()
 
 
     def test_GetTemplate(self):

@@ -12,6 +12,9 @@ class CreateCourseViewTest(TestCase):
         session["email"] = "writchie@uwm.edu"
         session["role"] = "admin"
         session.save()
+        self.henry = MyUser(1, "writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+                            "Milwaukee", "WI", 53026, "admin")
+        self.henry.save()
 
 
     def test_GetTemplate(self):
@@ -72,14 +75,14 @@ class CreateCourseViewTest(TestCase):
     def test_CreateCourseValid(self):
         response = self.client.post("/createcourse/",
                                     {"coursename": "Intro to Software Engineering",
-                                     "department": "COMPCSI",
+                                     "department": "COMPSCI",
                                      "coursenumber": 361,
                                      "semester": "spring",
                                      "year": 2023,
                                      }, follow=True)
         newCourse = Course.objects.filter().first()
         self.assertEqual(newCourse.name, "Intro to Software Engineering", "Course saved with wrong name")
-        self.assertEqual(newCourse.department, "COMPCSI", "Course saved with wrong department")
+        self.assertEqual(newCourse.department, "COMPSCI", "Course saved with wrong department")
         self.assertEqual(newCourse.courseNumber, 361, "Course saved with wrong coursenumber")
         self.assertEqual(newCourse.semester, "spring", "User saved with wrong email")
         self.assertEqual(newCourse.year, 2023, "Course saved with wrong year")

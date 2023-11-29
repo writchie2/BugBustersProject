@@ -12,10 +12,10 @@ class EditUserPageTest(TestCase):
         session["role"] = "admin"
         session["selecteduser"] = "esonnen@uwm.edu"
         session.save()
-        self.henryRitchie = MyUser("writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+        self.henryRitchie = MyUser(1,"writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
                                        "Milwaukee", "WI", 53026, "instructor")
         self.henryRitchie.save()
-        self.emmaSonnen = MyUser("esonnen@uwm.edu", "password", "Emma", "Sonnen", "5555555555", "1234 main st",
+        self.emmaSonnen = MyUser(2,"esonnen@uwm.edu", "password", "Emma", "Sonnen", "5555555555", "1234 main st",
                                  "Milwaukee", "WI", 53026, "admin")
 
         self.emmaSonnen.save()
@@ -77,7 +77,7 @@ class EditUserPageTest(TestCase):
 
     def test_PostCancel(self):
         response = self.client.post("/edituser/", {"navigation": "cancel"}, follow=True)
-        self.assertTemplateUsed(response, 'edituser.html')
+        self.assertTemplateUsed(response, 'userpage.html')
         self.assertEqual(self.client.session["email"], "writchie@uwm.edu",
                          "Email not saved when navigating to userpage")
         self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to directory")
