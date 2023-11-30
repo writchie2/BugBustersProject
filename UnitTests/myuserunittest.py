@@ -163,7 +163,6 @@ class ValidateStreetAddressTest(TestCase):
                       "5678 South", "North Ave",
                       "!2E4 East Washington Ave"]
 
-    long_street = "1234567890 Soooooouth Rioooooooo Saladooooo Roooooooad"
 
     def test_no_address(self):
         self.assertFalse(func_ValidateStreetAddress(""), "Expected: False Actual: True")
@@ -173,14 +172,13 @@ class ValidateStreetAddressTest(TestCase):
 
     def test_valid_address(self):
         for address in self.valid_street:
-            self.assertTrue(func_ValidateStreetAddress(address), "Expected: True Actual: False")
+            self.assertTrue(func_ValidateStreetAddress(address), "Expected: True Actual: False "+address)
 
     def test_invalid_address(self):
         for address in self.invalid_street:
             result = bool(self.assertFalse(func_ValidateStreetAddress(address), "Expected: False Actual: True"+address))
 
-    def test_long_address(self):
-        self.assertFalse(func_ValidateStreetAddress(self.long_street), "Expected: False Actual: True")
+
 
 
 class ValidateCityTest(TestCase):

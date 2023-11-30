@@ -1,12 +1,12 @@
 from django.db import models
 
 class MyUser(models.Model):
-    email = models.CharField(max_length=20, default="default@uwm.edu", editable=True)
+    email = models.CharField(max_length=30, default="default@uwm.edu", editable=True)
     password = models.CharField(max_length=20, default="defaultpassword", editable=True)
     firstName = models.CharField(max_length=20, default="defaultfirstname", editable=True)
     lastName = models.CharField(max_length=20, default="defaultlastname", editable=True)
     phoneNumber = models.CharField(max_length=20, default="defaultphonenumber", editable=True)
-    streetAddress = models.CharField(max_length=50, default="1234 Main st", editable=True)
+    streetAddress = models.CharField(max_length=100, default="1234 Main st", editable=True)
     city = models.CharField(max_length=20, default="Milwaukee", editable=True)
     state = models.CharField(max_length=2, default="WI", editable=True)
     zipcode = models.IntegerField(default=53206, editable=True)
@@ -20,7 +20,7 @@ class MyUser(models.Model):
         return self.firstName + " " + self.lastName
 
 class Course(models.Model):
-    name = models.CharField(max_length=50, default="Default Course Name", editable=True)
+    name = models.CharField(max_length=100, default="Default Course Name", editable=True)
     DEPARTMENT_CHOICES = [
         "AMLLC", "ACTSCI", "AD LDSP", "AFAS", "AFRIC", "AIS", "ANTHRO", "ARABIC", "ARCH", "ART", "ART ED", "ARTHIST",
         "ASTRON", "ATM SCI", "ATRAIN", "BIO SCI", "BME", "BMS", "BUS ADM", "BUSMGMT", "CELTIC", "CES", "CGS AIS",
@@ -39,7 +39,7 @@ class Course(models.Model):
         "SCNDVST", "SOC WRK", "SOCIOL", "SPANISH", "SPT&REC", "TCH LRN", "THEATRE", "THERREC", "TRNSLTN", "URB STD",
         "URBPLAN", "UWS NSG", "UWX", "WGS"
     ]
-    department = models.CharField(max_length=8, default="LATIN", editable=True)
+    department = models.CharField(max_length=12, default="LATIN", editable=True)
     courseNumber = models.IntegerField(default=123, editable=True)
     Semester_CHOICES = [
         ("spring", "Spring"),
@@ -62,7 +62,7 @@ class Section(models.Model):
         ("lab", "Lab")
     ]
     type = models.CharField(max_length=7, choices=TYPE_CHOICES, default="le", editable=True)
-    location = models.CharField(max_length=50, default="defaultlocation", editable=True)
+    location = models.CharField(max_length=100, default="defaultlocation", editable=True)
     daysMeeting = models.CharField(max_length=7, default="MTWHF", editable=True)
     startTime = models.CharField(max_length=50, default="defaultstarttime", editable=True)
     endTime = models.CharField(max_length=50, default="defaultendtime", editable=True)
