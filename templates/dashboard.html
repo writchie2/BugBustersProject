@@ -31,7 +31,7 @@
 <br>
 <br>
 <h2 id="greet">Hello, {{ user.fullname }}! <br> Welcome to Schedule Planner!</h2>
-<form action="/dashboard/" method="post" id="loginform">
+<form action="/dashboard/" method="post">
     {% csrf_token %}
     <button type="submit" name="navigation" value="viewself" class="bluebutton">View My Account</button>
 </form>
