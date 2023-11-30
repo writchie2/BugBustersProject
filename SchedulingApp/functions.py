@@ -595,13 +595,14 @@ Output: True if at least three words. First Word must contain numbers False othe
 def func_ValidateStreetAddress(streetAddress):
     if streetAddress == '' or streetAddress.isspace():
         return False
+    if any(not char.isalnum() and not char.isspace() for char in streetAddress):
+        return False
     s = streetAddress.split()
-    if any(not char.isdigit() for char in s[0]):
-        return False
-    if len(s) < 3 or len(streetAddress) > 50:
-        return False
-    else:
-        return True
+    if any(char.isdigit() for char in s[0]):
+        if len(s) < 3 or len(streetAddress) > 100:
+            return False
+        else:
+            return True
 
 """
 Input: string - a city.
