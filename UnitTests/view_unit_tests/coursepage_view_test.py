@@ -5,7 +5,7 @@ from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
 
-class UserPageTest(TestCase):
+class CoursePageTest(TestCase):
     def setUp(self):
         self.client = Client()
         session = self.client.session

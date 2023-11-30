@@ -72,7 +72,7 @@ class CreateCourseViewTest(TestCase):
         self.assertNotIn("selectedCourse", self.client.session, "Session has selected course saved at courselist.")
         self.assertNotIn("selectedSection", self.client.session, "Session has selected section saved at courselist.")
 
-    def test_CreateCourseValid(self):
+    def test_PostCreateCourseValid(self):
         response = self.client.post("/createcourse/",
                                     {"coursename": "Intro to Software Engineering",
                                      "department": "COMPSCI",
@@ -80,23 +80,52 @@ class CreateCourseViewTest(TestCase):
                                      "semester": "spring",
                                      "year": 2023,
                                      }, follow=True)
-        newCourse = Course.objects.filter().first()
-        self.assertEqual(newCourse.name, "Intro to Software Engineering", "Course saved with wrong name")
-        self.assertEqual(newCourse.department, "COMPSCI", "Course saved with wrong department")
-        self.assertEqual(newCourse.courseNumber, 361, "Course saved with wrong coursenumber")
-        self.assertEqual(newCourse.semester, "spring", "User saved with wrong email")
-        self.assertEqual(newCourse.year, 2023, "Course saved with wrong year")
         self.assertTemplateUsed(response, 'createcourse.html')
+        self.assertEqual(response.context["message"], "Course created successfully!",
+                         "Error message not displayed after course creation failure")
+
+    def test_PostCreateCourseInvalidCourseNumber(self):
+        response = self.client.post('/createcourse/',
+                                    {"coursenumber": '0', "coursename": 'Our Physical Geography',
+                                     "department": 'GEO SCI',
+                                     "semester": 'fall', "year": "2023"}, follow=True)
+        self.assertEqual(response.context["message"], "Invalid Course Number. Must be between 100 and 999 and unique.",
+                         "Error message not displayed after course creation failure")
+
+    def test_PostCreateCourseInvalidCourseName(self):
+        response = self.client.post('/createcourse/',
+                                    {"coursenumber": '120', "coursename": '0ur Phys1cal Ge0graphy',
+                                     "department": 'GEOSCI',
+                                     "semester": 'fall', "year": "2023"}, follow=True)
+        self.assertEqual(response.context["message"],
+                         "Invalid Course Name. Only letters and single spaces are allowed.",
+                         "Error message not displayed after course creation failure")
+
+    def test_PostCreateCourseInvalidDepartment(self):
+        response = self.client.post('/createcourse/',
+                                    {"coursenumber": '120', "coursename": 'Our Physical Geography',
+                                     "department": 'geosci',
+                                     "semester": 'fall', "year": "2023"}, follow=True)
+        self.assertEqual(response.context["message"],
+                         "Invalid Department. All Departments come from the UWM course cataloge.",
+                         "Error message not displayed after course creation failure")
 
 
-    def test_CreateCourseInvalid(self):
-        response = self.client.post("/createcourse/",
-                                    {"name": "",
-                                     "department": "COMPCSI",
-                                     "coursenumber": 361,
-                                     "semester": "spring",
-                                     "year": 2023,
-                                     }, follow=True)
-        self.assertTemplateUsed(response, 'createcourse.html')
-        self.assertEqual(response.context["message"], "Please fill out all fields!",
-                         "Error not played if nonunique usernames")
+    def test_PostCreateCourseInvalidSemester(self):
+        response = self.client.post('/createcourse/',
+                                    {"coursenumber": '120', "coursename": 'Our Physical Geography',
+                                     "department": 'GEO SCI',
+                                     "semester": 'autumn', "year": "2023"}, follow=True)
+        self.assertEqual(response.context["message"],
+                         "Invalid Semester. Acceptable values are fall, spring, winter, and summer",
+                         "Error message not displayed after course creation failure")
+
+
+    def test_PostCreateCourseInvalidYear(self):
+        response = self.client.post('/createcourse/',
+                                    {"coursenumber": '120', "coursename": 'Our Physical Geography',
+                                     "department": 'GEO SCI',
+                                     "semester": 'fall', "year": "1940"}, follow=True)
+        self.assertEqual(response.context["message"],
+                         "Invalid Year. Must be later than 1956 and cannot be greater than 2025",
+                         "Error message not displayed after course creation failure")

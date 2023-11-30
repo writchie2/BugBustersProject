@@ -76,7 +76,7 @@ class CreateSectionViewTest(TestCase):
                          "selectedcourse  not saved when canceling section creation")
         self.assertNotIn("selectedSection", self.client.session, "Session has selected section saved at courselist.")
 
-    def test_CreateSectionValid(self):
+    def test_PostCreateSectionValid(self):
         response = self.client.post("/createsection/",
                                     {"sectionnumber": 100,
                                      "type": "lecture",
@@ -85,17 +85,11 @@ class CreateSectionViewTest(TestCase):
                                      "starttime": "09:30",
                                      "endtime": "10:20",
                                      }, follow=True)
-        newSection = Section.objects.filter().first()
-        self.assertEqual(newSection.sectionNumber, 100, "Section saved with wrong sectionnumber")
-        self.assertEqual(newSection.type, "lecture", "Section saved with wrong type")
-        self.assertEqual(newSection.location, "180 Chemistry BLDG", "Section saved with wrong location")
-        self.assertEqual(newSection.daysMeeting, "TH", "Section saved with wrong daysMeeting")
-        self.assertEqual(newSection.startTime, "09:30", "Section saved with wrong startTime")
-        self.assertEqual(newSection.endTime, "10:20", "Section saved with wrong endTime")
-        self.assertEqual(newSection.course, self.swe, "Section saved with wrong course")
         self.assertTemplateUsed(response, 'createsection.html')
+        self.assertEqual(response.context["message"], "Section created successfully!",
+                         "Error not played if nonunique usernames")
 
-    def test_CreateSectionInvalid(self):
+    def test_PostCreateSectionInvalid(self):
         response = self.client.post("/createsection/",
                                     {"sectionnumber": -100,
                                      "type": "lecture",

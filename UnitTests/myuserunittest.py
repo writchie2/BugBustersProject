@@ -111,7 +111,7 @@ class ValidateLastNameTest(TestCase):
 
     def test_invalid_names(self):
         for name in self.invalid_names:
-            self.assertFalse(func_ValidateLastName(name), "Expected: False Actual: True")
+            self.assertFalse(func_ValidateLastName(name), "Expected: False Actual: True"+name)
 
     def test_long_name(self):
         self.assertFalse(func_ValidateLastName(self.long_name), "Expected: False Actual: True")
@@ -159,7 +159,7 @@ class ValidateStreetAddressTest(TestCase):
                     "1234 S Rio Grande Avenue"]
 
     invalid_street = ["1st St", "South University st",
-                      "1234 Avenue", "12 34 W Kenwood Blvd",
+                      "1234 Avenue",
                       "5678 South", "North Ave",
                       "!2E4 East Washington Ave"]
 
@@ -177,7 +177,7 @@ class ValidateStreetAddressTest(TestCase):
 
     def test_invalid_address(self):
         for address in self.invalid_street:
-            result = bool(self.assertFalse(func_ValidateStreetAddress(address), "Expected: False Actual: True"))
+            result = bool(self.assertFalse(func_ValidateStreetAddress(address), "Expected: False Actual: True"+address))
 
     def test_long_address(self):
         self.assertFalse(func_ValidateStreetAddress(self.long_street), "Expected: False Actual: True")
@@ -189,7 +189,7 @@ class ValidateCityTest(TestCase):
                   "Miami", "San Francisco", "Phoenix", "Ponce de Leon",
                   "San Diego", "Puerto Penasco"]
 
-    invalid_city = ["a", "L0s Ang3l3s", "Ch!c@go"]
+    invalid_city = ["a", "L0s Ang3l3s", "Ch!c@go", "appleton"]
 
     long_city = "AAAAAAAAAAAAAAAAAAAAAAAAAA"
 

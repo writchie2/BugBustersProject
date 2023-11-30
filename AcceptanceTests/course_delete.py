@@ -23,7 +23,7 @@ class CourseDeleteTest(TestCase):
                             "Milwaukee", "WI", 53026, "admin")
         self.henry.save()
 
-    def test_DeleteValid(self):
+    def test_DeleteCourseValid(self):
         response = self.client.post("/coursepage/", {'navigation': 'deletecourse'}, follow=True)
         self.assertTemplateUsed(response, 'courselist.html')
         self.assertNotIn(self.swe, Course.objects.all(), "Course not deleted")
@@ -34,6 +34,11 @@ class CourseDeleteTest(TestCase):
         self.assertNotIn("selecteduser", self.client.session, "Session has selected user when deleting course.")
         self.assertNotIn("selectedcourse", self.client.session, "Session has selected course when deleting course.")
         self.assertNotIn("selectedsection", self.client.session, "Session has selected section when deleting course.")
+
+    def test_DeletedCourseNotInList(self):
+        response = self.client.post("/coursepage/", {'navigation': 'deletecourse'}, follow=True)
+        displayed = any(course['title'] == "COMPSCI 361 Intro to Software Engineering" for course in response.context['list'])
+        self.assertFalse(displayed, "Course not displayed in courselist page after deletion")
 
     def test_DeleteCourseNotAdmin(self):
         session = self.client.session

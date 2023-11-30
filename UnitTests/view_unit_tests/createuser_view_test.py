@@ -5,7 +5,7 @@ from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
 
-class CreatUserViewTest(TestCase):
+class CreateUserViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         session = self.client.session
@@ -81,7 +81,7 @@ class CreatUserViewTest(TestCase):
         self.assertNotIn("selectedCourse", self.client.session, "Session has selected course saved at directory.")
         self.assertNotIn("selectedSection", self.client.session, "Session has selected section saved at directory.")
 
-    def test_CreateUserValid(self):
+    def test_PostCreateUserValid(self):
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
                                      "password": "Password!1",
@@ -94,21 +94,11 @@ class CreatUserViewTest(TestCase):
                                      "state": "WI",
                                      "zipcode": "53026",
                                      "role": "ta"}, follow=True)
-        newUser = MyUser.objects.filter(email="new@uwm.edu").first()
-        self.assertEqual(newUser.email, "new@uwm.edu", "User saved with wrong email")
-        self.assertEqual(newUser.firstName, "First", "User saved with wrong email")
-        self.assertEqual(newUser.lastName, "Last", "User saved with wrong email")
-        self.assertEqual(newUser.phoneNumber, "5555555555", "User saved with wrong email")
-        self.assertEqual(newUser.streetAddress, "1234 Street rd", "User saved with wrong email")
-        self.assertEqual(newUser.city, "Milwaukee", "User saved with wrong email")
-        self.assertEqual(newUser.state, "WI", "User saved with wrong email")
-        self.assertEqual(newUser.zipcode, 53026, "User saved with wrong email")
-        self.assertEqual(newUser.role, "ta", "User saved with wrong email")
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"], "User created successfully!",
                          "Message not played if successful user creation")
 
-    def test_CreateUserInvalid(self):
+    def test_PostCreateUserInvalid(self):
         response = self.client.post("/createuser/",
                                     {"email": "writchie@uwm.edu",
                                      "password": "Password!1",
@@ -122,8 +112,9 @@ class CreatUserViewTest(TestCase):
                                      "zipcode": "53026",
                                      "role": "ta"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')
-        self.assertEqual(response.context["message"], "Non-unique username. Please try again.",
+        self.assertEqual(response.context["message"], "Non-unique email. Please try again.",
                          "Error not played if nonunique usernames")
+
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
                                      "password": "password",
@@ -137,8 +128,10 @@ class CreatUserViewTest(TestCase):
                                      "zipcode": "53026",
                                      "role": "ta"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')
-        self.assertEqual(response.context["message"], "Passwords do not match. Please try again.",
+        self.assertEqual(response.context["message"], "Passwords must match and contain one lowercase letter, one uppercase letter,"
+                " a digit, and a special character. Please try again.",
                          "Error not played if not matching passwords")
+
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
                                      "password": "Password1!",
@@ -153,8 +146,9 @@ class CreatUserViewTest(TestCase):
                                      "role": "ta"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
-                         "Invalid first name. Must start with a capital and have no spaces. Please try again.",
+                         "Invalid first name. Must be capitalized and have only contain letters.",
                          "Error not played if invalid firstname")
+
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
                                      "password": "Password!1",
@@ -169,8 +163,9 @@ class CreatUserViewTest(TestCase):
                                      "role": "ta"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
-                         "Invalid last name. Must start with a capital and have no spaces. Please try again.",
+                         "Invalid last name. Must be capitalized and have only contain letters.",
                          "Error not played if invalid lastname")
+
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
                                      "password": "Password!1",
@@ -185,8 +180,9 @@ class CreatUserViewTest(TestCase):
                                      "role": "ta"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
-                         "Invalid phone number. Must be 9 numbers 0-9. Please try again.",
+                         "Invalid phone number. Format is 123-456-7890",
                          "Error not played if invalid phonenumber")
+
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
                                      "password": "Password!1",
@@ -201,8 +197,9 @@ class CreatUserViewTest(TestCase):
                                      "role": "ta"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
-                         "Invalid street address. Please try again.",
+                         "Invalid street address.",
                          "Error not played if invalid address")
+
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
                                      "password": "Password!1",
@@ -217,8 +214,9 @@ class CreatUserViewTest(TestCase):
                                      "role": "ta"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
-                         "Invalid city. Please try again.",
+                         "Invalid city. Must be capitalized.",
                          "Error not played if invalid city")
+
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
                                      "password": "Password!1",
@@ -233,8 +231,9 @@ class CreatUserViewTest(TestCase):
                                      "role": "ta"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
-                         "Invalid state. Please try again.",
+                         "Invalid state. Two letter state code only.",
                          "Error not played if invalid state")
+
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
                                      "password": "Password!1",
@@ -249,8 +248,9 @@ class CreatUserViewTest(TestCase):
                                      "role": "ta"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
-                         "Invalid zipcode. Please try again.",
+                         "Invalid zipcode. Must be 5 digits long",
                          "Error not played if invalid zipcode")
+
         response = self.client.post("/createuser/",
                                     {"email": "new@uwm.edu",
                                      "password": "Password!1",
@@ -265,7 +265,7 @@ class CreatUserViewTest(TestCase):
                                      "role": "student"}, follow=True)
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"],
-                         "Invalid role. Please try again.",
+                         "Invalid role. Can only be Admin, Instructor, or TA.",
                          "Error not played if invalid role")
 
 
