@@ -58,13 +58,16 @@
 {% if role == "admin" %}
     <form action="/userpage/" method="post">
         {% csrf_token %}
-        <button type="submit" name="navigation" value="directory" class="bluebutton">Back to Directory</button>
-        {% csrf_token %}
         <button type="submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
         {% csrf_token %}
         <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser"
                 class="redbutton">Delete User
         </button>
+        <br>
+        {% csrf_token %}
+        <button type="submit" name="navigation" value="directory" class="bluebutton">Back to Directory</button>
+        {% csrf_token %}
+        <button type="submit" name="navigation" value="dashboard" class="bluebutton">Back to Dashboard</button>
     </form>
 {% endif %}
 </body>
