@@ -10,7 +10,7 @@
 </head>
 <body id="wrapper">
 <div id="navlist">
-    <h1>Section Page - {{ section.sectionnumber }}</h1>
+    <h1>Section Page - {{ section.sectionnumber }} {{ section.type }}</h1>
     <form action="/sectionpage/" method="post">
         {% csrf_token %}
         <button type="submit" name="navigation" value="logout" class="redbutton">Logout</button>
