@@ -37,7 +37,7 @@
         {% csrf_token %}
         <button type="submit" name="navigation" value="editcourse" class="bluebutton">Edit This Course</button>
         {% csrf_token %}
-        <button type="submit" name="navigation" value="deletecourse" class="redbutton">Delete Course</button>
+        <button type="submit" name="navigation" onclick="return confirm('Are you sure?')" value="deletecourse" class="redbutton">Delete Course</button>
     </form>
 {% endif %}
 <table id="myTable">
