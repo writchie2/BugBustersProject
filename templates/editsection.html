@@ -30,6 +30,7 @@
 </div>
 <br>
 <br>
+{{ message }}
 <table id="myTable">
     <tr>
         <td class="label">Current Section Number:</td>
@@ -119,7 +120,6 @@
         </td>
     </tr>
 </table>
-{{ message }}
 <form action="/editsection/" method="post">
     {% csrf_token %}
     <button type="submit" name="navigation" value="cancel" class="redbutton">Cancel</button>

@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import Course
 from SchedulingApp.functions import (
@@ -10,57 +11,6 @@ from SchedulingApp.functions import (
 )
 from django.test import TestCase
 
-
-class TestCreateCourse(TestCase):
-    def setUp(self):
-        self.validCourse = Course(
-            name="Test",
-            department="Department",
-            courseNumber=101,
-            semester="Spring",
-            year=2024,
-        )
-
-        self.invalidCourse = Course(
-            name="",
-            department="Invalid",
-            courseNumber=000,
-            semester="Invalid",
-            year=1000,
-        )
-
-    def testCourseName(self):
-        validName = func_ValidateCourseName(self.validCourse.name)
-        self.assertTrue(validName, f"The name '{self.validCourse.name}' should be considered valid.")
-        invalidName = func_ValidateCourseName(self.invalidCourse.name)
-        self.assertFalse(invalidName, f"The name '{self.invalidCourse.name}' should be considered invalid.")
-
-    def testDepartment(self):
-        validDepartment = func_ValidateDepartment(self.validCourse.department)
-        self.assertTrue(validDepartment, f"The department '{self.validCourse.department}' should be considered valid.")
-        invalidDepartment = func_ValidateCourseName(self.invalidCourse.department)
-        self.assertFalse(invalidDepartment,
-                         f"The department '{self.invalidCourse.department}' should be considered invalid.")
-
-    def testCourseNumber(self):
-        validCourseNumber = func_ValidateCourseNumber(self.validCourse.courseNumber)
-        self.assertTrue(validCourseNumber,
-                        f"The course number'{self.validCourse.courseNumber}' should be considered valid.")
-        invalidCourseNumber = func_ValidateCourseName(self.invalidCourse.courseNumber)
-        self.assertFalse(invalidCourseNumber,
-                         f"The course number '{self.invalidCourse.courseNumber}' should be considered invalid.")
-
-    def testSemester(self):
-        validSemester = func_ValidateSemester(self.validCourse.semester)
-        self.assertTrue(validSemester, f"The semester '{self.validCourse.semester}' should be considered valid.")
-        invalidSemester = func_ValidateSemester(self.invalidCourse.semester)
-        self.assertFalse(invalidSemester, f"The semester '{self.invalidCourse.semester}' should be considered invalid.")
-
-    def testYear(self):
-        validYear = func_ValidateYear(self.validCourse.year)
-        self.assertTrue(validYear, f"The year '{self.validCourse.year}' should be considered valid.")
-        invalidYear = func_ValidateYear(self.invalidCourse.year)
-        self.assertFalse(invalidYear, f"The year '{self.invalidCourse.year}' should be considered invalid.")
 
 class ValidateCourseNameTest(TestCase):
     def test_Valid(self):
@@ -78,8 +28,6 @@ class ValidateCourseNameTest(TestCase):
     def test_HasNumbers(self):
         result = func_ValidateCourseName("12 Computer")
         self.assertFalse(result, "Name with only numbers returns True (Valid).")
-
-
 
     def test_IncorrectSpacing(self):
         result = func_ValidateCourseName(" Math 101")
@@ -112,6 +60,7 @@ class ValidateDepartmentTests(TestCase):
     def test_HasNumbers(self):
         result = func_ValidateDepartment("12COMPSCI")
         self.assertFalse(result, "Department with numbers returns True (Valid).")
+
     def test_HasLowerCase(self):
         result = func_ValidateDepartment("compsci")
         self.assertFalse(result, "Department with lowercase letters returns True (Valid).")
@@ -130,10 +79,110 @@ class ValidateDepartmentTests(TestCase):
         result = func_ValidateDepartment(2.5)
         self.assertFalse(result, "Department number that is a float returns True (Valid).")
 
-class ValidateCourseNumberTests:
-    pass
 
-class ValidateSemesterTests:
-    pass
-class ValidateYearTests:
-    pass
+class ValidateCourseNumberTests(TestCase):
+    def test_Valid(self):
+        result = func_ValidateCourseNumber(101, "AMLLC")
+        self.assertTrue(result, "AMLLC 101 returns False (Invalid).")
+        result = func_ValidateCourseNumber(458, "BIO SCI")
+        self.assertTrue(result, "BIO SCI 458 returns False (Invalid).")
+        result = func_ValidateCourseNumber(205, "CELTIC")
+        self.assertTrue(result, "CELTIC 205 returns False (Invalid).")
+
+    def test_InvalidTooShort(self):
+        result = func_ValidateCourseNumber(99, "DANCE")
+        self.assertFalse(result, "DANCE 99 returns True (Valid).")
+        result = func_ValidateCourseNumber(13, "ECON")
+        self.assertFalse(result, "ECON 13 returns True (Valid).")
+        result = func_ValidateCourseNumber(54, "FILM")
+        self.assertFalse(result, "FILM 54 returns True (Valid).")
+
+    def test_InvalidTooLong(self):
+        result = func_ValidateCourseNumber(1000, "GREEK")
+        self.assertFalse(result, "GREEK 1000 returns True (Valid).")
+        result = func_ValidateCourseNumber(9999, "HMONG")
+        self.assertFalse(result, "HMONG 9999 returns True (Valid).")
+        result = func_ValidateCourseNumber(1945, "INFOST")
+        self.assertFalse(result, "INFOST 1945 returns True (Valid).")
+
+    def test_InvalidDepartment(self):
+        result = func_ValidateCourseNumber(101, "GAMES")
+        self.assertFalse(result, "GAMES 101 returns True (Valid).")
+        result = func_ValidateCourseNumber(420, "FOOD")
+        self.assertFalse(result, "FOOD 420 returns True (Valid).")
+        result = func_ValidateCourseNumber(182, "PYTHON")
+        self.assertFalse(result, "PYTHON 182 returns True (Valid).")
+
+    def test_InvalidNonNumericValue(self):
+        invalid_test_cases = [
+            ("A101", "JAMS"),
+            ("101A", "KOREAN"),
+            ("10A1", "LACUSL"),
+        ]
+        for courseNumber, department in invalid_test_cases:
+            with self.subTest(course_number=courseNumber, department=department):
+                result = func_ValidateCourseNumber(courseNumber, department)
+                self.assertFalse(result,
+                                 f"{department} {courseNumber} returns True (Valid).")
+
+    def test_InvalidParameters(self):
+        invalid_test_cases = [
+            (91, "SCI"),
+            (1023, "THEOREMS"),
+            ("1O0", "MKE"),
+        ]
+        for courseNumber, department in invalid_test_cases:
+            with self.subTest(course_number=courseNumber, department=department):
+                result = func_ValidateCourseNumber(courseNumber, department)
+                self.assertFalse(result,
+                                 f"{department} {courseNumber} returns True (Valid).")
+
+
+class ValidateSemesterTests(TestCase):
+    def test_Valid(self):
+        valid_semesters = ["spring", "summer", "fall", "winter"]
+        for semester in valid_semesters:
+            with self.subTest(semester=semester):
+                result = func_ValidateSemester(semester)
+                self.assertTrue(result, f"{semester} should be considered a valid semester.")
+
+    def test_InvalidEmpty(self):
+        result = func_ValidateSemester("")
+        self.assertFalse(result, "Empty semester returns True (Valid).")
+
+    def test_InvalidNonexistent(self):
+        result = func_ValidateSemester("Autumn")
+        self.assertFalse(result, "Autumn returns True (Valid).")
+        result = func_ValidateSemester("Break")
+        self.assertFalse(result, "Break returns True (Valid).")
+
+    def test_InvalidInvalidSpacing(self):
+        result = func_ValidateSemester(" Fall")
+        self.assertFalse(result, "Semester with leading space returns True (Valid).")
+        result = func_ValidateSemester("Spring ")
+        self.assertFalse(result, "Semester with trailing space returns True (Valid).")
+        result = func_ValidateSemester("Summer   ")
+        self.assertFalse(result, "Semester with more than one inner space returns True (Valid).")
+
+    def test_invalidArg(self):
+        result = func_ValidateSemester(1)
+        self.assertFalse(result, "Integer as an argument returns True (Valid).")
+        result = func_ValidateSemester(2.5)
+        self.assertFalse(result, "Float as an argument returns True (Valid).")
+
+
+class ValidateYearTests(TestCase):
+    def test_Valid(self):
+        self.assertTrue(func_ValidateYear(1957), "1956 should be considered a valid year.")
+        self.assertTrue(func_ValidateYear(2000), "2000 should be considered a valid year.")
+        self.assertTrue(func_ValidateYear(2025), "2025 should be considered a valid year.")
+
+    def test_OutOfRange(self):
+        self.assertFalse(func_ValidateYear(1956), "1955 should be considered an invalid year.")
+        self.assertFalse(func_ValidateYear(2026), "2026 should be considered an invalid year.")
+        self.assertFalse(func_ValidateYear(3000), "3000 should be considered an invalid year.")
+
+    def test_InvalidType(self):
+        self.assertFalse(func_ValidateYear("abc"), "String 'abc' should be considered invalid.")
+        self.assertFalse(func_ValidateYear(2000.5), "Float 2000.5 should be considered invalid.")
+        self.assertFalse(func_ValidateYear(True), "Boolean True should be considered invalid.")

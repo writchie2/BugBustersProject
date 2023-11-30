@@ -18,6 +18,9 @@ class SectionPageTest(TestCase):
         self.swe.save()
         self.section = Section(1, 100, 'lecture', "Chemistry BLDG 180", "TH", "09:30", "10:20", self.swe.id)
         self.section.save()
+        self.henry = MyUser(1, "writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+                            "Milwaukee", "WI", 53026, "admin")
+        self.henry.save()
 
     def test_GetTemplate(self):
         response = self.client.get('/sectionpage/')

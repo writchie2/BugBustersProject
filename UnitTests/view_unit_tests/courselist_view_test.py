@@ -12,12 +12,15 @@ class CourseListViewTest(TestCase):
         session["email"] = "writchie@uwm.edu"
         session["role"] = "admin"
         session.save()
-        self.swe = Course(1,"SWE", "COMPSCI", 361, "spring", 2023)
+        self.swe = Course(1,"Software Engineering", "COMPSCI", 361, "spring", 2023)
         self.swe.save()
-        self.ca = Course(2,"CA", "COMPSCI", 451, "spring", 2023)
+        self.ca = Course(2,"Computer Architecture", "COMPSCI", 451, "spring", 2023)
         self.ca.save()
-        self.geo = Course(3,"OPA", "GEOG", 120, "spring", 2023)
+        self.geo = Course(3,"Our Physical Environment", "GEOG", 120, "spring", 2023)
         self.geo.save()
+        self.henry = MyUser(1, "writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+                            "Milwaukee", "WI", 53026, "admin")
+        self.henry.save()
     def test_GetTemplate(self):
         response = self.client.get('/courselist/')
         self.assertTemplateUsed(response, 'courselist.html')

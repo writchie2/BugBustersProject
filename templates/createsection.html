@@ -67,7 +67,7 @@
             <td><select name="type" id="type" required>
                 <option value="lecture">Lecture</option>
                 <option value="grader">Grader</option>
-                <option value="section">Section</option>
+                <option value="lab">Lab</option>
             </select></td>
         </tr>
     </table>
@@ -75,7 +75,7 @@
 </form>
 <form action="/createsection/" method="post">
     {% csrf_token %}
-    <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="Cancel" class="redbutton">
+    <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="cancel" class="redbutton">
         Cancel
     </button>
 </form>

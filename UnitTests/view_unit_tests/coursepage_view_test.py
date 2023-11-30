@@ -5,7 +5,7 @@ from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
 
-class UserPageTest(TestCase):
+class CoursePageTest(TestCase):
     def setUp(self):
         self.client = Client()
         session = self.client.session
@@ -15,6 +15,9 @@ class UserPageTest(TestCase):
         session.save()
         self.swe = Course(1, "SWE", "COMPSCI", 361, "spring", 2023)
         self.swe.save()
+        self.henry = MyUser(1, "writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
+                            "Milwaukee", "WI", 53026, "admin")
+        self.henry.save()
 
     def test_GetTemplate(self):
         response = self.client.get('/coursepage/')
