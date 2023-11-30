@@ -34,6 +34,9 @@
 {% if role == 'admin' %}
     <form action="/coursepage/" method="post">
         {% csrf_token %}
+        <button type="submit" name="navigation" value="courselist" class="bluebutton">Back to Courses</button>
+        <br>
+        {% csrf_token %}
         <button type="submit" name="navigation" value="createsection" class="greenbutton">Create New Section</button>
         {% csrf_token %}
         <button type="submit" name="navigation" value="editcourse" class="bluebutton">Edit This Course</button>
