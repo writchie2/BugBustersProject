@@ -21,7 +21,7 @@ class UserAsDictTest(TestCase):
         self.assertEqual(dict.get("streetaddress"), self.henry.streetAddress, "streetaddress is not the same")
         self.assertEqual(dict.get("city"), self.henry.city, "city is not the same")
         self.assertEqual(dict.get("state"), self.henry.state, "state is not the same")
-        self.assertEqual(dict.get("zipcode"), self.henry.zipcode, "zipcode is not the same")
+        self.assertEqual(dict.get("zipcode"), str(self.henry.zipcode), "zipcode is not the same")
         self.assertEqual(dict.get("role"), self.henry.role.capitalize(), "role is not the same")
         self.assertEqual(dict.get("fullname"), self.henry.__str__(), "fullname is not the same")
     def test_DictionaryNotCreatedUser(self):
