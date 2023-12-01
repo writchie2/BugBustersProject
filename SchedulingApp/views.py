@@ -12,7 +12,7 @@ class Login(View):
         else:
             request.session.flush()
         return render(request, "login.html")
-
+#login
     def post(self, request):
         if "email" and "password" in request.POST:
             message = func_Login(request)
