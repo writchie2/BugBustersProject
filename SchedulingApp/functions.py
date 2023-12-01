@@ -58,6 +58,18 @@ def func_UserAsDict(userEmail):
     if userEmail is None or MyUser.objects.filter(email=userEmail).first() is None:
         raise Exception("User does not exist!")
     user = MyUser.objects.filter(email=userEmail).first()
+    user_zipcode = user.zipcode
+    if user_zipcode <10000:
+        if user_zipcode<1000:
+            if user_zipcode<100:
+                if user_zipcode<10:
+                    zipcode_format = "0000"+str(user_zipcode)
+                zipcode_format = "000" + str(user_zipcode)
+            zipcode_format = "00" + str(user_zipcode)
+        zipcode_format = "0" + str(user_zipcode)
+    else:
+        zipcode_format = str(user_zipcode)
+
     dict = {
         "id": user.id,
         "email": user.email,
@@ -67,7 +79,7 @@ def func_UserAsDict(userEmail):
         "streetaddress": user.streetAddress,
         "city": user.city,
         "state": user.state,
-        "zipcode": user.zipcode,
+        "zipcode": zipcode_format,
         "role": user.role.capitalize(),
         "fullname": user.__str__()
     }
@@ -643,7 +655,9 @@ Input: int - a zipcode.
 Output: True if 5 digits long. False otherwise.
 """
 def func_ValidateZipCode(zip):
-    return isinstance(zip, int) and 10000 <= zip <= 99999
+    if len(str(zip))!=5:
+        return False
+    return isinstance(zip, int) and 1 <= zip <= 99999
 """
 Input: string - a role.
 Output: True 'admin', 'instructor', or 'ta'. False otherwise.
