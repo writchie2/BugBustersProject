@@ -54,11 +54,17 @@
         <td>{{ course.semester }} {{ course.year }}</td>
     </tr>
     <tr>
-        <td class="label" colspan="2">Assigned Users</td>
+        <td class="label">Assigned Users</td>
     </tr>
     {% for user in course.users %}
         <tr>
             <td colspan="2">{{ user.fullname }}</td>
+            <td>
+                <form action="/editsection/" method="post">
+                {% csrf_token %}
+                <input type="checkbox" name="assignuser" value="assignuser" id="assign"><label for="assign">Assign</label>
+                </form>
+            </td>
         </tr>
     {% endfor %}
     <tr>
