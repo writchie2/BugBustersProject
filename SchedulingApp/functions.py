@@ -58,17 +58,6 @@ def func_UserAsDict(userEmail):
     if userEmail is None or MyUser.objects.filter(email=userEmail).first() is None:
         raise Exception("User does not exist!")
     user = MyUser.objects.filter(email=userEmail).first()
-    user_zipcode = user.zipcode
-    if user_zipcode <10000:
-        if user_zipcode<1000:
-            if user_zipcode<100:
-                if user_zipcode<10:
-                    zipcode_format = "0000"+str(user_zipcode)
-                zipcode_format = "000" + str(user_zipcode)
-            zipcode_format = "00" + str(user_zipcode)
-        zipcode_format = "0" + str(user_zipcode)
-    else:
-        zipcode_format = str(user_zipcode)
 
     dict = {
         "id": user.id,
@@ -79,7 +68,7 @@ def func_UserAsDict(userEmail):
         "streetaddress": user.streetAddress,
         "city": user.city,
         "state": user.state,
-        "zipcode": zipcode_format,
+        "zipcode": user.zipcode,
         "role": user.role.capitalize(),
         "fullname": user.__str__()
     }
@@ -208,7 +197,7 @@ def func_CreateUser(request):
     street = request.POST["streetaddress"]
     city = request.POST["city"]
     state = request.POST["state"]
-    zip = int(request.POST["zipcode"])
+    zip = request.POST["zipcode"]
     role = request.POST["role"]
 
     if not func_ValidateEmail(email):
@@ -293,7 +282,7 @@ def func_EditUser(request):
         else:
             return "Invalid state. Two letter state code only."
     if 'zipcode' in request.POST:
-        if func_ValidateZipCode(int(request.POST['zipcode'])):
+        if func_ValidateZipCode(request.POST['zipcode']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.zipcode = request.POST['zipcode']
             changeUser.save()
@@ -498,6 +487,16 @@ def func_EditSection(request):
 def func_DeleteSection(request):
     Section.objects.filter(id=request.session['selectedsection']).first().delete()
 
+def func_AddUserToCourse(request):
+    pass
+
+def func_RemoveUserFromCourse(request):
+    pass
+
+def func_AddUserToSection(request):
+    pass
+def func_RemoveUserFromSection(request):
+    pass
 
 """
 MyUser validator functions used when creating or editing MyUser objects
@@ -655,9 +654,13 @@ Input: int - a zipcode.
 Output: True if 5 digits long. False otherwise.
 """
 def func_ValidateZipCode(zip):
-    if len(str(zip))!=5:
+    if not isinstance(zip, str):
         return False
-    return isinstance(zip, int) and 1 <= zip <= 99999
+    if len(zip) != 5:
+        return False
+    if any(not char.isdigit() for char in zip):
+        return False
+    return True
 """
 Input: string - a role.
 Output: True 'admin', 'instructor', or 'ta'. False otherwise.

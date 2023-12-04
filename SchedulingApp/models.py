@@ -9,7 +9,7 @@ class MyUser(models.Model):
     streetAddress = models.CharField(max_length=100, default="1234 Main st", editable=True)
     city = models.CharField(max_length=20, default="Milwaukee", editable=True)
     state = models.CharField(max_length=2, default="WI", editable=True)
-    zipcode = models.IntegerField(default=53206, editable=True)
+    zipcode = models.CharField(default="53206",max_length=10, editable=True)
     ROLE_CHOICES = [
         ("admin", "Admin"),
         ("instructor", "Instructor"),

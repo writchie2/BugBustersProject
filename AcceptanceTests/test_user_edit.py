@@ -210,7 +210,7 @@ class EditUserPageViewTest(TestCase):
                          "Role not saved when editing zipcode")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing zipcode")
-        self.assertEqual(self.emmaSonnen.zipcode, 53022,
+        self.assertEqual(self.emmaSonnen.zipcode, '53022',
                          "zipcode not edited in edituser when valid")
         self.assertEqual(response.context["message"], "Zipcode changed successfully!",
                          "success message does not show for successful edit")
@@ -225,7 +225,7 @@ class EditUserPageViewTest(TestCase):
                          "Role not saved when editing zipcode")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing zipcode")
-        self.assertEqual(self.emmaSonnen.zipcode, 53026,
+        self.assertEqual(self.emmaSonnen.zipcode, '53026',
                          "zipcode is edited in edituser when invalid")
         self.assertEqual(response.context["message"], "Invalid zipcode. Must be 5 digits long.",
                          "error message does not show for unsuccessful edit")

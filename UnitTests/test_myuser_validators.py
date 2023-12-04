@@ -245,8 +245,8 @@ class ValidateStateTest(TestCase):
 
 
 class ValidateZipCodeTest(TestCase):
-    valid_zip = [53206, 12345, 53220]
-    invalid_zip = [53, 2, -53220]
+    valid_zip = ['53206', '12345', '53220']
+    invalid_zip = ['53', '2', '-53220']
 
     def test_no_zip(self):
         self.assertFalse(func_ValidateZipCode(0), "Expected: False Actual: True")

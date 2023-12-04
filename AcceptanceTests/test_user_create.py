@@ -38,7 +38,7 @@ class CreateUserViewTest(TestCase):
         self.assertEqual(newUser.streetAddress, "1234 Street rd", "User saved with wrong email")
         self.assertEqual(newUser.city, "Milwaukee", "User saved with wrong email")
         self.assertEqual(newUser.state, "WI", "User saved with wrong email")
-        self.assertEqual(newUser.zipcode, 53026, "User saved with wrong email")
+        self.assertEqual(newUser.zipcode, '53026', "User saved with wrong email")
         self.assertEqual(newUser.role, "ta", "User saved with wrong email")
         self.assertTemplateUsed(response, 'createuser.html')
         self.assertEqual(response.context["message"], "User created successfully!",

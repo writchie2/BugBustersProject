@@ -105,7 +105,8 @@ class UserPage(View):
 
             if 'selecteduser' in request.session:
                 return render(request, "userpage.html",
-                      {"user": func_UserAsDict(request.session['selecteduser']), "role": request.session['role']})
+                      {"user": func_UserAsDict(request.session['selecteduser']), "role": request.session['role'],
+                       'ownpage': request.session['selecteduser'] == request.session['email']})
             else:
                 return redirect("/directory/")
         else:
@@ -127,7 +128,7 @@ class UserPage(View):
             del request.session["selecteduser"]
             return redirect("/directory/")
         if request.POST['navigation'] == "edituser":
-            if request.session['role'] != 'admin':
+            if request.session['role'] != 'admin' and request.session['email'] != request.session['selecteduser']:
                 return render(request, "userpage.html", {"message": "Only admins can edit users!","user": func_UserAsDict(request.session['selecteduser'])})
             else:
                 return redirect("/edituser/")
@@ -182,11 +183,13 @@ class EditUser(View):
                 del request.session['selectedcourse']
             if 'selectedsection' in request.session:
                 del request.session['selectedsection']
+            if 'selecteduser' not in request.session:
+                return redirect("/directory/")
 
-            if request.session['role'] != "admin" or 'selecteduser' not in request.session:
+            if request.session['role'] != "admin" and request.session['selecteduser'] != request.session['email']:
                 return redirect("/directory/")
             else:
-                return render(request, "edituser.html",{"user": func_UserAsDict(request.session['selecteduser'])})
+                return render(request, "edituser.html",{"user": func_UserAsDict(request.session['selecteduser']), 'role': request.session['role']})
         else:
             return redirect("/")
 
@@ -209,7 +212,7 @@ class EditUser(View):
             if request.POST['navigation'] == "cancel":
                 return redirect("/userpage/")
         message = func_EditUser(request)
-        return render(request, "edituser.html", {"user": func_UserAsDict(request.session['selecteduser']), "message": message})
+        return render(request, "edituser.html", {"user": func_UserAsDict(request.session['selecteduser']), "message": message, 'role': request.session['role']})
 
 
 

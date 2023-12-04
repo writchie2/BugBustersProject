@@ -7,19 +7,19 @@ from django.test import TestCase, Client
 class AlphabeticalMyUserListTest(TestCase):
     def setUp(self):
         self.emmaSonnen = MyUser(1,"esonnen@uwm.edu", "password", "Emma", "Sonnen", "5555555555", "1234 main st",
-                               "Milwaukee", "WI", 53026, "admin")
+                               "Milwaukee", "WI", '53026', "admin")
 
         self.emmaSonnen.save()
         self.henryRitchie = MyUser(2,"writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
-                               "Milwaukee", "WI", 53026, "admin")
+                               "Milwaukee", "WI", '53026', "admin")
 
         self.henryRitchie.save()
         self.sarahCramer = MyUser(3,"scramer@uwm.edu", "password", "Sarah", "Cramer", "5555555555", "1234 main st",
-                               "Milwaukee", "WI", 53026, "admin")
+                               "Milwaukee", "WI", '53026', "admin")
 
         self.sarahCramer.save()
         self.bobAllen = MyUser(4,"ballen@uwm.edu", "password", "Bob", "Allen", "5555555555", "1234 main st",
-                               "Milwaukee", "WI", 53026, "admin")
+                               "Milwaukee", "WI", '53026', "admin")
 
         self.bobAllen.save()
     def test_List(self):
