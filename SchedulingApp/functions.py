@@ -488,15 +488,16 @@ def func_DeleteSection(request):
     Section.objects.filter(id=request.session['selectedsection']).first().delete()
 
 def func_AddUserToCourse(request):
-    pass
+    return "Need to implement AddUserToCourse."
 
 def func_RemoveUserFromCourse(request):
-    pass
+    return "Need to implement RemoveUserFromCourse."
 
 def func_AddUserToSection(request):
-    pass
+    return "Need to implement AddUserToSection."
+
 def func_RemoveUserFromSection(request):
-    pass
+    return "Need to implement RemoveUserFromSection."
 
 """
 MyUser validator functions used when creating or editing MyUser objects
