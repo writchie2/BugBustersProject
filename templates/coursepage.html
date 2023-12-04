@@ -69,10 +69,11 @@
         <td>{{ course.semester }} {{ course.year }}</td>
     </tr>
     <tr>
-        <td class="label" colspan="2">Assigned Users</td>
+        <td class="label">Assigned Users</td>
     </tr>
     {% for user in course.users %}
         <tr>
+
             <td colspan="1">{{ user.fullname }}</td>
             <td colspan="1">
                 <form action="/coursepage/" method="post">
@@ -84,6 +85,7 @@
                 <form action="/coursepage/" method="post">
                 {% csrf_token %}
                 <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ user.email }} class="redbutton">Remove User</button>
+
                 </form>
             </td>
         </tr>
