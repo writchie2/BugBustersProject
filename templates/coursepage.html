@@ -78,7 +78,7 @@
 
             <td>{{ user.fullname }}</td>
             <td>
-                <form action="/coursepage/" method="post">
+                <form action="/directory/" method="post">
                 {% csrf_token %}
                 <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View User</button>
                 </form>
