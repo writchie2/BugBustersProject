@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .models import Section, MyUser, Course
 from django.http import HttpResponseRedirect
-from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection, func_Login, func_AlphabeticalMyUserList, func_UserAsDict, func_AlphabeticalCourseList, func_CourseAsDict, func_AscendingSectionList, func_SectionAsDict, func_AddUserToCourse, func_AddUserToSection, func_RemoveUserFromCourse, func_RemoveUserFromSection
+from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection, func_Login, func_AlphabeticalMyUserList, func_UserAsDict, func_AlphabeticalCourseList, func_CourseAsDict, func_AscendingSectionList, func_SectionAsDict, func_AddUserToCourse, func_AddUserToSection, func_RemoveUserFromCourse, func_RemoveUserFromSection, func_RemoveExcessNewLine
 
 
 class Login(View):
@@ -87,8 +87,10 @@ class UserPage(View):
         if "email" and "role" in request.session:
             if 'selecteduser' in request.session:
                 return render(request, "userpage.html",
-                      {"user": func_UserAsDict(request.session['selecteduser']), "role": request.session['role'],
-                       'ownpage': request.session['selecteduser'] == request.session['email']})
+                      {"user": func_UserAsDict(request.session['selecteduser']),
+                       "role": request.session['role'],
+                       'ownpage': request.session['selecteduser'] == request.session['email'],
+                       'editbio': 'False'})
             else:
                 return redirect("/directory/")
         else:
@@ -97,27 +99,40 @@ class UserPage(View):
     def post(self, request):
         if 'email' not in request.session:
             return redirect('/')
-        if request.POST['navigation'] == "logout":
-            request.session.flush()
-            return redirect("/")
-        if request.POST['navigation'] == "dashboard":
-            return redirect("/dashboard/")
-        if request.POST['navigation'] == "courselist":
-            return redirect("/courselist/")
-        if request.POST['navigation'] == "directory":
-            return redirect("/directory/")
-        if request.POST['navigation'] == "edituser":
-            if request.session['role'] != 'admin' and request.session['email'] != request.session['selecteduser']:
-                return render(request, "userpage.html", {"message": "Only admins can edit users!","user": func_UserAsDict(request.session['selecteduser'])})
-            else:
-                return redirect("/edituser/")
-        if request.POST['navigation'] == "deleteuser":
-            if request.session['role'] != 'admin':
-                return render(request, "userpage.html", {"message": "Only admins can delete users!","user": func_UserAsDict(request.session['selecteduser'])})
-            else:
-                func_DeleteUser(request)
-                del request.session["selecteduser"]
+        if 'navigation' in request.POST:
+            if request.POST['navigation'] == "logout":
+                request.session.flush()
+                return redirect("/")
+            if request.POST['navigation'] == "dashboard":
+                return redirect("/dashboard/")
+            if request.POST['navigation'] == "courselist":
+                return redirect("/courselist/")
+            if request.POST['navigation'] == "directory":
                 return redirect("/directory/")
+            if request.POST['navigation'] == "edituser":
+                if request.session['role'] != 'admin' and request.session['email'] != request.session['selecteduser']:
+                    return render(request, "userpage.html", {"message": "Only admins can edit users!","user": func_UserAsDict(request.session['selecteduser'])})
+                else:
+                    return redirect("/edituser/")
+            if request.POST['navigation'] == "deleteuser":
+                if request.session['role'] != 'admin':
+                    return render(request, "userpage.html", {"message": "Only admins can delete users!","user": func_UserAsDict(request.session['selecteduser'])})
+                else:
+                    func_DeleteUser(request)
+                    del request.session["selecteduser"]
+                    return redirect("/directory/")
+        if 'editbio' in request.POST:
+            if request.POST['editbio'] == "True":
+                return render(request, "userpage.html",
+                              {"user": func_UserAsDict(request.session['selecteduser']),
+                               "role": request.session['role'],
+                               'ownpage': request.session['selecteduser'] == request.session['email'],
+                               'editbio': 'True'})
+        if 'savebio' in request.POST:
+            user = MyUser.objects.filter(email=request.session['selecteduser']).first()
+            user.bio = func_RemoveExcessNewLine(request.POST['savebio'])
+            user.save()
+            return redirect('/userpage/')
 
 
 class CreateUser(View):
@@ -154,7 +169,6 @@ class EditUser(View):
         if "email" and "role" in request.session:
             if 'selecteduser' not in request.session:
                 return redirect("/directory/")
-
             if request.session['role'] != "admin" and request.session['selecteduser'] != request.session['email']:
                 return redirect("/directory/")
             else:
@@ -265,13 +279,13 @@ class CoursePage(View):
             request.session["selectedsection"] = request.POST['selectedsection']
             return redirect("/sectionpage/")
         if 'adduser' in request.POST:
-            message = func_AddUserToCourse(request)
-            return render(request, "coursepage.html",
-                          {"course": func_CourseAsDict(request.session['selectedcourse']),
-                           "role": request.session['role'],
-                           'unassignedusers': func_AlphabeticalMyUserList(
-                               MyUser.objects.exclude(course=request.session['selectedcourse'])),
-                           'message': message})
+                message = func_AddUserToCourse(request)
+                return render(request, "coursepage.html",
+                              {"course": func_CourseAsDict(request.session['selectedcourse']),
+                               "role": request.session['role'],
+                               'unassignedusers': func_AlphabeticalMyUserList(
+                                   MyUser.objects.exclude(course=request.session['selectedcourse'])),
+                               'message': message})
         if 'selecteduser' in request.POST:
             request.session["selecteduser"] = request.POST['selecteduser']
             return redirect("/userpage/")

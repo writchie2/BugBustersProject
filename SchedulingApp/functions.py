@@ -70,7 +70,8 @@ def func_UserAsDict(userEmail):
         "state": user.state,
         "zipcode": user.zipcode,
         "role": user.role.capitalize(),
-        "fullname": user.__str__()
+        "fullname": user.__str__(),
+        "bio": user.bio
     }
     return dict
 
@@ -488,7 +489,22 @@ def func_DeleteSection(request):
     Section.objects.filter(id=request.session['selectedsection']).first().delete()
 
 def func_AddUserToCourse(request):
-    return "Need to implement AddUserToCourse."
+    if request.session['role'] != 'admin':
+        return "Only admins can add users to courses!"
+    try:
+        user = MyUser.objects.get(email=request.POST['adduser'])
+    except:
+        return "User does not exist!"
+
+    try:
+        course = Course.objects.get(id=request.session['selectedcourse'])
+    except:
+        return "This course does not exist!"
+    if course in user.course_set.all():
+        return "User is already in the course!"
+    course.assignedUser.add(user)
+    course.save()
+    return "User added successfully!"
 
 def func_RemoveUserFromCourse(request):
     return "Need to implement RemoveUserFromCourse."
@@ -903,3 +919,12 @@ def func_ValidateSectionType(type):
         return True
     else:
         return False
+
+def func_RemoveExcessNewLine(string):
+    lines = string.split('\r\n')
+    formatted_string =''
+    for line in lines:
+        if line != '':
+            formatted_string += line
+            formatted_string += '\r\n'
+    return formatted_string

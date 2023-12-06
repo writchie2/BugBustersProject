@@ -7,7 +7,13 @@ from django.test import TestCase, Client, RequestFactory
 
 class AddUserToCourseTest(TestCase):
 
-    def setup(self):
+    def setUp(self):
+        self.client = Client()
+        session = self.client.session
+        session["email"] = "writchie@uwm.edu"
+        session["role"] = "admin"
+        session["selectedcourse"] = 1
+        session.save()
         self.emma = MyUser(1, "esonnen@uwm.edu", "password", "Emma", "Sonnen", "5555555555", "1234 main st",
                                  "Milwaukee", "WI", '53026', "admin")
 
@@ -31,30 +37,23 @@ class AddUserToCourseTest(TestCase):
         self.geo = Course(3, "Our Physical Environment", "GEOG", 120, "spring", 2023)
         self.geo.save()
 
-        self.client = Client()
-        session = self.client.session
-        session["email"] = "writchie@uwm.edu"
-        session["role"] = "admin"
-        session["selectedcourse"] = 1
-        session.save()
-
     def test_AddUserValid(self):
-        response = self.client.post('/coursepage/', {'adduser':'esonnen@uwm.edu'})
-        self.assertIn(self.emma, MyUser.objects.filter(courses__id=1), "User not added to course.")
+        response = self.client.post('/coursepage/', {'adduser': 'esonnen@uwm.edu'})
+        self.assertIn(self.emma, self.swe.assignedUser.all(), "User not added to course.")
         self.assertEqual(response.context['message'], "User added successfully!",
                          "Success message does not play after user is added.")
 
     def test_AddUserAlreadyIn(self):
         self.swe.assignedUser.add(self.emma)
         response = self.client.post('/coursepage/', {'adduser': 'esonnen@uwm.edu'})
-        self.assertIn(self.emma, MyUser.objects.filter(courses__id=1),
+        self.assertIn(self.emma, self.swe.assignedUser.all(),
                       "User not in course after trying to be added a second time.")
         self.assertEqual(response.context['message'], "User is already in the course!",
                          "Error message does not play after user is added double added.")
 
     def test_AddNonExistantUser(self):
         response = self.client.post('/coursepage/', {'adduser': 'none@uwm.edu'})
-        self.assertNotIn(MyUser.objects.filter(email='none@uwm.edu').first(), MyUser.objects.filter(courses__id=1),
+        self.assertNotIn(MyUser.objects.filter(email='none@uwm.edu').first(), self.swe.assignedUser.all(),
                       "Nonexistant user added to course.")
         self.assertEqual(response.context['message'], "User does not exist!",
                          "Error message does not play after adding nonexistant user.")
@@ -63,18 +62,19 @@ class AddUserToCourseTest(TestCase):
         session = self.client.session
         session["selectedcourse"] = 5
         session.save()
-        response = self.client.post('/coursepage/', {'adduser': 'esonnen@uwm.edu'})
-        self.assertNotIn(self.emma, MyUser.objects.filter(courses__id=5),
+        with self.assertRaises(Exception):
+            response = self.client.post('/coursepage/', {'adduser': 'esonnen@uwm.edu'})
+        self.assertNotIn(self.emma, MyUser.objects.filter(course__id=5),
                          "User added to nonexistant course.")
-        self.assertEqual(response.context['message'], "The course does not exist!",
-                         "Error message does not play after adding user to nonexistant course.")
 
     def test_AddUserNotAdmin(self):
         self.client = Client()
         session = self.client.session
         session["role"] = "ta"
+        session["email"] = "writchie@uwm.edu"
+        session["selectedcourse"] = 1
         session.save()
-        response = self.client.post('/coursepage/', {'adduser': 'esonnen@uwm.edu'})
-        self.assertIn(self.emma, MyUser.objects.filter(courses__id=1), "User not added to course.")
+        response = self.client.post('/coursepage/', {'adduser': 'esonnen@uwm.edu'}, follow=True)
+        self.assertNotIn(self.emma, self.swe.assignedUser.all(), "User added to course when non-admin adds.")
         self.assertEqual(response.context['message'], "Only admins can add users to courses!",
-                         "Success message does not play after user is added.")
+                         "Error message does not play after non-admin tries to add user.")

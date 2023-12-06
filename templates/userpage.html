@@ -31,50 +31,75 @@
 <br>
 <br>
 {{ message }}
-<table id="myTable">
-    <tr>
-        <td class="label">User:</td>
-        <td>{{ user.fullname }}</td>
-    </tr>
-    <tr>
-        <td class="label">Email:</td>
-        <td>{{ user.email }}</td>
-    </tr>
-    <tr>
-        <td class="label">Role:</td>
-        <td>{{ user.role }}</td>
-    </tr>
-    {% if role == "admin" %}
-        <tr>
-            <td class="label">Phone Number:</td>
-            <td>{{ user.phonenumber }}</td>
-        </tr>
-        <tr>
-            <td class="label">Address:</td>
-            <td>{{ user.streetaddress }}. {{ user.city }}, {{ user.state }} {{ user.zipcode }}</td>
-        </tr>
-    {% endif %}
-</table>
+<div class = "grid-container">
+    <div class="grid-child">
+        <table id="myTable">
+            <tr>
+                <td class="label">User:</td>
+                <td>{{ user.fullname }}</td>
+            </tr>
+            <tr>
+                <td class="label">Email:</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td class="label">Role:</td>
+                <td>{{ user.role }}</td>
+            </tr>
+            {% if role == "admin" %}
+                <tr>
+                    <td class="label">Phone Number:</td>
+                    <td>{{ user.phonenumber }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Address:</td>
+                    <td>{{ user.streetaddress }}. {{ user.city }}, {{ user.state }} {{ user.zipcode }}</td>
+                </tr>
+            {% endif %}
+        </table>
+        <form action="/userpage/" method="post">
+            {% if role == "admin" or ownpage == True %}
+            {% csrf_token %}
+            <button type="submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
+            {% endif %}
 
-
-    <form action="/userpage/" method="post">
-        {% if role == "admin" or ownpage == True %}
-        {% csrf_token %}
-        <button type="submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
+            {% if role == "admin" %}
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser"
+                    class="redbutton">Delete User
+            </button>
+            {% endif %}
+            <br>
+            {% csrf_token %}
+            <button type="submit" name="navigation" value="directory" class="bluebutton">Back to Directory</button>
+            {% csrf_token %}
+            <button type="submit" name="navigation" value="dashboard" class="bluebutton">Back to Dashboard</button>
+        </form>
+    </div>
+    <div class ="grid-child">
+        {% if editbio == 'False' %}
+            <p class="label">About {{ user.fullname }}:</p>
+            <p id="bio-text">{{ user.bio|linebreaksbr }}</p>
+            {% if ownpage == True %}
+                <form action="/userpage/" method="post">
+                {% csrf_token %}
+                <button type="submit" name="editbio" value="True" class="bluebutton">Edit Bio</button>
+                </form>
+            {% endif %}
         {% endif %}
-
-        {% if role == "admin" %}
-        {% csrf_token %}
-        <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser"
-                class="redbutton">Delete User
-        </button>
+        {% if editbio == 'True' %}
+            <form action="/userpage/" method="post">
+            {% csrf_token %}
+            <textarea id="bio-text" name="savebio" rows="5" cols="80" maxlength="750">{{ user.bio }}</textarea>
+            <br>
+                <input type="submit" value="Save" class="bluebutton"></input>
+            </form>
         {% endif %}
-        <br>
-        {% csrf_token %}
-        <button type="submit" name="navigation" value="directory" class="bluebutton">Back to Directory</button>
-        {% csrf_token %}
-        <button type="submit" name="navigation" value="dashboard" class="bluebutton">Back to Dashboard</button>
-    </form>
+    </div>
+    <div class ="grid-child">
+        Courses: *Need to implement*
+    </div>
+</div>
 
 </body>
 </html>

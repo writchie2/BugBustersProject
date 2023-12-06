@@ -16,6 +16,7 @@ class MyUser(models.Model):
         ("ta", "TA")
     ]
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="ad", editable=True)
+    bio = models.TextField(default="No bio added.", max_length=500, editable=True)
     def __str__(self):
         return self.firstName + " " + self.lastName
 
