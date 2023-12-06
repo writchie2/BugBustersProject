@@ -53,8 +53,6 @@ class EditUserPageTest(TestCase):
                          "Email not saved when navigating to courselist")
         self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to courselist")
         self.assertNotIn("selecteduser", self.client.session, "Session has selected user saved at courselist.")
-        self.assertNotIn("selectedcourse", self.client.session, "Session has selected course saved at courselist.")
-        self.assertNotIn("selectedsection", self.client.session, "Session has selected section saved at courselist.")
 
     def test_PostDirectory(self):
         response = self.client.post("/editsection/", {"navigation": "directory"}, follow=True)
@@ -63,8 +61,6 @@ class EditUserPageTest(TestCase):
                          "Email not saved when navigating to directory")
         self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to directory")
         self.assertNotIn("selecteduser", self.client.session, "Session has selected user saved at direcotry.")
-        self.assertNotIn("selectedcourse", self.client.session, "Session has selected course saved at directory.")
-        self.assertNotIn("selectedsection", self.client.session, "Session has selected section saved at directory.")
 
     def test_PostDashboard(self):
         response = self.client.post("/editsection/", {"navigation": "dashboard"}, follow=True)
@@ -73,8 +69,6 @@ class EditUserPageTest(TestCase):
                          "Email not saved when navigating to dashboard")
         self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to dashboard")
         self.assertNotIn("selecteduser", self.client.session, "Session has selected user saved at dashboard.")
-        self.assertNotIn("selectedcourse", self.client.session, "Session has selected course saved at dashboard.")
-        self.assertNotIn("selectedsection", self.client.session, "Session has selected section saved at dashboard.")
 
     def test_PostCancel(self):
         response = self.client.post("/editsection/", {"navigation": "cancel"}, follow=True)

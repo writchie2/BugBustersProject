@@ -117,6 +117,7 @@
                 <input type="text" name="zipcode"> <input type="submit" value="Save" class="greenbutton"></form>
         </td>
     </tr>
+    {% if role == 'admin' %}
     <tr>
         <td class="label">Current Role:</td>
         <td>{{ user.role }}</td>
@@ -134,6 +135,7 @@
                 <input type="submit" value="Save" class="greenbutton"></form>
         </td>
     </tr>
+    {% endif %}
 </table>
 <form action="/edituser/" method="post">
     {% csrf_token %}

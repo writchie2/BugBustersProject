@@ -60,7 +60,7 @@ html {
 #wrapper {
   width: auto;
   height: auto;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -124,4 +124,30 @@ html {
 
 #myTable tr:nth-child(even) {
   background-color: #fcfcfc
+}
+
+.grid-container {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
+    grid-template-areas:  "user bio"
+                          "user  assignments";
+}
+.grid-child:nth-child(1) {
+  grid-area: user;
+}
+
+.grid-child:nth-child(2) {
+  grid-area: bio;
+}
+
+.grid-child:nth-child(3) {
+  grid-area: assignments;
+}
+
+
+#bio-text {
+  max-width: 600px;
+
 }
