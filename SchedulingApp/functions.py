@@ -64,17 +64,15 @@ def func_UserAsDict(userEmail):
     if userEmail is None or MyUser.objects.filter(email=userEmail).first() is None:
         raise Exception("User does not exist!")
     user = MyUser.objects.filter(email=userEmail).first()
-    user_zipcode = user.zipcode
-    if user_zipcode < 10000:
-        if user_zipcode < 1000:
-            if user_zipcode < 100:
-                if user_zipcode < 10:
-                    zipcode_format = "0000" + str(user_zipcode)
-                zipcode_format = "000" + str(user_zipcode)
-            zipcode_format = "00" + str(user_zipcode)
-        zipcode_format = "0" + str(user_zipcode)
-    else:
-        zipcode_format = str(user_zipcode)
+
+
+    my_courses = func_AlphabeticalCourseList(Course.objects.filter(assignedUser=user))
+    if not my_courses:
+        my_courses = None
+
+    my_sections = func_AscendingSectionList(Section.objects.filter(assignedUser=user))
+    if not my_sections:
+        my_sections = None
 
     dict = {
         "id": user.id,
@@ -85,9 +83,12 @@ def func_UserAsDict(userEmail):
         "streetaddress": user.streetAddress,
         "city": user.city,
         "state": user.state,
-        "zipcode": zipcode_format,
+        "zipcode": user.zipcode,
         "role": user.role.capitalize(),
-        "fullname": user.__str__()
+        "fullname": user.__str__(),
+        "bio": user.bio,
+        "courses": my_courses,
+        "sections": my_sections
     }
     return dict
 
@@ -226,7 +227,7 @@ def func_CreateUser(request):
     street = request.POST["streetaddress"]
     city = request.POST["city"]
     state = request.POST["state"]
-    zip = int(request.POST["zipcode"])
+    zip = request.POST["zipcode"]
     role = request.POST["role"]
 
     if not func_ValidateEmail(email):
@@ -312,7 +313,7 @@ def func_EditUser(request):
         else:
             return "Invalid state. Two letter state code only."
     if 'zipcode' in request.POST:
-        if func_ValidateZipCode(int(request.POST['zipcode'])):
+        if func_ValidateZipCode(request.POST['zipcode']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.zipcode = request.POST['zipcode']
             changeUser.save()
@@ -518,6 +519,32 @@ def func_EditSection(request):
 def func_DeleteSection(request):
     Section.objects.filter(id=request.session['selectedsection']).first().delete()
 
+def func_AddUserToCourse(request):
+    if request.session['role'] != 'admin':
+        return "Only admins can add users to courses!"
+    try:
+        user = MyUser.objects.get(email=request.POST['adduser'])
+    except:
+        return "User does not exist!"
+
+    try:
+        course = Course.objects.get(id=request.session['selectedcourse'])
+    except:
+        return "This course does not exist!"
+    if course in user.course_set.all():
+        return "User is already in the course!"
+    course.assignedUser.add(user)
+    course.save()
+    return "User added successfully!"
+
+def func_RemoveUserFromCourse(request):
+    return "Need to implement RemoveUserFromCourse."
+
+def func_AddUserToSection(request):
+    return "Need to implement AddUserToSection."
+
+def func_RemoveUserFromSection(request):
+    return "Need to implement RemoveUserFromSection."
 
 def func_AddUserToCourse(request):
     if request.session['role'] != 'admin':
@@ -746,11 +773,14 @@ Output: True if 5 digits long. False otherwise.
 
 
 def func_ValidateZipCode(zip):
-    if len(str(zip)) != 5:
+
+    if not isinstance(zip, str):
         return False
-    return isinstance(zip, int) and 1 <= zip <= 99999
-
-
+    if len(zip) != 5:
+        return False
+    if any(not char.isdigit() for char in zip):
+        return False
+    return True
 """
 Input: string - a role.
 Output: True 'admin', 'instructor', or 'ta'. False otherwise.
@@ -1022,3 +1052,12 @@ def func_ValidateSectionType(type):
         return True
     else:
         return False
+
+def func_RemoveExcessNewLine(string):
+    lines = string.split('\r\n')
+    formatted_string =''
+    for line in lines:
+        if line != '':
+            formatted_string += line
+            formatted_string += '\r\n'
+    return formatted_string

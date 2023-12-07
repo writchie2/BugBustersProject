@@ -9,13 +9,14 @@ class MyUser(models.Model):
     streetAddress = models.CharField(max_length=100, default="1234 Main st", editable=True)
     city = models.CharField(max_length=20, default="Milwaukee", editable=True)
     state = models.CharField(max_length=2, default="WI", editable=True)
-    zipcode = models.IntegerField(default=53206, editable=True)
+    zipcode = models.CharField(default="53206",max_length=10, editable=True)
     ROLE_CHOICES = [
         ("admin", "Admin"),
         ("instructor", "Instructor"),
         ("ta", "TA")
     ]
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="ad", editable=True)
+    bio = models.TextField(default="No bio added.", max_length=500, editable=True)
     def __str__(self):
         return self.firstName + " " + self.lastName
 

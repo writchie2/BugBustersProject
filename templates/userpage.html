@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>User - {{ user.fullname }}</title>
-    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'userpage.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body id="wrapper">
 <div id="navlist">
@@ -31,44 +31,95 @@
 <br>
 <br>
 {{ message }}
-<table id="myTable">
-    <tr>
-        <td class="label">User:</td>
-        <td>{{ user.fullname }}</td>
-    </tr>
-    <tr>
-        <td class="label">Email:</td>
-        <td>{{ user.email }}</td>
-    </tr>
-    <tr>
-        <td class="label">Role:</td>
-        <td>{{ user.role }}</td>
-    </tr>
-    {% if role == "admin" %}
-        <tr>
-            <td class="label">Phone Number:</td>
-            <td>{{ user.phonenumber }}</td>
-        </tr>
-        <tr>
-            <td class="label">Address:</td>
-            <td>{{ user.streetaddress }}. {{ user.city }}, {{ user.state }} {{ user.zipcode }}</td>
-        </tr>
-    {% endif %}
-</table>
-{% if role == "admin" %}
-    <form action="/userpage/" method="post">
-        {% csrf_token %}
-        <button type="submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
-        {% csrf_token %}
-        <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser"
-                class="redbutton">Delete User
-        </button>
-        <br>
-        {% csrf_token %}
-        <button type="submit" name="navigation" value="directory" class="bluebutton">Back to Directory</button>
-        {% csrf_token %}
-        <button type="submit" name="navigation" value="dashboard" class="bluebutton">Back to Dashboard</button>
-    </form>
-{% endif %}
+<div class = "grid-container">
+    <div class="grid-child">
+        <table id="myTable">
+            <tr>
+                <td class="label">User:</td>
+                <td>{{ user.fullname }}</td>
+            </tr>
+            <tr>
+                <td class="label">Email:</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td class="label">Role:</td>
+                <td>{{ user.role }}</td>
+            </tr>
+            {% if role == "admin" %}
+                <tr>
+                    <td class="label">Phone Number:</td>
+                    <td>{{ user.phonenumber }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Address:</td>
+                    <td>{{ user.streetaddress }}. {{ user.city }}, {{ user.state }} {{ user.zipcode }}</td>
+                </tr>
+            {% endif %}
+        </table>
+        <form action="/userpage/" method="post">
+            {% if role == "admin" or ownpage == True %}
+            {% csrf_token %}
+            <button type="submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
+            {% endif %}
+
+            {% if role == "admin" %}
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser"
+                    class="redbutton">Delete User
+            </button>
+            {% endif %}
+            <br>
+            {% csrf_token %}
+            <button type="submit" name="navigation" value="directory" class="bluebutton">Back to Directory</button>
+            {% csrf_token %}
+            <button type="submit" name="navigation" value="dashboard" class="bluebutton">Back to Dashboard</button>
+        </form>
+    </div>
+    <div class ="grid-child">
+        {% if editbio == 'False' %}
+            <p class="label">About {{ user.fullname }}:</p>
+            <p id="bio-text">{{ user.bio|linebreaksbr }}</p>
+            {% if ownpage == True %}
+                <form action="/userpage/" method="post">
+                {% csrf_token %}
+                <button type="submit" name="editbio" value="True" class="bluebutton">Edit Bio</button>
+                </form>
+            {% endif %}
+        {% endif %}
+        {% if editbio == 'True' %}
+            <p class="label">About {{ user.fullname }}:</p>
+            <form action="/userpage/" method="post">
+            {% csrf_token %}
+            <textarea id="bio-text" name="savebio" rows="5" cols="80" maxlength="750">{{ user.bio }}</textarea>
+            <br>
+                <input type="submit" value="Save" class="bluebutton"></input>
+            </form>
+        {% endif %}
+    </div>
+    <div class ="grid-child">
+        <p class="label">Assigned Courses:</p>
+        {% if user.courses == None %}
+            {{ user.fullname }} is not in any courses.
+        {% else %}
+            <table id="myTable">
+                {% for course in user.courses %}
+                    <tr>
+                        <td class="label">{{ course.title }}</td>
+                        <td>{{ course.semester }}, {{ course.year }}</td>
+                        <td>
+                            <form action="/courselist/" method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="selectedcourse" class="bluebutton" value={{ course.id }}>View Course
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+</div>
+
 </body>
 </html>

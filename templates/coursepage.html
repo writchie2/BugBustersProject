@@ -47,6 +47,21 @@
     </form>
 {% endif %}
 
+
+{% if role == 'admin' %}
+<form action="/coursepage/" method="post">
+{% csrf_token %}
+  <label for="adduser">Add a new user to the course:</label>
+  <input list="addusers" name="adduser" id="adduser">
+  <datalist id="addusers">
+      {% for user in unassignedusers %}
+          <option value= {{ user.email }}>{{ user.fullname }}</option>
+        {% endfor %}
+  </datalist>
+  <input type="submit">
+</form>
+{% endif %}
+
 <table id="myTable">
     <tr>
         <td class="label">Course:</td>
@@ -56,6 +71,8 @@
         <td class="label">Semester:</td>
         <td>{{ course.semester }} {{ course.year }}</td>
     </tr>
+</table>
+<table id="myTable">
     <tr>
         <td class="label">Assigned Users</td>
         <td>
@@ -76,6 +93,7 @@
     </tr>
     {% for user in course.users %}
         <tr>
+
             <td>{{ user.fullname }}</td>
             <td>
                 <form action="/coursepage/" method="post">
@@ -87,6 +105,8 @@
             </td>
         </tr>
     {% endfor %}
+</table>
+<table id="myTable">
     <tr>
         <td class="label" colspan="2">Sections</td>
         <td></td>

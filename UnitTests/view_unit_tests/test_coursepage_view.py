@@ -18,6 +18,13 @@ class CoursePageTest(TestCase):
         self.henry = MyUser(1, "writchie@uwm.edu", "password", "Henry", "Ritchie", "5555555555", "1234 main st",
                             "Milwaukee", "WI", 53026, "admin")
         self.henry.save()
+        self.emma = MyUser(2, "esonnen@uwm.edu", "password", "Emma", "Sonnen", "5555555555", "1234 main st",
+                           "Milwaukee", "WI", '53026', "admin")
+        self.emma.save()
+        self.swe.assignedUser.add(self.emma)
+        self.swe.save()
+
+
 
     def test_GetTemplate(self):
         response = self.client.get('/coursepage/')
@@ -81,7 +88,7 @@ class CoursePageTest(TestCase):
                          "Email not saved when navigating to userpage")
         self.assertEqual(self.client.session["role"], "admin", "Role not saved when navigating to editcourse")
         self.assertEqual(self.client.session["selectedcourse"], 1,
-                         "selected user not saved when navigating to editcourse")
+                         "selected course not saved when navigating to editcourse")
         self.assertNotIn("selecteduse", self.client.session, "Session has selected course saved at editcourse.")
         self.assertNotIn("selectedsection", self.client.session, "Session has selected section saved at editcourse.")
 
@@ -165,3 +172,66 @@ class CoursePageTest(TestCase):
                          "Session has selected user when non-admin tries to create section.")
         self.assertNotIn("selectedsection", self.client.session,
                          "Session has selected section when non-admin tries to create section")
+
+    def test_PostAddUserAdmin(self):
+        response = self.client.post("/coursepage/", {"adduser": "writchie@uwm.edu"}, follow=True)
+        self.assertTemplateUsed(response, 'coursepage.html')
+        self.assertEqual(self.client.session["email"], "writchie@uwm.edu",
+                         "Email not saved when adding user")
+        self.assertEqual(response.context['message'], "User added successfully!",
+                         "Success message does not play on user ass")
+        self.assertEqual(self.client.session["role"], "admin", "Role not saved when adding user")
+        self.assertEqual(self.client.session["selectedcourse"], 1,
+                         "selected user not saved when adding user")
+        self.assertNotIn("selecteduser", self.client.session, "Session has selected course saved when  adding user.")
+        self.assertNotIn("selectedsection", self.client.session, "Session has selected section saved when adding user.")
+
+    def test_PostAddUserNotAdmin(self):
+        session = self.client.session
+        session["email"] = "ballen@uwm.edu"
+        session["role"] = "ta"
+        session["selectedcourse"] = 1
+        session.save()
+        response = self.client.post("/coursepage/", {"adduser": "writchie@uwm.edu"}, follow=True)
+        self.assertTemplateUsed(response, 'coursepage.html')
+        self.assertEqual(self.client.session["email"], "ballen@uwm.edu",
+                         "Email not saved when nonadmin tries to add user")
+        self.assertEqual(response.context['message'], "Only admins can add users to courses!",
+                         "Error message does not play when nonadmin tries to add user")
+        self.assertEqual(self.client.session["role"], "ta", "Role not saved when when nonadmin tries to add user")
+        self.assertEqual(self.client.session["selectedcourse"], 1,
+                         "selected user not saved when when nonadmin tries to add user")
+        self.assertNotIn("selecteduser", self.client.session, "Session has selected course when nonadmin tries to add user.")
+        self.assertNotIn("selectedsection", self.client.session, "Session has selected section saved when nonadmin tries to add user.")
+
+    def test_PostRemoveUserAdmin(self):
+        response = self.client.post("/coursepage/", {"removeuser": "esonnen@uwm.edu"}, follow=True)
+        self.assertTemplateUsed(response, 'coursepage.html')
+        self.assertEqual(self.client.session["email"], "writchie@uwm.edu",
+                         "Email not saved when removing user")
+        self.assertEqual(response.context['message'], "User removed successfully!",
+                         "Success message does not play on user removed")
+        self.assertEqual(self.client.session["role"], "admin", "Role not saved when removing user")
+        self.assertEqual(self.client.session["selectedcourse"], 1,
+                         "selected user not saved when removing user")
+        self.assertNotIn("selecteduser", self.client.session, "Session has selected course when removing user.")
+        self.assertNotIn("selectedsection", self.client.session, "Session has selected section saved when removing user.")
+
+    def test_PostRemoveUserNotAdmin(self):
+        session = self.client.session
+        session["email"] = "ballen@uwm.edu"
+        session["role"] = "ta"
+        session["selectedcourse"] = 1
+        session.save()
+        response = self.client.post("/coursepage/", {"adduser": "esonnen@uwm.edu"}, follow=True)
+        self.assertTemplateUsed(response, 'coursepage.html')
+        self.assertEqual(self.client.session["email"], "ballen@uwm.edu",
+                         "Email not saved when nonadmin tries to remove user")
+        self.assertEqual(response.context['message'], "Only admins can remove users from courses!",
+                         "Error message does not play when nonadmin tries to remove user")
+        self.assertEqual(self.client.session["role"], "ta", "Role not saved when nonadmin tries to remove user")
+        self.assertEqual(self.client.session["selectedcourse"], 1,
+                         "selected user not saved when nonadmin tries to remove user")
+        self.assertNotIn("selecteduser", self.client.session, "Session has selected course when nonadmin tries to remove user.")
+        self.assertNotIn("selectedsection", self.client.session, "Session has selected section when nonadmin tries to remove user.")
+

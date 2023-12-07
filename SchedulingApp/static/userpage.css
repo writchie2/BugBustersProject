@@ -135,7 +135,6 @@ html {
                           "one  three";
 }
 
-
 .grid-child:nth-child(1) {
   grid-area: one;
 }
