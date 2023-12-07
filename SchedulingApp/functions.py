@@ -36,6 +36,7 @@ def func_Login(request):
 Takes a list of MyUser objects and returns a list of dictionaries created for each user.
 List is sorted by last name.
 """
+#TODO make geters/setter for user class
 def func_AlphabeticalMyUserList(user_bin):
     userList = []
     for user in user_bin:
@@ -54,6 +55,7 @@ Input is a string that represents a MyUser object email
 If email is blank or not associated with a user an exception is raised
 Returns a dictionary with all of the fields of the MyUser
 """
+#TODO make getters/setters for user class
 def func_UserAsDict(userEmail):
     if userEmail is None or MyUser.objects.filter(email=userEmail).first() is None:
         raise Exception("User does not exist!")
@@ -89,6 +91,7 @@ def func_UserAsDict(userEmail):
 Takes a list of Course objects and returns a list of dictionaries created for each course.
 List is sorted by title (department + courseNumber).
 """
+#TODO make getters/setters for course class
 def func_AlphabeticalCourseList(course_bin):
     courseList = []
     for course in course_bin:
@@ -107,6 +110,7 @@ Input is an int that represents a Course object id
 If id is blank or not associated with a user an exception is raised
 Returns a dictionary with all of the fields of the Course
 """
+#TODO make getters and setters for course class
 def func_CourseAsDict(courseID):
     if courseID is None or Course.objects.filter(id=courseID).first() is None:
         raise Exception("Course does not exist!")
@@ -128,6 +132,7 @@ def func_CourseAsDict(courseID):
 Takes a list of Section objects and returns a list of dictionaries created for each section.
 List is sorted by title (sectionNumber + type).
 """
+#TODO make getters and setters for section class
 def func_AscendingSectionList(section_bin):
     sectionList = []
     for section in section_bin:
@@ -144,6 +149,7 @@ Input is an int that represents a Section object id
 If id is blank or not associated with a user an exception is raised
 Returns a dictionary with all of the fields of the Section
 """
+#TODO get getters and setters for section class
 def func_SectionAsDict(sectionID):
     if sectionID is None or Section.objects.filter(id=sectionID).first() is None:
         raise Exception("Section does not exist!")
@@ -188,7 +194,7 @@ If validators pass function creates an object and returns with a success message
 If a validator function fails then no object is created and returns with a failure message.   
 """
 
-
+#TODO Make user creation method in user class
 def func_CreateUser(request):
     if(
         'email' not in request.POST or 'password' not in request.POST or
@@ -243,6 +249,7 @@ def func_CreateUser(request):
     user.save()
     return "User created successfully!"
 
+#TODO make setters for user
 def func_EditUser(request):
     if 'firstname' in request.POST:
         if func_ValidateFirstName(request.POST['firstname']):
@@ -309,10 +316,11 @@ def func_EditUser(request):
         else:
             return "Invalid role. Can only be Admin, Instructor, or TA."
 
-
+#TODO move to sections, add admin check
 def func_DeleteUser(request):
     MyUser.objects.filter(email=request.session['selecteduser']).first().delete()
-  
+
+  #TODO make course create method
 def func_CreateCourse(request):
     if ('coursename' not in request.POST or 'department' not in request.POST or
             'coursenumber' not in request.POST
@@ -339,7 +347,7 @@ def func_CreateCourse(request):
     newCourse.save()
     return "Course created successfully!"
 
-
+#TODO make course getters and setters
 def func_EditCourse(request):
     chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
     if 'coursename' in request.POST:
@@ -393,11 +401,11 @@ def func_EditCourse(request):
             chosen.save()
             return "Year edited successfully!"
 
-
+#TODO make course getters and setters
 def func_DeleteCourse(request):
     Course.objects.filter(id=request.session['selectedcourse']).first().delete()
 
-
+#TODO section create method
 def func_CreateSection(request):
     if ('sectionnumber' not in request.POST or 'location' not in request.POST or
             'starttime' not in request.POST
@@ -429,7 +437,7 @@ def func_CreateSection(request):
     newSection.save()
     return "Section created successfully!"
 
-
+#TODO section getters and setters
 def func_EditSection(request):
     chosen = Section.objects.filter(id=request.session['selectedsection']).first()
     if 'sectionnumber' in request.POST:
@@ -494,10 +502,10 @@ def func_EditSection(request):
             chosen.save()
             return "Type edited successfully!"
 
-
+#TODO move to section class
 def func_DeleteSection(request):
     Section.objects.filter(id=request.session['selectedsection']).first().delete()
-
+#TODO Make methods in course class to add user
 def func_AddUserToCourse(request):
     if request.session['role'] != 'admin':
         return "Only admins can add users to courses!"
