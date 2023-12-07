@@ -68,28 +68,31 @@
         <td class="label">Semester:</td>
         <td>{{ course.semester }} {{ course.year }}</td>
     </tr>
+</table>
+<table id="myTable">
     <tr>
         <td class="label">Assigned Users</td>
     </tr>
     {% for user in course.users %}
         <tr>
 
-            <td colspan="1">{{ user.fullname }}</td>
-            <td colspan="1">
-                <form action="/coursepage/" method="post">
+            <td>{{ user.fullname }}</td>
+            <td>
+                <form action="/directory/" method="post">
                 {% csrf_token %}
                 <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View User</button>
                 </form>
             </td>
-            <td colspan="1">
+            <td>
                 <form action="/coursepage/" method="post">
                 {% csrf_token %}
                 <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ user.email }} class="redbutton">Remove User</button>
-
                 </form>
             </td>
         </tr>
     {% endfor %}
+</table>
+<table id="myTable">
     <tr>
         <td class="label" colspan="2">Sections</td>
         <td></td>

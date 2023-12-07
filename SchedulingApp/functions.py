@@ -59,6 +59,14 @@ def func_UserAsDict(userEmail):
         raise Exception("User does not exist!")
     user = MyUser.objects.filter(email=userEmail).first()
 
+    my_courses = func_AlphabeticalCourseList(Course.objects.filter(assignedUser=user))
+    if not my_courses:
+        my_courses = None
+
+    my_sections = func_AscendingSectionList(Section.objects.filter(assignedUser=user))
+    if not my_sections:
+        my_sections = None
+
     dict = {
         "id": user.id,
         "email": user.email,
@@ -71,7 +79,9 @@ def func_UserAsDict(userEmail):
         "zipcode": user.zipcode,
         "role": user.role.capitalize(),
         "fullname": user.__str__(),
-        "bio": user.bio
+        "bio": user.bio,
+        "courses": my_courses,
+        "sections": my_sections
     }
     return dict
 

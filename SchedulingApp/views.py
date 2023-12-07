@@ -286,9 +286,6 @@ class CoursePage(View):
                                'unassignedusers': func_AlphabeticalMyUserList(
                                    MyUser.objects.exclude(course=request.session['selectedcourse'])),
                                'message': message})
-        if 'selecteduser' in request.POST:
-            request.session["selecteduser"] = request.POST['selecteduser']
-            return redirect("/userpage/")
         if 'removeuser' in request.POST:
             message = func_RemoveUserFromCourse(request)
             return render(request, "coursepage.html",
