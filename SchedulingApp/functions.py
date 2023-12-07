@@ -541,7 +541,11 @@ def func_RemoveUserFromCourse(request):
     return "Need to implement RemoveUserFromCourse."
 
 def func_AddUserToSection(request):
-    return "Need to implement AddUserToSection."
+    user = MyUser.objects.get(email=request.POST['adduser'])
+    course = Course.objects.get(id=request.session['selectedcourse'])
+    course.assignedUser.add(user)
+    course.save()
+    return "User added successfully!"
 
 def func_RemoveUserFromSection(request):
     return "Need to implement RemoveUserFromSection."
