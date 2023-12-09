@@ -28,6 +28,20 @@ class test_RemoveUserFromCourse(TestCase):
         # Log in as admin
         self.client.login(email='admin@uwm.edu', password='password!123')
 
+        # Create non-admin user
+        self.non_admin = MyUser.objects.create(
+            email='nonadmin@uwm.edu',
+            password='nonadminpassword!23',
+            firstName='Non',
+            lastName='Admin',
+            phoneNumber='9876543210',
+            streetAddress='5678 Side St',
+            city='Milwaukee',
+            state='WI',
+            zipcode=53206,
+            role='TA'
+        )
+
         # Create course
         self.course = Course.objects.create(
             name='Intro to Software Engineering',
@@ -136,4 +150,22 @@ class test_RemoveUserFromCourse(TestCase):
         self.assertEqual(other_course.assignedUser.count(), initial_other_course_user_count)
         self.assertIn(self.user, other_course.assignedUser.all())
 
+    def test_non_admin_attempt_remove_user(self):
+        # Count number of users before removal
+        initial_user_count = self.course.assignedUser.count()
 
+        # Log in as non-admin user
+        self.client.login(email='nonadmin@uwm.edu', password='nonadminpassword!23')
+
+        # Attempt to remove user from course as a non-admin user
+        response = self.client.post('/coursepage/', {'removeuser': 'user@uwm.edu'}, follow=True)
+
+        # Ensure the response indicates a permission error or similar
+        self.assertContains(response, "Permission Denied")
+
+        # Ensure the number of users is unchanged
+        self.assertEqual(self.course.assignedUser.count(), initial_user_count)
+
+        # Check that user was not deleted
+        user_exists = MyUser.objects.filter(email='user@uwm.edu').exists()
+        self.assertTrue(user_exists, "User was unexpectedly deleted from the database.")
