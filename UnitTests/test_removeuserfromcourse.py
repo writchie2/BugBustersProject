@@ -72,8 +72,10 @@ class test_RemoveUserFromCourse(TestCase):
 
     def test_user_not_in_course(self):
         # Create user not assigned to course
-        non_existing_user = MyUser.objects.create(email='nonexisting@uwm.edu', password='nonexistingpassword!2',
-                                                  firstName='John', lastName='Doe')
+        non_existing_user = MyUser.objects.create(email='nonexisting@uwm.edu',
+                                                  password='nonexistingpassword!2',
+                                                  firstName='John',
+                                                  lastName='Doe')
         # Count number of users
         initial_user_count = self.course.assignedUser.count()
 
@@ -95,7 +97,7 @@ class test_RemoveUserFromCourse(TestCase):
         initial_user_count = self.course.assignedUser.count()
 
         # Attempt to remove non-existing user
-        response = self.client.post('/coursepage/', {'removeuser': 'nonexisting@uwm.edu'}, follow=True)
+        response = self.client.post('/coursepage/', {'removeuser': 'random@uwm.edu'}, follow=True)
         self.assertTemplateUsed(response, 'coursepage.html')
         self.assertContains(response, "User does not exist!")
 
@@ -103,19 +105,35 @@ class test_RemoveUserFromCourse(TestCase):
         self.assertEqual(self.course.assignedUser.count(), initial_user_count)
 
 
-    def test_func_RemoveUserFromCourse_from_multiple_courses(self):
-        other_course = Course.objects.create(name='Other Course', department='MATH', courseNumber=456, semester='fall',
+    def test_user_not_removed_from_all_assigned_courses(self):
+        # Create new course
+        other_course = Course.objects.create(name='Other Course',
+                                             department='MATH',
+                                             courseNumber=456,
+                                             semester='fall',
                                              year=2023)
+
+        # Assign user to new course
         other_course.assignedUser.add(self.user)
 
+        # Count number of users before
         initial_user_count = self.course.assignedUser.count()
         initial_other_course_user_count = other_course.assignedUser.count()
 
-        func_RemoveUserFromCourse(self.user)
+        # Remove user
+        response = self.client.post('/coursepage/', {'removeuser': 'nonexisting@uwm.edu'}, follow=True)
+        self.assertTemplateUsed(response, 'coursepage.html')
+        self.assertContains(response, "User is already not assigned to this course!")
 
         self.assertEqual(self.course.assignedUser.count(), initial_user_count - 1)
         self.assertNotIn(self.user, self.course.assignedUser.all())
 
+        # Check that user was not deleted
+        user_exists = MyUser.objects.filter(email='user@uwm.edu').exists()
+        self.assertTrue(user_exists, "User was unexpectedly deleted from the database.")
+
         # Verify that the user is still associated with the other course
         self.assertEqual(other_course.assignedUser.count(), initial_other_course_user_count)
         self.assertIn(self.user, other_course.assignedUser.all())
+
+
