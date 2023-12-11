@@ -447,7 +447,34 @@ If a validator function fails then no object is created and returns with a failu
             chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
             chosen.year = newYear
             chosen.save()
-            return "Year edited successfully!" """
+
+            return "Year edited successfully!"
+
+def func_RemoveUserFromCourse(request):
+    if request.session['role'] != 'admin':
+        return "Permission Denied"
+    email_to_remove = request.POST.get('removeuser', None)
+    try:
+        user = MyUser.objects.get(email=email_to_remove)
+    except MyUser.DoesNotExist:
+        return "User does not exist!"
+    try:
+        course = Course.objects.filter(id=request.session['selectedcourse']).first()
+    except Course.DoesNotExist:
+        return "Course does not exist!"
+
+    if user not in course.assignedUser.all():
+        return "User is not in this course!"
+
+    course.assignedUser.remove(user)
+    course.save()
+    return "User removed from course successfully!"
+
+
+
+def func_DeleteCourse(request):
+    Course.objects.filter(id=request.session['selectedcourse']).first().delete()
+
 
 #TODO make course getters and setters
 """def func_DeleteCourse(request):

@@ -17,7 +17,9 @@
       <sourceFolder url="file://$MODULE_DIR$/Acceptance Tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/Unit Tests" isTestSource="true" />
     </content>
+
     <orderEntry type="jdk" jdkName="Python 3.12" jdkType="Python SDK" />
+
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TemplatesService">
