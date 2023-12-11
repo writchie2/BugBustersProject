@@ -74,7 +74,6 @@ Returns a dictionary with all of the fields of the MyUser
         raise Exception("User does not exist!")
     user = MyUser.objects.filter(email=userEmail).first()
 
-
     my_courses = func_AlphabeticalCourseList(Course.objects.filter(assignedUser=user))
     if not my_courses:
         my_courses = None
@@ -563,6 +562,7 @@ If a validator function fails then no object is created and returns with a failu
             chosen.save()
             return "Type edited successfully!"""
 
+
 #TODO move to section class
 """def func_DeleteSection(request):
     if request.session['role'] != 'admin':
@@ -637,7 +637,23 @@ def func_RemoveUserFromCourse(request):
 
 
 def func_AddUserToSection(request):
-    return "Need to implement AddUserToSection."
+    # if request.session['role'] != 'admin' or request.session['role'] != 'instructor':
+    #     return "Only admins and instructors can add users to sections!"
+
+    '''check instructor is assigned to the course from the section'''
+
+    user = MyUser.objects.get(email=request.POST['adduser'])
+    if user == None:
+        return "user is none"
+    section = Section.objects.get(id=request.session['selectedsection'])
+    if section == None:
+        return "section is none"
+    section.assignedUser = user
+    print(section)
+    print(section.assignedUser)
+    #user.save()
+    #section.save()
+    return "User added successfully!"
 
 
 def func_RemoveUserFromSection(request):
@@ -828,7 +844,9 @@ Input: int - a zipcode.
 Output: True if 5 digits long. False otherwise.
 """
 
+
 """def func_ValidateZipCode(zip):
+
 
     if not isinstance(zip, str):
         return False
@@ -836,7 +854,9 @@ Output: True if 5 digits long. False otherwise.
         return False
     if any(not char.isdigit() for char in zip):
         return False
+
     return True"""
+
 """
 Input: string - a role.
 Output: True 'admin', 'instructor', or 'ta'. False otherwise.
@@ -1112,11 +1132,15 @@ Output: True 'lecture', 'grader',or  'lab'. False otherwise.
     else:
         return False"""
 
+
 """def func_RemoveExcessNewLine(string):
+
     lines = string.split('\r\n')
-    formatted_string =''
+    formatted_string = ''
     for line in lines:
         if line != '':
             formatted_string += line
             formatted_string += '\r\n'
+
     return formatted_string"""
+
