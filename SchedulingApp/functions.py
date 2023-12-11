@@ -74,7 +74,6 @@ Returns a dictionary with all of the fields of the MyUser
         raise Exception("User does not exist!")
     user = MyUser.objects.filter(email=userEmail).first()
 
-
     my_courses = func_AlphabeticalCourseList(Course.objects.filter(assignedUser=user))
     if not my_courses:
         my_courses = None
@@ -448,7 +447,34 @@ If a validator function fails then no object is created and returns with a failu
             chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
             chosen.year = newYear
             chosen.save()
-            return "Year edited successfully!" """
+
+            return "Year edited successfully!"
+
+def func_RemoveUserFromCourse(request):
+    if request.session['role'] != 'admin':
+        return "Permission Denied"
+    email_to_remove = request.POST.get('removeuser', None)
+    try:
+        user = MyUser.objects.get(email=email_to_remove)
+    except MyUser.DoesNotExist:
+        return "User does not exist!"
+    try:
+        course = Course.objects.filter(id=request.session['selectedcourse']).first()
+    except Course.DoesNotExist:
+        return "Course does not exist!"
+
+    if user not in course.assignedUser.all():
+        return "User is not in this course!"
+
+    course.assignedUser.remove(user)
+    course.save()
+    return "User removed from course successfully!"
+
+
+
+def func_DeleteCourse(request):
+    Course.objects.filter(id=request.session['selectedcourse']).first().delete()
+
 
 #TODO make course getters and setters
 """def func_DeleteCourse(request):
@@ -563,6 +589,7 @@ If a validator function fails then no object is created and returns with a failu
             chosen.save()
             return "Type edited successfully!"""
 
+
 #TODO move to section class
 """def func_DeleteSection(request):
     if request.session['role'] != 'admin':
@@ -648,7 +675,8 @@ def func_RemoveUserFromSection(request):
         user_removing = MyUser.objects.get(email=request.session['email'])
     except:
         return "You are not logged in!"
-    if request.session['role'] != 'admin' and not(user_removing.role == 'instructor' and course in user_removing.course_set.all()):
+    if request.session['role'] != 'admin' and not (
+            user_removing.role == 'instructor' and course in user_removing.course_set.all()):
         return "Only admins or instructors of the course can remove users to sections!"
     try:
         user_removed = MyUser.objects.get(email=request.POST['removeuser'])
@@ -660,7 +688,6 @@ def func_RemoveUserFromSection(request):
     except:
         return "Section does not exist!"
 
-
     if section.assignedUser != user_removed:
         return "User is not assigned to the section!"
     if section.assignedUser == None:
@@ -668,7 +695,6 @@ def func_RemoveUserFromSection(request):
     section.assignedUser = None
     section.save()
     return "User removed successfully!"
-
 
 def func_AddUserToCourse(request):
     if request.session['role'] != 'admin':
@@ -690,31 +716,47 @@ def func_AddUserToCourse(request):
 
 
 def func_RemoveUserFromCourse(request):
-    if request.session['role'] != 'admin':
-        return "Only admins can remove users from courses!"
+    return "Need to implement RemoveUserFromCourse."
+
+
+def func_AddUserToSection(request):
+    # if request.session['role'] != 'admin' or request.session['role'] != 'instructor':
+    #     return "Only admins and instructors can add users to sections!"
+
+    '''check instructor is assigned to the course from the section'''
+
+    user = MyUser.objects.get(email=request.POST['adduser'])
+    if user == None:
+        return "user is none"
+    section = Section.objects.get(id=request.session['selectedsection'])
+    if section == None:
+        return "section is none"
+    section.assignedUser = user
+    print(section)
+    print(section.assignedUser)
+    #user.save()
+    #section.save()
+    return "User added successfully!"
+
+
+def func_RemoveUserFromSection(request):
+    if request.session['role'] != 'admin' or request.session['role'] != 'instructor':
+        return "Only admins and instructors of this course can remove users!"
     try:
-        user = MyUser.objects.filter(email=request.session['removeuser'])
+        user = MyUser.objects.get(email=request.POST['removeuser'])
     except:
         return "User does not exist!"
 
     try:
         course = Course.objects.get(id=request.session['selectedcourse'])
+        section = Section.objects.get(id=request.session['selectedsection'])
     except:
-        return "This course does not exist!"
-    if course not in user.course_set.all():
-        return "User is not in the course!"
-    course.assignedUser.remove(user)
-    course.save()
-    return "User removed successfully!"
-
-
-def func_AddUserToSection(request):
-    return "Need to implement AddUserToSection."
-
-
-def func_RemoveUserFromSection(request):
-    return "Need to implement RemoveUserFromSection."
-
+        return "This section does not exist!"
+    if section in user.section_set.all():
+        return "User is already in the section!"
+    section.assignedUser.remove(user)
+    section.save()
+    return "User removed successfully."
 
 """
 MyUser validator functions used when creating or editing MyUser objects
@@ -900,7 +942,9 @@ Input: int - a zipcode.
 Output: True if 5 digits long. False otherwise.
 """
 
+
 """def func_ValidateZipCode(zip):
+
 
     if not isinstance(zip, str):
         return False
@@ -908,7 +952,9 @@ Output: True if 5 digits long. False otherwise.
         return False
     if any(not char.isdigit() for char in zip):
         return False
+
     return True"""
+
 """
 Input: string - a role.
 Output: True 'admin', 'instructor', or 'ta'. False otherwise.
@@ -1184,11 +1230,15 @@ Output: True 'lecture', 'grader',or  'lab'. False otherwise.
     else:
         return False"""
 
+
 """def func_RemoveExcessNewLine(string):
+
     lines = string.split('\r\n')
-    formatted_string =''
+    formatted_string = ''
     for line in lines:
         if line != '':
             formatted_string += line
             formatted_string += '\r\n'
+
     return formatted_string"""
+

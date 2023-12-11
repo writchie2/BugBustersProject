@@ -12,7 +12,9 @@ from .Model_Classes.Section_Functions import func_SectionCreator, func_EditSecti
 
 from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_UserAsDict, func_AlphabeticalMyUserList, func_AscendingSectionList, func_AlphabeticalCourseList, func_SectionAsDict, func_CourseAsDict
 from .models import Section, MyUser, Course
+
 from .functions import func_AddUserToCourse, func_AddUserToSection, func_RemoveUserFromCourse, func_RemoveUserFromSection
+
 
 
 class Login(View):
@@ -354,6 +356,7 @@ class CoursePage(View):
         if 'selectedsection' in request.POST:
             request.session["selectedsection"] = request.POST['selectedsection']
             return redirect("/sectionpage/")
+
         if 'adduser' in request.POST:
                 message = func_AddUserToCourse(request)
                 return render(request, "coursepage.html",
@@ -376,6 +379,7 @@ class CoursePage(View):
             return "Only admins can delete courses!"
         else:
             return func_CourseDeleter(request.session['selectedcourse'])
+
 
 
 
