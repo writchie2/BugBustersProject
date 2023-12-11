@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Section Page</title>
-    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'sectionpage.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body id="wrapper">
 <div id="navlist">
@@ -91,6 +91,8 @@
             {% if section.assigneduser.fullname != None %}
                 {{ section.assigneduser.fullname }}
                 <form action="/sectionpage/" method="post">
+                {% csrf_token %}
+                <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View User</button>
                 {% csrf_token %}
                 <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ section.assigneduser.email }} class="redbutton">Remove User</button>
                 </form>

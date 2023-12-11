@@ -14,19 +14,4 @@
       <data-sources db="c5332d74-73d7-439c-a4aa-c6cdaefe3f04" ddl="8ad8672b-df56-418d-8f15-b603410d861c" />
     </mapping>
   </component>
-  <component name="SqlDataSourceStorage">
-    <option name="dataSources">
-      <list>
-        <State>
-          <option name="id" value="115a27d2-ae8e-4e96-829b-ffa5973c73ea" />
-          <option name="name" value="DDL data source" />
-          <option name="dbmsName" value="UNKNOWN" />
-          <option name="urls">
-            <array />
-          </option>
-          <option name="outLayout" value="File per object by schema.groovy" />
-        </State>
-      </list>
-    </option>
-  </component>
 </project>

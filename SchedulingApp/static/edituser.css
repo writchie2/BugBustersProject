@@ -64,27 +64,6 @@ html {
   margin: 0 auto;
 }
 
-#titlebar {
-  background-color: #c9daf8;
-  border-radius: 5px;
-  padding: 10px;
-  text-align: center;
-  margin-top: 10%;
-}
-
-#loginform {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10%;
-  text-align: right;
-}
-
-#loginform .label {
-  font-size: 20px;
-  font-weight: bold;
-}
-
 #navlist {
   padding-left: 4%;
   margin: 0;
@@ -98,12 +77,6 @@ html {
   text-align: center;
   float: right;
   display: inline;
-}
-
-#dashlist {
-  text-align:center;
-  display: block;
-  margin-top: 10%;
 }
 
 #myTable table {
@@ -127,8 +100,6 @@ html {
   background-color: #fcfcfc
 }
 
-
-
 .grid-container {
     display: grid;
     grid-gap: 0px;
@@ -148,11 +119,7 @@ html {
 .grid-child:nth-child(3) {
   grid-area: three;
 }
-.grid-child:nth-child(4) {
-  grid-area: four;
-}
 
 #bio-text {
   max-width: 600px;
-
 }
