@@ -101,6 +101,7 @@ html {
     grid-template-areas: "one one"
                          "two three"
                          "four four";
+
 }
 
 .grid-child:nth-child(1) {
