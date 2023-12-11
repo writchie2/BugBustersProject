@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Course Page - {{ course.title }}</title>
-    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'coursepage.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body id="wrapper">
 <div id="navlist">
@@ -30,100 +30,103 @@
 </div>
 <br>
 <br>
-{{ message }}
-{% if role == 'admin' %}
-    <form action="/coursepage/" method="post">
-        {% csrf_token %}
-        <button type="submit" name="navigation" value="courselist" class="bluebutton">Back to Courses</button>
-        <br>
-        {% csrf_token %}
-        <button type="submit" name="navigation" value="createsection" class="greenbutton">Create New Section</button>
-        {% csrf_token %}
-        <button type="submit" name="navigation" value="editcourse" class="bluebutton">Edit This Course</button>
-        {% csrf_token %}
-        <button type="submit" name="navigation" onclick="return confirm('Are you sure?')" value="deletecourse"
-                class="redbutton">Delete Course
-        </button>
-    </form>
-{% endif %}
-
-
-{% if role == 'admin' %}
-<form action="/coursepage/" method="post">
-{% csrf_token %}
-  <label for="adduser">Add a new user to the course:</label>
-  <input list="addusers" name="adduser" id="adduser">
-  <datalist id="addusers">
-      {% for user in unassignedusers %}
-          <option value= {{ user.email }}>{{ user.fullname }}</option>
+<div class="grid-container">
+    <div class="grid-child">
+    {% if role == 'admin' %}
+        <form action="/coursepage/" method="post">
+            {% csrf_token %}
+            <button type="submit" name="navigation" value="courselist" class="bluebutton">Back to Courses</button>
+            {{ message }}
+            <div class="totheright">
+                {% csrf_token %}
+                <button type="submit" name="navigation" value="editcourse" class="bluebutton">Edit This Course</button>
+                {% csrf_token %}
+                <button type="submit" name="navigation" onclick="return confirm('Are you sure?')" value="deletecourse"
+                        class="redbutton">Delete Course
+                </button>
+            </div>
+        </form>
+    {% endif %}
+    </div>
+    <div class="grid-child">
+    <table id="myTable">
+        <thead>
+        <tr>
+            <td class="label">Course:</td>
+            <td>{{ course.title }}</td>
+        </tr>
+        <tr>
+            <td class="label">Semester:</td>
+            <td>{{ course.semester }} {{ course.year }}</td>
+        </tr>
+        </thead>
+    </table>
+    </div>
+    <div class="grid-child">
+    <table id="myTable">
+        <thead>
+            <td class="label">Assigned Users: </td>
+            <td>
+                {% if role == 'admin' %}
+                    <form action="/coursepage/" method="post">
+                        {% csrf_token %}
+                        <label for="adduser">Add a user:</label>
+                        <input list="addusers" name="adduser" id="adduser">
+                        <datalist id="addusers">
+                            {% for user in unassignedusers %}
+                                <option value= {{ user.email }}>{{ user.fullname }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <input type="submit" class="greenbutton">
+                    </form>
+                {% endif %}
+            </td>
+        </thead>
+        <tbody>
+            {% for user in course.users %}
+                <tr>
+                    <td>{{ user.fullname }}</td>
+                    <td>
+                        <form action="/coursepage/" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View User</button>
+                        {% csrf_token %}
+                        <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ user.email }} class="redbutton">Remove User</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <div class="grid-child">
+    <table id="myTable">
+        <thead>
+            <td class="label">Sections: </td>
+            <td>
+                <form action="/coursepage/" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="navigation" value="createsection" class="greenbutton">Create New Section</button>
+                </form>
+            </td>
+        </thead>
+        <tbody>
+        {% for section in course.sections %}
+            <tr>
+                <td>{{ section.title }}</td>
+                <td>
+                    <form action="/coursepage/" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="selectedsection" class="bluebutton" value={{ section.id }}>View
+                            Section
+                        </button>
+                    </form>
+                </td>
+            </tr>
         {% endfor %}
-  </datalist>
-  <input type="submit">
-</form>
-{% endif %}
-
-<table id="myTable">
-    <tr>
-        <td class="label">Course:</td>
-        <td>{{ course.title }}</td>
-    </tr>
-    <tr>
-        <td class="label">Semester:</td>
-        <td>{{ course.semester }} {{ course.year }}</td>
-    </tr>
-</table>
-<table id="myTable">
-    <tr>
-        <td class="label">Assigned Users</td>
-        <td>
-            {% if role == 'admin' %}
-                <form action="/coursepage/" method="post">
-                    {% csrf_token %}
-                    <label for="adduser">Add a new user to the course:</label>
-                    <input list="addusers" name="adduser" id="adduser">
-                    <datalist id="addusers">
-                        {% for user in unassignedusers %}
-                            <option value= {{ user.email }}>{{ user.fullname }}</option>
-                        {% endfor %}
-                    </datalist>
-                    <input type="submit">
-                </form>
-            {% endif %}
-        </td>
-    </tr>
-    {% for user in course.users %}
-        <tr>
-
-            <td>{{ user.fullname }}</td>
-            <td>
-                <form action="/coursepage/" method="post">
-                {% csrf_token %}
-                <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View User</button>
-                {% csrf_token %}
-                <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ user.email }} class="redbutton">Remove User</button>
-                </form>
-            </td>
-        </tr>
-    {% endfor %}
-</table>
-<table id="myTable">
-    <tr>
-        <td class="label" colspan="2">Sections</td>
-        <td></td>
-    </tr>
-    {% for section in course.sections %}
-        <tr>
-            <td>{{ section.title }}</td>
-            <td>
-                <form action="/coursepage/" method="post">
-                    {% csrf_token %}
-                    <button type="submit" name="selectedsection" class="bluebutton" value={{ section.id }}>View
-                        Section
-                    </button>
-                </form>
-            </td>
-        </tr>
-    {% endfor %}
-</table>
+        </tbody>
+    </table>
+    </div>
+</div>
 </body>
 </html>
