@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .models import Section, MyUser, Course
 from django.http import HttpResponseRedirect
-from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection, func_Login, func_AlphabeticalMyUserList, func_UserAsDict, func_AlphabeticalCourseList, func_CourseAsDict, func_AscendingSectionList, func_SectionAsDict
+from .functions import func_CreateUser, func_EditUser, func_DeleteUser, func_CreateCourse, func_EditCourse, func_DeleteCourse, func_CreateSection, func_EditSection, func_DeleteSection, func_Login, func_AlphabeticalMyUserList, func_UserAsDict, func_AlphabeticalCourseList, func_CourseAsDict, func_AscendingSectionList, func_SectionAsDict, func_RemoveUserFromCourse
 
 
 class Login(View):
@@ -306,6 +306,10 @@ class CoursePage(View):
         if 'selectedsection' in request.POST:
             request.session["selectedsection"] = request.POST['selectedsection']
             return redirect("/sectionpage/")
+        if 'removeuser' in request.POST:
+            email_to_remove = request.POST['removeuser']
+            message = func_RemoveUserFromCourse(request, email_to_remove)
+            return render(request, "createcourse.html", {"message": message})
 
 
 class CreateCourse(View):

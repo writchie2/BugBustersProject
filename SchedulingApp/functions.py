@@ -393,24 +393,24 @@ def func_EditCourse(request):
             chosen.save()
             return "Year edited successfully!"
 
-def func_RemoveUserFromCourse(request):
+def func_RemoveUserFromCourse(request, email_to_remove):
     if request.session['role'] != 'admin':
-        return "Only Admins can remove users from courses!"
+        return "Permission Denied"
     try:
-        user = MyUser.objects.filter(email=request.session['selecteduser']).first()
-
-    except:
+        user = MyUser.objects.get(email=email_to_remove)
+    except MyUser.DoesNotExist:
         return "User does not exist!"
     try:
         course = Course.objects.filter(id=request.session['selectedcourse']).first()
-    except:
+    except Course.DoesNotExist:
         return "Course does not exist!"
-    #check if user is even in course
-    #otherwise say user is not in course
 
-    course.assignedUser.delete(user)
+    if user not in course.assignedUser.all():
+        return "User is not in this course!"
+
+    course.assignedUser.remove(user)
     course.save()
-    return("User has been removed!")
+    return "User removed from course successfully!"
 
 
 

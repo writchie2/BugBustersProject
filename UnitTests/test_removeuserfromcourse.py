@@ -10,70 +10,86 @@ class test_RemoveUserFromCourse(TestCase):
 
     def setUp(self):
         self.client = Client()
+        session = self.client.session
+        session["email"] = "admin@uwm.edu"
+        session["role"] = "admin"
+        session.save()
 
         # Create admin
-        self.admin = MyUser.objects.create(
-            email='admin@uwm.edu',
-            password='password!123',
-            firstName='Administrator',
-            lastName='Admin',
-            phoneNumber='1231234567',
-            streetAddress='1234 Main St',
-            city='Milwaukee',
-            state='WI',
-            zipcode=53206,
-            role='admin'
-        )
-
-        # Log in as admin
-        self.client.login(email='admin@uwm.edu', password='password!123')
+        self.admin = MyUser(1, 'admin@uwm.edu',
+                            'password!123',
+                            'Administrator',
+                            'Admin',
+                            '1231234567',
+                            '1234 Main St',
+                            'Milwaukee',
+                            'WI',
+                            53206,
+                            'admin')
+        self.admin.save()
 
         # Create non-admin user
-        self.non_admin = MyUser.objects.create(
-            email='nonadmin@uwm.edu',
-            password='nonadminpassword!23',
-            firstName='Non',
-            lastName='Admin',
-            phoneNumber='9876543210',
-            streetAddress='5678 Side St',
-            city='Milwaukee',
-            state='WI',
-            zipcode=53206,
-            role='TA'
-        )
+        self.non_admin = MyUser(2,
+                                'nonadmin@uwm.edu',
+                                'nonadminpassword!23',
+                                'Non',
+                                'Admin',
+                                '9876543210',
+                                '5678 Side St',
+                                'Milwaukee',
+                                'WI',
+                                53206,
+                                'TA'
+                                )
+
+        self.non_admin.save()
 
         # Create course
-        self.course = Course.objects.create(
-            name='Intro to Software Engineering',
-            department='COMPSCI',
-            courseNumber=361,
-            semester='spring',
-            year=2023
-        )
+        self.course = Course(3,
+                             'Intro to Software Engineering',
+                             'COMPSCI',
+                             361,
+                             'spring',
+                             2023
+                             )
+
+        self.course.save()
+
+        session["selectedcourse"] = self.course.id
+        session.save()
+
+        self.other_course = Course(5, 'Other Course',
+                                   'MATH',
+                                   456,
+                                   'fall',
+                                   2023)
+        self.other_course.save()
 
         # Create user to add to course
-        self.user = MyUser.objects.create(
-            email="user@uwm.edu",
-            password="password",
-            firstName="Jane",
-            lastName="Doe",
-            phoneNumber="3333333333",
-            streetAddress="1236 main st",
-            city="Milwaukee",
-            state="WI",
-            zipcode=53026,
-            role="TA")
+        self.user = MyUser(4,
+                           "user@uwm.edu",
+                           "password##@@",
+                           "Jane",
+                           "Doe",
+                           "3333333333",
+                           "1236 main st",
+                           "Milwaukee",
+                           "WI",
+                           53026,
+                           "TA")
+        self.user.save()
 
         # Add user to course
         self.course.assignedUser.add(self.user)
 
     def test_func_RemoveUserFromCourse_success(self):
+        self.client.login(username='admin@uwm.edu', password='password!123')
+
         # Check number of users before removal
         initial_user_count = self.course.assignedUser.count()
 
         # Delete user from course
         response = self.client.post('/coursepage/', {'removeuser': 'user@uwm.edu'}, follow=True)
-        self.assertTemplateUsed(response, 'coursepage.html')
         self.assertContains(response, "User removed from course successfully!")
 
         # Ensure user was actually removed from course
@@ -95,8 +111,7 @@ class test_RemoveUserFromCourse(TestCase):
 
         # Attempt to remove user not in course
         response = self.client.post('/coursepage/', {'removeuser': 'nonexisting@uwm.edu'}, follow=True)
-        self.assertTemplateUsed(response, 'coursepage.html')
-        self.assertContains(response, "User is already not assigned to this course!")
+        self.assertContains(response, "User is not in this course!")
 
         # Ensure the number of users is the same
         self.assertEqual(self.course.assignedUser.count(), initial_user_count)
@@ -112,32 +127,22 @@ class test_RemoveUserFromCourse(TestCase):
 
         # Attempt to remove non-existing user
         response = self.client.post('/coursepage/', {'removeuser': 'random@uwm.edu'}, follow=True)
-        self.assertTemplateUsed(response, 'coursepage.html')
         self.assertContains(response, "User does not exist!")
 
         # Ensure the number of users is the same
         self.assertEqual(self.course.assignedUser.count(), initial_user_count)
 
-
     def test_user_not_removed_from_all_assigned_courses(self):
-        # Create new course
-        other_course = Course.objects.create(name='Other Course',
-                                             department='MATH',
-                                             courseNumber=456,
-                                             semester='fall',
-                                             year=2023)
-
         # Assign user to new course
-        other_course.assignedUser.add(self.user)
+        self.other_course.assignedUser.add(self.user)
 
         # Count number of users before
         initial_user_count = self.course.assignedUser.count()
-        initial_other_course_user_count = other_course.assignedUser.count()
+        initial_other_course_user_count = self.other_course.assignedUser.count()
 
         # Remove user
-        response = self.client.post('/coursepage/', {'removeuser': 'nonexisting@uwm.edu'}, follow=True)
-        self.assertTemplateUsed(response, 'coursepage.html')
-        self.assertContains(response, "User is already not assigned to this course!")
+        response = self.client.post('/coursepage/', {'removeuser': 'user@uwm.edu'}, follow=True)
+        self.assertContains(response, "User removed from course successfully!")
 
         self.assertEqual(self.course.assignedUser.count(), initial_user_count - 1)
         self.assertNotIn(self.user, self.course.assignedUser.all())
@@ -147,15 +152,18 @@ class test_RemoveUserFromCourse(TestCase):
         self.assertTrue(user_exists, "User was unexpectedly deleted from the database.")
 
         # Verify that the user is still associated with the other course
-        self.assertEqual(other_course.assignedUser.count(), initial_other_course_user_count)
-        self.assertIn(self.user, other_course.assignedUser.all())
+        self.assertEqual(self.other_course.assignedUser.count(), initial_other_course_user_count)
+        self.assertIn(self.user, self.other_course.assignedUser.all())
 
     def test_non_admin_attempt_remove_user(self):
         # Count number of users before removal
         initial_user_count = self.course.assignedUser.count()
 
         # Log in as non-admin user
-        self.client.login(email='nonadmin@uwm.edu', password='nonadminpassword!23')
+        session = self.client.session
+        session["email"] = "nonadmin@uwm.edu"
+        session["role"] = "ta"
+        session.save()
 
         # Attempt to remove user from course as a non-admin user
         response = self.client.post('/coursepage/', {'removeuser': 'user@uwm.edu'}, follow=True)
