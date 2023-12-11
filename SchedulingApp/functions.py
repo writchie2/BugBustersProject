@@ -65,7 +65,6 @@ def func_UserAsDict(userEmail):
         raise Exception("User does not exist!")
     user = MyUser.objects.filter(email=userEmail).first()
 
-
     my_courses = func_AlphabeticalCourseList(Course.objects.filter(assignedUser=user))
     if not my_courses:
         my_courses = None
@@ -519,36 +518,6 @@ def func_EditSection(request):
 def func_DeleteSection(request):
     Section.objects.filter(id=request.session['selectedsection']).first().delete()
 
-def func_AddUserToCourse(request):
-    if request.session['role'] != 'admin':
-        return "Only admins can add users to courses!"
-    try:
-        user = MyUser.objects.get(email=request.POST['adduser'])
-    except:
-        return "User does not exist!"
-
-    try:
-        course = Course.objects.get(id=request.session['selectedcourse'])
-    except:
-        return "This course does not exist!"
-    if course in user.course_set.all():
-        return "User is already in the course!"
-    course.assignedUser.add(user)
-    course.save()
-    return "User added successfully!"
-
-def func_RemoveUserFromCourse(request):
-    return "Need to implement RemoveUserFromCourse."
-
-def func_AddUserToSection(request):
-    user = MyUser.objects.get(email=request.POST['adduser'])
-    course = Course.objects.get(id=request.session['selectedcourse'])
-    course.assignedUser.add(user)
-    course.save()
-    return "User added successfully!"
-
-def func_RemoveUserFromSection(request):
-    return "Need to implement RemoveUserFromSection."
 
 def func_AddUserToCourse(request):
     if request.session['role'] != 'admin':
@@ -589,7 +558,23 @@ def func_RemoveUserFromCourse(request):
 
 
 def func_AddUserToSection(request):
-    return "Need to implement AddUserToSection."
+    # if request.session['role'] != 'admin' or request.session['role'] != 'instructor':
+    #     return "Only admins and instructors can add users to sections!"
+
+    '''check instructor is assigned to the course from the section'''
+
+    user = MyUser.objects.get(email=request.POST['adduser'])
+    if user == None:
+        return "user is none"
+    section = Section.objects.get(id=request.session['selectedsection'])
+    if section == None:
+        return "section is none"
+    section.assignedUser = user
+    print(section)
+    print(section.assignedUser)
+    #user.save()
+    #section.save()
+    return "User added successfully!"
 
 
 def func_RemoveUserFromSection(request):
@@ -777,7 +762,6 @@ Output: True if 5 digits long. False otherwise.
 
 
 def func_ValidateZipCode(zip):
-
     if not isinstance(zip, str):
         return False
     if len(zip) != 5:
@@ -785,6 +769,8 @@ def func_ValidateZipCode(zip):
     if any(not char.isdigit() for char in zip):
         return False
     return True
+
+
 """
 Input: string - a role.
 Output: True 'admin', 'instructor', or 'ta'. False otherwise.
@@ -1057,9 +1043,10 @@ def func_ValidateSectionType(type):
     else:
         return False
 
+
 def func_RemoveExcessNewLine(string):
     lines = string.split('\r\n')
-    formatted_string =''
+    formatted_string = ''
     for line in lines:
         if line != '':
             formatted_string += line
