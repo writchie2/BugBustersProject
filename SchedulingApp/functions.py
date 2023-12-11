@@ -393,9 +393,10 @@ def func_EditCourse(request):
             chosen.save()
             return "Year edited successfully!"
 
-def func_RemoveUserFromCourse(request, email_to_remove):
+def func_RemoveUserFromCourse(request):
     if request.session['role'] != 'admin':
         return "Permission Denied"
+    email_to_remove = request.POST.get('removeuser', None)
     try:
         user = MyUser.objects.get(email=email_to_remove)
     except MyUser.DoesNotExist:

@@ -307,8 +307,7 @@ class CoursePage(View):
             request.session["selectedsection"] = request.POST['selectedsection']
             return redirect("/sectionpage/")
         if 'removeuser' in request.POST:
-            email_to_remove = request.POST['removeuser'] #dont need will remove later
-            message = func_RemoveUserFromCourse(request, email_to_remove)
+            message = func_RemoveUserFromCourse(request)
             return render(request, "createcourse.html", {"message": message})
 
 
