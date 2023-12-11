@@ -2,7 +2,6 @@ import sys
 
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
-from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
 class EditUserPageViewTest(TestCase):
     def setUp(self):
@@ -77,7 +76,7 @@ class EditUserPageViewTest(TestCase):
                          "selected user not saved when editing lastname")
         self.assertEqual(self.emmaSonnen.lastName, "Sonnen",
                          "lastname is edited in edituser when invalid")
-        self.assertEqual(response.context["message"], "Invalid First Name. Must be capitalized and have only contain letters.",
+        self.assertEqual(response.context["message"], "Invalid last name. Must be capitalized and have only contain letters.",
                          "error message does not show for unsuccessful edit")
 
     def test_EditPhoneNumberValid(self):
