@@ -4,6 +4,13 @@ from operator import itemgetter
 
 from django.shortcuts import redirect
 
+from .Model_Classes.Course_Functions import func_CourseCreator, func_EditCourseName, func_EditDepartment, func_EditCourseNumber, \
+    func_EditSemester, func_CourseDeleter
+from .Model_Classes.MyUser_Functions import func_MyUserCreator, func_EditFirstName, func_EditLastName, func_EditPhoneNumber, \
+    func_EditStreetAddress, func_EditCity, func_EditZipcode, func_EditState, func_EditRole, func_MyUserDeleter
+from .Model_Classes.Section_Functions import (func_SectionCreator, func_EditSectionNumber, func_EditLocation,
+                                              func_EditDaysMeeting, func_EditStartTime, func_EditEndTime, func_EditType,
+                                              func_SectionDeleter)
 from .models import Course, MyUser, Section
 
 """
@@ -13,7 +20,7 @@ Failure returns a render with a failure message
 """
 
 
-def func_Login(request):
+"""def func_Login(request):
     noSuchUser = False
     isWrongPassword = False
     isBlank = ("" == request.POST['email']) or ("" == request.POST['password'])
@@ -30,7 +37,7 @@ def func_Login(request):
     elif isWrongPassword:
         return "Incorrect password."
     else:
-        return "success."
+        return "success."""
 
 
 """
@@ -38,8 +45,9 @@ Takes a list of MyUser objects and returns a list of dictionaries created for ea
 List is sorted by last name.
 """
 
+#TODO make geters/setter for user class
+"""def func_AlphabeticalMyUserList(user_bin):
 
-def func_AlphabeticalMyUserList(user_bin):
     userList = []
     for user in user_bin:
         thisdict = {
@@ -50,7 +58,7 @@ def func_AlphabeticalMyUserList(user_bin):
         }
         userList.append(thisdict)
     alphabetical = sorted(userList, key=itemgetter('lastname'))
-    return alphabetical
+    return alphabetical"""
 
 
 """
@@ -59,8 +67,9 @@ If email is blank or not associated with a user an exception is raised
 Returns a dictionary with all of the fields of the MyUser
 """
 
+#TODO make getters/setters for user class
+"""def func_UserAsDict(userEmail):
 
-def func_UserAsDict(userEmail):
     if userEmail is None or MyUser.objects.filter(email=userEmail).first() is None:
         raise Exception("User does not exist!")
     user = MyUser.objects.filter(email=userEmail).first()
@@ -90,7 +99,7 @@ def func_UserAsDict(userEmail):
         "courses": my_courses,
         "sections": my_sections
     }
-    return dict
+    return dict"""
 
 
 """
@@ -98,8 +107,9 @@ Takes a list of Course objects and returns a list of dictionaries created for ea
 List is sorted by title (department + courseNumber).
 """
 
+#TODO make getters/setters for course class
+"""def func_AlphabeticalCourseList(course_bin):
 
-def func_AlphabeticalCourseList(course_bin):
     courseList = []
     for course in course_bin:
         thisdict = {
@@ -110,7 +120,7 @@ def func_AlphabeticalCourseList(course_bin):
         }
         courseList.append(thisdict)
     alphabetical = sorted(courseList, key=itemgetter('title'))
-    return alphabetical
+    return alphabetical"""
 
 
 """
@@ -119,8 +129,9 @@ If id is blank or not associated with a user an exception is raised
 Returns a dictionary with all of the fields of the Course
 """
 
+#TODO make getters and setters for course class
+"""def func_CourseAsDict(courseID):
 
-def func_CourseAsDict(courseID):
     if courseID is None or Course.objects.filter(id=courseID).first() is None:
         raise Exception("Course does not exist!")
     course = Course.objects.filter(id=courseID).first()
@@ -135,7 +146,7 @@ def func_CourseAsDict(courseID):
         "users": func_AlphabeticalMyUserList(MyUser.objects.filter(course__id=courseID)),
         "sections": func_AscendingSectionList(Section.objects.filter(course=courseID))
     }
-    return dict
+    return dict"""
 
 
 """
@@ -143,8 +154,9 @@ Takes a list of Section objects and returns a list of dictionaries created for e
 List is sorted by title (sectionNumber + type).
 """
 
+#TODO make getters and setters for section class
+"""def func_AscendingSectionList(section_bin):
 
-def func_AscendingSectionList(section_bin):
     sectionList = []
     for section in section_bin:
         thisdict = {
@@ -153,7 +165,7 @@ def func_AscendingSectionList(section_bin):
         }
         sectionList.append(thisdict)
     alphabetical = sorted(sectionList, key=itemgetter('title'))
-    return alphabetical
+    return alphabetical"""
 
 
 """
@@ -162,8 +174,9 @@ If id is blank or not associated with a user an exception is raised
 Returns a dictionary with all of the fields of the Section
 """
 
+#TODO get getters and setters for section class
+"""def func_SectionAsDict(sectionID):
 
-def func_SectionAsDict(sectionID):
     if sectionID is None or Section.objects.filter(id=sectionID).first() is None:
         raise Exception("Section does not exist!")
     section = Section.objects.filter(id=sectionID).first()
@@ -197,7 +210,7 @@ def func_SectionAsDict(sectionID):
             "endtime": end_12hour,
             "course": func_CourseAsDict(section.course.id)
         }
-    return dict
+    return dict"""
 
 
 """
@@ -208,14 +221,16 @@ If a validator function fails then no object is created and returns with a failu
 """
 
 
-def func_CreateUser(request):
-    if (
-            'email' not in request.POST or 'password' not in request.POST or
-            'confirmpassword' not in request.POST or 'firstname' not in request.POST or
-            'lastname' not in request.POST or 'phonenumber' not in request.POST or
-            'streetaddress' not in request.POST or 'city' not in request.POST or
-            'state' not in request.POST or 'zipcode' not in request.POST or
-            'role' not in request.POST
+#TODO Make user creation method in user class
+"""def func_CreateUser(request):
+    if(
+        'email' not in request.POST or 'password' not in request.POST or
+        'confirmpassword' not in request.POST or 'firstname' not in request.POST or
+        'lastname' not in request.POST or 'phonenumber' not in request.POST or
+        'streetaddress' not in request.POST or 'city' not in request.POST or
+        'state' not in request.POST or 'zipcode' not in request.POST or
+        'role' not in request.POST
+
     ):
         return "Please fill out all fields!"
     email = request.POST["email"]
@@ -229,7 +244,8 @@ def func_CreateUser(request):
     state = request.POST["state"]
     zip = request.POST["zipcode"]
     role = request.POST["role"]
-
+    return_message = func_MyUserCreator(email, pw, pwc, first, last, phone, street, city, state, zip, role)
+    return return_message
     if not func_ValidateEmail(email):
         return "Invalid email. Must be a UWM email."
     if MyUser.objects.filter(email=email).exists():
@@ -262,9 +278,12 @@ def func_CreateUser(request):
     user.save()
     return "User created successfully!"
 
+"""
+#TODO make setters for user
+"""def func_EditUser(request):
 
-def func_EditUser(request):
     if 'firstname' in request.POST:
+        return func_EditFirstName(request.POST['firstname'], request.session['selecteduser'])
         if func_ValidateFirstName(request.POST['firstname']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.firstName = request.POST['firstname']
@@ -273,7 +292,8 @@ def func_EditUser(request):
         else:
             return "Invalid first name. Must be capitalized and have only contain letters."
     if 'lastname' in request.POST:
-        if func_ValidateLastName(request.POST['lastname']):
+        return func_EditLastName(request.POST['lastname'], request.session['selecteduser'])
+       if func_ValidateLastName(request.POST['lastname']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.lastName = request.POST['lastname']
             changeUser.save()
@@ -281,6 +301,7 @@ def func_EditUser(request):
         else:
             return "Invalid First Name. Must be capitalized and have only contain letters."
     if 'phonenumber' in request.POST:
+        return func_EditPhoneNumber(request.POST['phonenumber'], request.session['selecteduser'])
         if func_ValidatePhoneNumber(request.POST['phonenumber']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.phoneNumber = request.POST['phonenumber']
@@ -289,6 +310,7 @@ def func_EditUser(request):
         else:
             return "Invalid phone number. Format is 123-456-7890"
     if 'streetaddress' in request.POST:
+        return func_EditStreetAddress(request.POST['streetaddress'], request.session['selecteduser'])
         if func_ValidateStreetAddress(request.POST['streetaddress']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.streetAddress = request.POST['streetaddress']
@@ -297,6 +319,7 @@ def func_EditUser(request):
         else:
             return "Invalid street address."
     if 'city' in request.POST:
+        return func_EditCity(request.POST['city'], request.session['selecteduser'])
         if func_ValidateCity(request.POST['city']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.city = request.POST['city']
@@ -305,6 +328,7 @@ def func_EditUser(request):
         else:
             return "Invalid city. Must be capitalized."
     if 'state' in request.POST:
+        return func_EditState(request.POST['state'], request.session['selecteduser'])
         if func_ValidateState(request.POST['state']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.state = request.POST['state']
@@ -313,6 +337,7 @@ def func_EditUser(request):
         else:
             return "Invalid state. Two letter state code only."
     if 'zipcode' in request.POST:
+        return func_EditZipcode(request.POST['zipcode'], request.session['selecteduser'])
         if func_ValidateZipCode(request.POST['zipcode']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.zipcode = request.POST['zipcode']
@@ -321,6 +346,7 @@ def func_EditUser(request):
         else:
             return "Invalid zipcode. Must be 5 digits long."
     if 'role' in request.POST:
+        return func_EditRole(request.POST['role'], request.session['selecteduser'])
         if func_ValidateRole(request.POST['role']):
             changeUser = MyUser.objects.filter(email=request.session['selecteduser']).first()
             changeUser.role = request.POST['role']
@@ -328,13 +354,17 @@ def func_EditUser(request):
             return "Role changed successfully!"
         else:
             return "Invalid role. Can only be Admin, Instructor, or TA."
+"""
+#TODO move to sections, add admin check
+"""def func_DeleteUser(request):
+    if request.session['role'] != 'admin':
+        return "Only admins can delete users!"
+    return func_MyUserDeleter(request.session['selecteduser'])"""
 
 
-def func_DeleteUser(request):
-    MyUser.objects.filter(email=request.session['selecteduser']).first().delete()
+  #TODO make course create method
+"""def func_CreateCourse(request):
 
-
-def func_CreateCourse(request):
     if ('coursename' not in request.POST or 'department' not in request.POST or
             'coursenumber' not in request.POST
             or 'semester' not in request.POST or 'year' not in request.POST):
@@ -344,6 +374,8 @@ def func_CreateCourse(request):
     newCourseNumber = int(request.POST['coursenumber'])
     newCourseSemester = request.POST['semester']
     newCourseYear = int(request.POST['year'])
+    message = func_CourseCreator(newCourseName, newCourseDepartment, newCourseNumber, newCourseSemester, newCourseYear)
+    return message
     if func_ValidateCourseName(newCourseName) == False:
         return "Invalid Course Name. Only letters and single spaces are allowed."
     if func_ValidateDepartment(newCourseDepartment) == False:
@@ -358,22 +390,23 @@ def func_CreateCourse(request):
                                       courseNumber=newCourseNumber, semester=newCourseSemester,
                                       year=newCourseYear)
     newCourse.save()
-    return "Course created successfully!"
+    return "Course created successfully!"""
 
-
-def func_EditCourse(request):
+#TODO make course getters and setters
+"""def func_EditCourse(request):
     chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
     if 'coursename' in request.POST:
-        newCourseName = request.POST["coursename"]
+        return func_EditCourseName(request.POST["coursename"], request.session['selectedcourse'])
         if func_ValidateCourseName(newCourseName) == False:
             return "Invalid Course Name. Only letters and single spaces are allowed."
         else:
             chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
             chosen.name = newCourseName
             chosen.save()
-            return "Course Name edited successfully!"
+            return "Course Name edited successfully!
 
     if 'department' in request.POST:
+        return func_EditDepartment(request.POST["department"], request.session['selectedcourse'])
         newDepartment = request.POST["department"]
         if func_ValidateDepartment(newDepartment) == False:
             return "Invalid Department. All Departments come from the UWM course cataloge."
@@ -381,10 +414,11 @@ def func_EditCourse(request):
             chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
             chosen.department = newDepartment
             chosen.save()
-            return "Department edited successfully!"
+            return "Department edited successfully!
 
     if 'coursenumber' in request.POST:
-        newCourseNumber = int(request.POST["coursenumber"])
+        return func_EdiitCourseNumber(request.POST["coursenumber"], request.session['selectedcourse'])
+       newCourseNumber = int(request.POST["coursenumber"])
         chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
         if func_ValidateCourseNumber(newCourseNumber, chosen.department) == False:
             return "Invalid Course Number. Must be between 100 and 999 and unique."
@@ -392,9 +426,10 @@ def func_EditCourse(request):
             chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
             chosen.courseNumber = newCourseNumber
             chosen.save()
-            return "Course Number edited successfully!"
+            return "Course Number edited successfully!
 
     if 'semester' in request.POST:
+        return func_EditSemester(request.POST["semester"], request.session['selectedcourse'])
         newSemester = request.POST["semester"]
         if func_ValidateSemester(newSemester) == False:
             return "Invalid Semester. Acceptable values are fall, spring, winter, and summer"
@@ -402,9 +437,10 @@ def func_EditCourse(request):
             chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
             chosen.semester = newSemester
             chosen.save()
-            return "Semester edited successfully!"
+            return "Semester edited successfully!
 
     if 'year' in request.POST:
+        return func_EditYear(request.POST["year"], request.session['selectedcourse'])
         newYear = int(request.POST["year"])
         if func_ValidateYear(newYear) == False:
             return "Invalid Year. Must be later than 1956 and cannot be greater than 2025"
@@ -412,14 +448,18 @@ def func_EditCourse(request):
             chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
             chosen.year = newYear
             chosen.save()
-            return "Year edited successfully!"
+            return "Year edited successfully!" """
 
+#TODO make course getters and setters
+"""def func_DeleteCourse(request):
+    if request.session['role'] != 'admin':
+        return "Only admins can delete courses!"
+    else:
+        return func_CourseDeleter(request.session['selectedcourse'])
+    Course.objects.filter(id=request.session['selectedcourse']).first().delete()"""
 
-def func_DeleteCourse(request):
-    Course.objects.filter(id=request.session['selectedcourse']).first().delete()
-
-
-def func_CreateSection(request):
+#TODO section create method
+"""def func_CreateSection(request):
     if ('sectionnumber' not in request.POST or 'location' not in request.POST or
             'starttime' not in request.POST
             or 'endtime' not in request.POST or 'type' not in request.POST):
@@ -432,6 +472,8 @@ def func_CreateSection(request):
     newStartTime = request.POST["starttime"]
     newEndTime = request.POST["endtime"]
     newType = request.POST['type']
+    return func_SectionCreator(newSectionNumber, request.session['selectedcourse'], newDaysMeeting, newLocation, newType,
+                               newStartTime, newEndTime)
     if func_ValidateSectionNumber(newSectionNumber, request.session['selectedcourse']) == False:
         return "Invalid Section Number. Must be between 100 and 999 and unique!"
     if func_ValidateDaysMeeting(newDaysMeeting) == False:
@@ -448,12 +490,13 @@ def func_CreateSection(request):
                                         startTime=newStartTime, endTime=newEndTime,
                                         course=Course.objects.filter(id=request.session['selectedcourse']).first())
     newSection.save()
-    return "Section created successfully!"
+    return "Section created successfully!"""
 
-
-def func_EditSection(request):
+#TODO section getters and setters
+"""def func_EditSection(request):
     chosen = Section.objects.filter(id=request.session['selectedsection']).first()
     if 'sectionnumber' in request.POST:
+        return func_EditSectionNumber(int(request.POST["sectionnumber"]), request.session['selectedsection'])
         newSectionNumber = int(request.POST["sectionnumber"])
         if func_ValidateSectionNumber(newSectionNumber, request.session['selectedcourse']) == False:
             return "Invalid Section Number. Must be between 100 and 999 and unique!"
@@ -461,9 +504,10 @@ def func_EditSection(request):
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.sectionNumber = newSectionNumber
             chosen.save()
-            return "Section Number edited successfully!"
+            return "Section Number edited successfully!
 
     if 'location' in request.POST:
+        return func_EditLocation(request.POST["location"], request.session['selectedsection'])
         newLocation = request.POST["location"]
         if func_ValidateLocation(newLocation) == False:
             return "Invalid Location. Format: Room# Building Name"
@@ -471,21 +515,23 @@ def func_EditSection(request):
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.location = newLocation
             chosen.save()
-            return "Location edited successfully!"
+            return "Location edited successfully!
 
     if 'daysmeeting' in request.POST:
         newDaysMeeting = ''
         for days in request.POST.getlist('daysmeeting'):
             newDaysMeeting += days
+        return func_EditDaysMeeting(newDaysMeeting, request.session['selectedsection'])
         if func_ValidateDaysMeeting(newDaysMeeting) == False:
             return "Invalid Days Meeting. Must be in order MTWHFSU, 'No Meeting Pattern' cannot be selected with other days."
         else:
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.daysMeeting = newDaysMeeting
             chosen.save()
-            return "Days Meeting edited successfully!"
+            return "Days Meeting edited successfully!
 
     if 'starttime' in request.POST:
+        return func_EditStartTime(request.POST["starttime"], request.session['selectedsection'])
         newStartTime = request.POST["starttime"]
         if func_ValidateStartAndEndTime(newStartTime, chosen.endTime) == False:
             return "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end."
@@ -493,9 +539,10 @@ def func_EditSection(request):
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.startTime = newStartTime
             chosen.save()
-            return "Start Time edited successfully!"
+            return "Start Time edited successfully!
 
     if 'endtime' in request.POST:
+        return func_EditEndTime(request.POST["endtime"], request.session['selectedsection'])
         newEndTime = request.POST["endtime"]
         if func_ValidateStartAndEndTime(chosen.startTime, newEndTime) == False:
             return "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end."
@@ -503,9 +550,10 @@ def func_EditSection(request):
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.endTime = newEndTime
             chosen.save()
-            return "End Time edited successfully!"
+            return "End Time edited successfully!
 
     if 'type' in request.POST:
+        return func_EditType(request.POST['type'], request.session['selectedsection'])
         newType = request.POST['type']
         if func_ValidateSectionType(newType) == False:
             return "Invalid Type. Must be lecture, lab, or grader."
@@ -513,12 +561,16 @@ def func_EditSection(request):
             chosen = Section.objects.filter(id=request.session['selectedsection']).first()
             chosen.type = newType
             chosen.save()
-            return "Type edited successfully!"
+            return "Type edited successfully!"""
 
-
-def func_DeleteSection(request):
-    Section.objects.filter(id=request.session['selectedsection']).first().delete()
-
+#TODO move to section class
+"""def func_DeleteSection(request):
+    if request.session['role'] != 'admin':
+        return "Only admins can delete sections!"
+    else:
+        return func_SectionDeleter(request.session['selectedsection'])
+    Section.objects.filter(id=request.session['selectedsection']).first().delete()"""
+#TODO Make methods in course class to add user
 def func_AddUserToCourse(request):
     if request.session['role'] != 'admin':
         return "Only admins can add users to courses!"
@@ -602,8 +654,10 @@ Output: True if it is a UWM email. False otherwise.
 """
 
 
-def func_ValidateEmail(email):
-    return bool(re.fullmatch(r"[^@\s.]{1,12}@uwm\.edu", email))
+
+"""def func_ValidateEmail(email):
+    return bool(re.fullmatch(r"[^@\s.]{1,12}@uwm\.edu", email))}"""
+
 
 
 """
@@ -611,6 +665,9 @@ Input: string, string - two matching passwords
 Output: True if passwords match and have one lowercase letter, one uppercase letter,
 one digit, one special character, and at least 8 chars long. False otherwise
 """
+
+"""def func_ValidatePassword(password,confirmPassword):
+
 
 
 def func_ValidatePassword(password, confirmPassword):
@@ -640,7 +697,7 @@ def func_ValidatePassword(password, confirmPassword):
     if not any(char.isdigit() for char in password):
         return False
 
-    return True
+    return True"""
 
 
 """
@@ -648,8 +705,8 @@ Input: string - a name.
 Output: True if it is capatalized, has no spaces, and only contains letters. False otherwise.
 """
 
+"""def func_ValidateFirstName(firstName):
 
-def func_ValidateFirstName(firstName):
     if not isinstance(firstName, str):
         return False
     if len(firstName) > 20:
@@ -662,7 +719,7 @@ def func_ValidateFirstName(firstName):
         else:
             return True
     else:
-        return False
+        return False"""
 
 
 """
@@ -670,8 +727,8 @@ Input: string - a name.
 Output: True if it is capatalized, has no spaces, and only contains letters. False otherwise.
 """
 
+"""def func_ValidateLastName(lastName):
 
-def func_ValidateLastName(lastName):
     if not isinstance(lastName, str):
         return False
     if len(lastName) > 20:
@@ -684,7 +741,7 @@ def func_ValidateLastName(lastName):
         else:
             return True
     else:
-        return False
+        return False"""
 
 
 """
@@ -692,8 +749,8 @@ Input: string - a phone number.
 Output: True if in the format 123-456-7890. False otherwise.
 """
 
+"""def func_ValidatePhoneNumber(phoneNumber):
 
-def func_ValidatePhoneNumber(phoneNumber):
     pattern1 = re.compile(r'^\(\d{3}\)\d{3}-\d{4}$')
     pattern2 = re.compile(r'^\d{3}-\d{3}-\d{4}$')
     pattern3 = re.compile(r'^\d{10}$')
@@ -704,7 +761,7 @@ def func_ValidatePhoneNumber(phoneNumber):
     match3 = pattern3.match(phoneNumber)
     match4 = pattern4.match(phoneNumber)
 
-    return bool(match1) or bool(match2) or bool(match3) or bool(match4)
+    return bool(match1) or bool(match2) or bool(match3) or bool(match4)"""
 
 
 """
@@ -712,8 +769,8 @@ Input: string - an address.
 Output: True if at least three words. First Word must contain numbers False otherwise.
 """
 
+"""def func_ValidateStreetAddress(streetAddress):
 
-def func_ValidateStreetAddress(streetAddress):
     if streetAddress == '' or streetAddress.isspace():
         return False
     if any(not char.isalnum() and not char.isspace() for char in streetAddress):
@@ -723,7 +780,7 @@ def func_ValidateStreetAddress(streetAddress):
         if len(s) < 3 or len(streetAddress) > 100:
             return False
         else:
-            return True
+            return True"""
 
 
 """
@@ -731,15 +788,15 @@ Input: string - a city.
 Output: True if capitalized and only contains letters and spaces. False otherwise.
 """
 
+"""def func_ValidateCity(city):
 
-def func_ValidateCity(city):
     if city == '' or city.isspace():
         return False
     if not city[0].isupper():
         return False
     pattern = re.compile(r'^[a-zA-Z\s]{2,20}$')
     match = pattern.match(city)
-    return bool(match)
+    return bool(match)"""
 
 
 """
@@ -747,8 +804,8 @@ Input: string - a state.
 Output: True if one of the state postal codes. False otherwise.
 """
 
+"""def func_ValidateState(state):
 
-def func_ValidateState(state):
     valid_state = ["AL", "AK", "AZ", "AR",
                    "CA", "CO", "CT", "DC",
                    "DE", "FL", "GA", "HI",
@@ -763,7 +820,7 @@ def func_ValidateState(state):
                    "UT", "VT", "VA", "WA",
                    "WV", "WI", "WY"]
 
-    return state in valid_state
+    return state in valid_state"""
 
 
 """
@@ -771,8 +828,7 @@ Input: int - a zipcode.
 Output: True if 5 digits long. False otherwise.
 """
 
-
-def func_ValidateZipCode(zip):
+"""def func_ValidateZipCode(zip):
 
     if not isinstance(zip, str):
         return False
@@ -780,20 +836,20 @@ def func_ValidateZipCode(zip):
         return False
     if any(not char.isdigit() for char in zip):
         return False
-    return True
+    return True"""
 """
 Input: string - a role.
 Output: True 'admin', 'instructor', or 'ta'. False otherwise.
 """
 
+"""def func_ValidateRole(role):
 
-def func_ValidateRole(role):
     ROLE_CHOICES = [
         ("admin", "Admin"),
         ("instructor", "Instructor"),
         ("ta", "TA")
     ]
-    return any(role in choice for choice in ROLE_CHOICES)
+    return any(role in choice for choice in ROLE_CHOICES)"""
 
 
 """
@@ -805,8 +861,8 @@ Input: string - a name.
 Output: True if it is capatalized, has no spaces, and only contains letters. False otherwise.
 """
 
+"""def func_ValidateCourseName(name):
 
-def func_ValidateCourseName(name):
     if not isinstance(name, str):
         return False
     if name == '':
@@ -823,7 +879,7 @@ def func_ValidateCourseName(name):
             else:
                 return True
     else:
-        return False
+        return False"""
 
 
 """
@@ -831,33 +887,33 @@ Input: string - a department.
 Output: True if it is one of UWM departments. False otherwise.
 """
 
-
-def func_ValidateDepartment(department):
+"""def func_ValidateDepartment(department):
     if not isinstance(department, str):
         return False
     dept_list = ['AMLLC', 'ACTSCI', 'AD LDSP', 'AFAS', 'AFRIC', 'AIS', 'ANTHRO', 'ARABIC',
-                 'ARCH', 'ART', 'ART ED', 'ARTHIST', 'ASTRON', 'ATM SCI', 'ATRAIN', 'BIO SCI',
-                 'BME', 'BMS', 'BUS ADM', 'BUSMGMT', 'CELTIC', 'CES', 'CGS AIS', 'CGS ANT',
-                 'CGS ART', 'CGS AST', 'CGS BIO', 'CGS BUS', 'CGS CHE', 'CGS CPS', 'CGS CTA',
-                 'CGS ECO', 'CGS EDU', 'CGS EGR', 'CGS ENG', 'CGS ESL', 'CGS FRE', 'CGS GEO',
-                 'CGS GER', 'CGS GLG', 'CGS GSW', 'CGS HES', 'CGS HIS', 'CGS INT', 'CGS IST',
-                 'CGS ITA', 'CGS LEA', 'CGS LEA', 'CGS LEC', 'CGS MAT', 'CGS MLG', 'CGS MUA',
-                 'CGS MUS', 'CGS PHI', 'CGS PHY', 'CGS POL', 'CGS PSY', 'CGS REL', 'CGS SOC',
-                 'CGS SPA', 'CHEM', 'CHINESE', 'CHS', 'CIV ENG', 'CLASSIC', 'COMMUN', 'COMPLIT',
-                 'COMPSCI', 'COMPST', 'COMSDIS', 'COUNS', 'CRM JST', 'CURRINS', 'DAC', 'DANCE',
-                 'DMI', 'EAP', 'EAS', 'ECON', 'ED POL', 'ED PSY', 'EDUC', 'ELECENG', 'ENGLISH',
-                 'ETHNIC', 'EXCEDUC', 'FILM', 'FILMSTD', 'FINEART', 'FOODBEV', 'FRENCH',
-                 'FRSHWTR', 'GEO SCI', 'GEOG', 'GERMAN', 'GLOBAL', 'GARD', 'GREEK', 'HCA',
-                 'HEBREW', 'HI', 'HIST', 'HMONG', 'HONORS', 'HS', 'IEP', 'IND ENG', 'IND REL',
-                 'INFOST', 'INTLST', 'ITALIAN', 'JAMS', 'JAPAN', 'JEWISH', 'KIN', 'KOREAN',
-                 'L&S HUM', 'L&S NS', 'L&S SS', 'LACS', 'LACUSL', 'LATIN', 'LATINX', 'LGBT',
-                 'LIBRLST', 'LINGUIS', 'MALLT', 'MATH', 'MATLENG', 'MECHENG', 'MIL SCI',
-                 'MSP', 'MTHSTAT', 'MUS ED', 'MUSIC', 'MUSPERF', 'MEURO', 'NONPROF', 'NURS',
-                 'OCCTHPY', 'PEACEST', 'PH', 'PHILOS', 'PHYSICS', 'POL SCI', 'POLISH', 'PORTUGS',
-                 'PRPP', 'PSYCH', 'PT', 'PUB ADM', 'RELIGST', 'RUSSIAN', 'SCNDVST', 'SOC WRK',
-                 'SOCIOL', 'SPANISH', 'SPT&REC', 'TCH LRN', 'THEATRE', 'THERREC', 'TRNSLTN', 'URB STD',
-                 'URBPLAN', 'UWS NSG', 'UWX', 'WGS']
-    return department in dept_list
+                   'ARCH', 'ART', 'ART ED', 'ARTHIST', 'ASTRON', 'ATM SCI', 'ATRAIN', 'BIO SCI',
+                   'BME', 'BMS', 'BUS ADM', 'BUSMGMT', 'CELTIC', 'CES', 'CGS AIS', 'CGS ANT',
+                   'CGS ART', 'CGS AST', 'CGS BIO', 'CGS BUS', 'CGS CHE', 'CGS CPS', 'CGS CTA',
+                   'CGS ECO', 'CGS EDU', 'CGS EGR', 'CGS ENG', 'CGS ESL', 'CGS FRE', 'CGS GEO',
+                   'CGS GER', 'CGS GLG', 'CGS GSW', 'CGS HES', 'CGS HIS', 'CGS INT', 'CGS IST',
+                   'CGS ITA', 'CGS LEA', 'CGS LEA', 'CGS LEC', 'CGS MAT', 'CGS MLG', 'CGS MUA',
+                   'CGS MUS', 'CGS PHI', 'CGS PHY', 'CGS POL', 'CGS PSY', 'CGS REL', 'CGS SOC',
+                   'CGS SPA', 'CHEM', 'CHINESE', 'CHS', 'CIV ENG', 'CLASSIC', 'COMMUN', 'COMPLIT',
+                   'COMPSCI', 'COMPST', 'COMSDIS', 'COUNS', 'CRM JST', 'CURRINS', 'DAC', 'DANCE',
+                   'DMI', 'EAP', 'EAS', 'ECON', 'ED POL', 'ED PSY', 'EDUC', 'ELECENG', 'ENGLISH',
+                   'ETHNIC', 'EXCEDUC', 'FILM', 'FILMSTD', 'FINEART', 'FOODBEV', 'FRENCH',
+                   'FRSHWTR', 'GEO SCI', 'GEOG', 'GERMAN', 'GLOBAL', 'GARD', 'GREEK', 'HCA',
+                   'HEBREW', 'HI', 'HIST', 'HMONG', 'HONORS', 'HS', 'IEP', 'IND ENG', 'IND REL',
+                   'INFOST', 'INTLST', 'ITALIAN', 'JAMS', 'JAPAN', 'JEWISH', 'KIN', 'KOREAN',
+                   'L&S HUM', 'L&S NS', 'L&S SS', 'LACS', 'LACUSL', 'LATIN', 'LATINX', 'LGBT',
+                   'LIBRLST', 'LINGUIS', 'MALLT', 'MATH', 'MATLENG', 'MECHENG', 'MIL SCI',
+                   'MSP', 'MTHSTAT', 'MUS ED', 'MUSIC', 'MUSPERF', 'MEURO', 'NONPROF', 'NURS',
+                   'OCCTHPY', 'PEACEST', 'PH', 'PHILOS', 'PHYSICS', 'POL SCI', 'POLISH', 'PORTUGS',
+                   'PRPP', 'PSYCH', 'PT', 'PUB ADM', 'RELIGST', 'RUSSIAN', 'SCNDVST', 'SOC WRK',
+                   'SOCIOL', 'SPANISH', 'SPT&REC', 'TCH LRN', 'THEATRE', 'THERREC', 'TRNSLTN', 'URB STD',
+                   'URBPLAN', 'UWS NSG', 'UWX', 'WGS']
+    return department in dept_list"""
+
 
 
 """
@@ -865,6 +921,9 @@ Input: int, string - course number and a department.
 Output: True the course number has 3 digits and no other course with 
 that number exists in the department. If all conditions met returns True. Otherwise False otherwise.
 """
+
+"""def func_ValidateCourseNumber(courseNumber, department):
+
 
 
 def func_ValidateCourseNumber(courseNumber, department):
@@ -880,7 +939,7 @@ def func_ValidateCourseNumber(courseNumber, department):
             return True
 
     else:
-        return False
+        return False"""
 
 
 """
@@ -888,12 +947,12 @@ Input: string - a semester.
 Output: True 'fall', 'winter', 'spring' or 'summer'. False otherwise.
 """
 
+"""def func_ValidateSemester(semester):
 
-def func_ValidateSemester(semester):
     if semester == 'fall' or semester == 'winter' or semester == 'spring' or semester == 'summer':
         return True
     else:
-        return False
+        return False"""
 
 
 """
@@ -901,15 +960,15 @@ Input: int - a year.
 Output: True if between 1957 and 2025. False otherwise.
 """
 
+"""def func_ValidateYear(year):
 
-def func_ValidateYear(year):
     if isinstance(year, int):
         if year < 1957 or year > 2025:
             return False
         else:
             return True
     else:
-        return False
+        return False"""
 
 
 """
@@ -922,8 +981,8 @@ Output: True the section number has 3 digits and no other section with
 that number exists in the course. If all conditions met returns True. Otherwise False otherwise.
 """
 
+"""def func_ValidateSectionNumber(sectionNumber, courseID):
 
-def func_ValidateSectionNumber(sectionNumber, courseID):
     if isinstance(sectionNumber, int):
         if sectionNumber < 99 or sectionNumber > 999:
             return False
@@ -936,7 +995,7 @@ def func_ValidateSectionNumber(sectionNumber, courseID):
             return True
 
     else:
-        return False
+        return False"""
 
 
 """
@@ -945,8 +1004,8 @@ Output: True in the format #### Building Name. Room numbers need to be at least 
  start or end with a letter (i.e. S195). If all conditions met returns True. Otherwise False otherwise.
 """
 
+"""def func_ValidateLocation(location):
 
-def func_ValidateLocation(location):
     if not isinstance(location, str):
         return False
     location_pattern = "^([A-Z]?)(\\d{1,})([A-Z]?) [a-zA-Z0-9\\s]"
@@ -963,7 +1022,7 @@ def func_ValidateLocation(location):
         if location == "Online":
             return True
         else:
-            return False
+            return False"""
 
 
 """
@@ -973,8 +1032,8 @@ Output: True if in chronological order (i.e. M before T).
 If all conditions met returns True. Otherwise False otherwise.
 """
 
+"""def func_ValidateDaysMeeting(daysMeeting):
 
-def func_ValidateDaysMeeting(daysMeeting):
     order = {
         'M': 0,
         'T': 1,
@@ -999,7 +1058,7 @@ def func_ValidateDaysMeeting(daysMeeting):
                     return True
                 next = order.get(daysMeeting[index + 1])
                 if next <= current:
-                    return False
+                    return False"""
 
 
 """
@@ -1009,8 +1068,8 @@ later than '17:59' (5:59pm). End time cannot be later than '19:59' (7:59pm). If 
 conditions met returns True. Otherwise returns False.
 """
 
+"""def func_ValidateStartAndEndTime(startTime, endTime):
 
-def func_ValidateStartAndEndTime(startTime, endTime):
     if not isinstance(startTime, str) or not isinstance(endTime, str):
         return False
     if startTime == endTime:
@@ -1038,7 +1097,7 @@ def func_ValidateStartAndEndTime(startTime, endTime):
                 return False
         return True
     else:
-        return False
+        return False"""
 
 
 """
@@ -1046,18 +1105,18 @@ Input: string - a section type.
 Output: True 'lecture', 'grader',or  'lab'. False otherwise.
 """
 
+"""def func_ValidateSectionType(type):
 
-def func_ValidateSectionType(type):
     if type == 'lecture' or type == 'grader' or type == 'lab':
         return True
     else:
-        return False
+        return False"""
 
-def func_RemoveExcessNewLine(string):
+"""def func_RemoveExcessNewLine(string):
     lines = string.split('\r\n')
     formatted_string =''
     for line in lines:
         if line != '':
             formatted_string += line
             formatted_string += '\r\n'
-    return formatted_string
+    return formatted_string"""
