@@ -2,7 +2,6 @@ import sys
 
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
-from SchedulingApp.functions import func_Login
 from django.test import TestCase, Client, RequestFactory
 class EditUserPageViewTest(TestCase):
     def setUp(self):
@@ -77,7 +76,7 @@ class EditUserPageViewTest(TestCase):
                          "selected user not saved when editing lastname")
         self.assertEqual(self.emmaSonnen.lastName, "Sonnen",
                          "lastname is edited in edituser when invalid")
-        self.assertEqual(response.context["message"], "Invalid First Name. Must be capitalized and have only contain letters.",
+        self.assertEqual(response.context["message"], "Invalid last name. Must be capitalized and have only contain letters.",
                          "error message does not show for unsuccessful edit")
 
     def test_EditPhoneNumberValid(self):
@@ -210,7 +209,7 @@ class EditUserPageViewTest(TestCase):
                          "Role not saved when editing zipcode")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing zipcode")
-        self.assertEqual(self.emmaSonnen.zipcode, 53022,
+        self.assertEqual(self.emmaSonnen.zipcode, '53022',
                          "zipcode not edited in edituser when valid")
         self.assertEqual(response.context["message"], "Zipcode changed successfully!",
                          "success message does not show for successful edit")
@@ -225,7 +224,7 @@ class EditUserPageViewTest(TestCase):
                          "Role not saved when editing zipcode")
         self.assertEqual(self.client.session["selecteduser"], "esonnen@uwm.edu",
                          "selected user not saved when editing zipcode")
-        self.assertEqual(self.emmaSonnen.zipcode, 53026,
+        self.assertEqual(self.emmaSonnen.zipcode, '53026',
                          "zipcode is edited in edituser when invalid")
         self.assertEqual(response.context["message"], "Invalid zipcode. Must be 5 digits long.",
                          "error message does not show for unsuccessful edit")

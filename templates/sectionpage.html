@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Section Page</title>
-    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'sectionpage.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body id="wrapper">
 <div id="navlist">
@@ -74,7 +74,30 @@
     </tr>
     <tr>
         <td class="label">Instructor:</td>
-        <td>{{ section.assigneduser.fullname }}</td>
+        <td>
+            {% if section.assigneduser.fullname == None %}
+                <form action="/sectionpage/" method="post">
+                {% csrf_token %}
+                <label for="adduser">Assign a user to the section:</label>
+                <input list="addusers" name="adduser" id="adduser">
+                <datalist id="addusers">
+                {% for user in unassignedusers %}
+                    <option value= {{ user.email }}>{{ user.fullname }}</option>
+                {% endfor %}
+                </datalist>
+                <input type="submit">
+                </form>
+            {% endif %}
+            {% if section.assigneduser.fullname != None %}
+                {{ section.assigneduser.fullname }}
+                <form action="/sectionpage/" method="post">
+                {% csrf_token %}
+                <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View User</button>
+                {% csrf_token %}
+                <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ section.assigneduser.email }} class="redbutton">Remove User</button>
+                </form>
+            {% endif %}
+        </td>
     </tr>
 </table>
 </body>

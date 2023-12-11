@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Edit User</title>
-    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'edituser.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body id="wrapper">
 <div id="navlist">
@@ -28,6 +28,7 @@
         <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
 </div>
+
 <br>
 <br>
 {{ message }}
@@ -41,7 +42,7 @@
         <td>
             <form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="firstname"> <input type="submit" value="Save" class="greenbutton"></form>
+                <input type="text" name="firstname"> <input type="submit" value="Save"></form>
         </td>
     </tr>
     <tr>
@@ -53,7 +54,7 @@
         <td>
             <form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="lastname"> <input type="submit" value="Save" class="greenbutton"></form>
+                <input type="text" name="lastname"> <input type="submit" value="Save"></form>
         </td>
     </tr>
     <tr>
@@ -66,7 +67,7 @@
             <form action="/edituser/" method="post">
                 {% csrf_token %}
                 <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" name="phonenumber">
-                <input type="submit" value="Save" class="greenbutton"></form>
+                <input type="submit" value="Save"></form>
         </td>
     </tr>
     <tr>
@@ -78,7 +79,7 @@
         <td>
             <form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="streetaddress"> <input type="submit" value="Save" class="greenbutton"></form>
+                <input type="text" name="streetaddress"> <input type="submit" value="Save"></form>
         </td>
     </tr>
     <tr>
@@ -90,7 +91,7 @@
         <td>
             <form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="city"> <input type="submit" value="Save" class="greenbutton"></form>
+                <input type="text" name="city"> <input type="submit" value="Save"></form>
         </td>
     </tr>
     <tr>
@@ -102,7 +103,7 @@
         <td>
             <form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="state"> <input type="submit" value="Save" class="greenbutton"></form>
+                <input type="text" name="state" placeholder="NY, CA, FL, etc."> <input type="submit"></form>
         </td>
     </tr>
     <tr>
@@ -114,9 +115,10 @@
         <td>
             <form action="/edituser/" method="post">
                 {% csrf_token %}
-                <input type="text" name="zipcode"> <input type="submit" value="Save" class="greenbutton"></form>
+                <input type="text" name="zipcode" placeholder="#####"> <input type="submit" value="Save"></form>
         </td>
     </tr>
+    {% if role == 'admin' %}
     <tr>
         <td class="label">Current Role:</td>
         <td>{{ user.role }}</td>
@@ -131,13 +133,15 @@
                     <option value="instructor">Instructor</option>
                     <option value="ta">TA</option>
                 </select>
-                <input type="submit" value="Save" class="greenbutton"></form>
+                <input type="submit" value="Save"></form>
         </td>
     </tr>
+    {% endif %}
 </table>
 <form action="/edituser/" method="post">
     {% csrf_token %}
     <button type="submit" name="navigation" value="cancel" class="redbutton">Cancel</button>
 </form>
+=======
 </body>
 </html>
