@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Edit User</title>
-    <link href="{% static 'x.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'edituser.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body id="wrapper">
 <div id="navlist">
@@ -28,6 +28,7 @@
         <button type="submit" name="navigation" value="directory" class="bluebutton">View Directory</button>
     </form>
 </div>
+
 <br>
 <br>
 {{ message }}
@@ -141,5 +142,6 @@
     {% csrf_token %}
     <button type="submit" name="navigation" value="cancel" class="redbutton">Cancel</button>
 </form>
+=======
 </body>
 </html>
