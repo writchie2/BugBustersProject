@@ -41,9 +41,12 @@
         {% csrf_token %}
         <button type="submit" name="navigation" value="editcourse" class="bluebutton">Edit This Course</button>
         {% csrf_token %}
-        <button type="submit" name="navigation" onclick="return confirm('Are you sure?')" value="deletecourse" class="redbutton">Delete Course</button>
+        <button type="submit" name="navigation" onclick="return confirm('Are you sure?')" value="deletecourse"
+                class="redbutton">Delete Course
+        </button>
     </form>
 {% endif %}
+
 
 {% if role == 'admin' %}
 <form action="/coursepage/" method="post">
@@ -72,19 +75,30 @@
 <table id="myTable">
     <tr>
         <td class="label">Assigned Users</td>
+        <td>
+            {% if role == 'admin' %}
+                <form action="/coursepage/" method="post">
+                    {% csrf_token %}
+                    <label for="adduser">Add a new user to the course:</label>
+                    <input list="addusers" name="adduser" id="adduser">
+                    <datalist id="addusers">
+                        {% for user in unassignedusers %}
+                            <option value= {{ user.email }}>{{ user.fullname }}</option>
+                        {% endfor %}
+                    </datalist>
+                    <input type="submit">
+                </form>
+            {% endif %}
+        </td>
     </tr>
     {% for user in course.users %}
         <tr>
 
             <td>{{ user.fullname }}</td>
             <td>
-                <form action="/directory/" method="post">
+                <form action="/coursepage/" method="post">
                 {% csrf_token %}
                 <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View User</button>
-                </form>
-            </td>
-            <td>
-                <form action="/coursepage/" method="post">
                 {% csrf_token %}
                 <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ user.email }} class="redbutton">Remove User</button>
                 </form>
