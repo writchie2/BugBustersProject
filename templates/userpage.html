@@ -30,8 +30,28 @@
 </div>
 <br>
 <br>
-{{ message }}
-<div class = "grid-container">
+<div class="grid-container">
+    <div class="grid-child">
+        <form action="/userpage/" method="post">
+            {% csrf_token %}
+            <button type="submit" name="navigation" value="directory" class="bluebutton">Back to Directory</button>
+            {% csrf_token %}
+            <button type="submit" name="navigation" value="dashboard" class="bluebutton">Back to Dashboard</button>
+            {{ message }}
+            <div class="totheright">
+                {% if role == "admin" or ownpage == True %}
+                    {% csrf_token %}
+                    <button type="submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
+                {% endif %}
+                {% if role == "admin" %}
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser"
+                            class="redbutton">Delete User
+                    </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
     <div class="grid-child">
         <table id="myTable">
             <tr>
@@ -57,24 +77,6 @@
                 </tr>
             {% endif %}
         </table>
-        <form action="/userpage/" method="post">
-            {% if role == "admin" or ownpage == True %}
-            {% csrf_token %}
-            <button type="submit" name="navigation" value="edituser" class="bluebutton">Edit User</button>
-            {% endif %}
-
-            {% if role == "admin" %}
-            {% csrf_token %}
-            <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deleteuser"
-                    class="redbutton">Delete User
-            </button>
-            {% endif %}
-            <br>
-            {% csrf_token %}
-            <button type="submit" name="navigation" value="directory" class="bluebutton">Back to Directory</button>
-            {% csrf_token %}
-            <button type="submit" name="navigation" value="dashboard" class="bluebutton">Back to Dashboard</button>
-        </form>
     </div>
     <div class ="grid-child">
         {% if editbio == 'False' %}
@@ -90,9 +92,9 @@
         {% if editbio == 'True' %}
             <p class="label">About {{ user.fullname }}:</p>
             <form action="/userpage/" method="post">
-            {% csrf_token %}
-            <textarea id="bio-text" name="savebio" rows="5" cols="80" maxlength="750">{{ user.bio }}</textarea>
-            <br>
+                {% csrf_token %}
+                <textarea id="bio-text" name="savebio" rows="5" cols="80" maxlength="750">{{ user.bio }}</textarea>
+                <br>
                 <input type="submit" value="Save" class="bluebutton"></input>
             </form>
         {% endif %}
@@ -120,6 +122,5 @@
         {% endif %}
     </div>
 </div>
-
 </body>
 </html>

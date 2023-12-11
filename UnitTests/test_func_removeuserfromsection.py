@@ -74,12 +74,6 @@ class RemoveUserFromSectionTest(TestCase):
         self.assertEqual(response.context['message'], "Only admins or instructors of this course can remove users from sections!",
                          "Error message does not play after non-admin or non-instructor tries to remove user from section.")
 
-    def test_RemoveInstructorUserFromSection(self):
-        self.client = Client()
-        session = self.client.session
-        session["role"] = "ta"
-
-
 
     def test_RemoveUserAsInstructorInAnotherCourse(self):
         self.client = Client()
