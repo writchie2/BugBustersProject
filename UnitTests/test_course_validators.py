@@ -2,7 +2,7 @@ import sys
 
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import Course
-from SchedulingApp.functions import (
+from SchedulingApp.Model_Classes.Course_Functions import (
     func_ValidateCourseName,
     func_ValidateDepartment,
     func_ValidateCourseNumber,

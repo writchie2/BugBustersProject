@@ -2,7 +2,12 @@ import sys
 
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
-from SchedulingApp.functions import func_SectionAsDict, func_CourseAsDict, func_UserAsDict, func_AlphabeticalMyUserList
+from SchedulingApp.Model_Classes.Template_Dicts_Functions import (
+    func_SectionAsDict,
+    func_CourseAsDict,
+    func_UserAsDict,
+    func_AlphabeticalMyUserList
+)
 from django.test import TestCase, Client
 
 class SectionAsDictTest(TestCase):

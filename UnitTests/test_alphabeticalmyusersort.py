@@ -2,7 +2,7 @@ import sys
 
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
-from SchedulingApp.functions import func_AlphabeticalMyUserList
+from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_AlphabeticalMyUserList
 from django.test import TestCase, Client
 class AlphabeticalMyUserListTest(TestCase):
     def setUp(self):
