@@ -92,7 +92,7 @@
                 {{ section.assigneduser.fullname }}
                 <form action="/sectionpage/" method="post">
                 {% csrf_token %}
-                <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View User</button>
+                <button type="submit" name="selecteduser" value={{ section.assigneduser.email }} class="bluebutton">View User</button>
                 {% csrf_token %}
                 <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ section.assigneduser.email }} class="redbutton">Remove User</button>
                 </form>

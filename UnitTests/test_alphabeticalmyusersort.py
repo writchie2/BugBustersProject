@@ -1,9 +1,10 @@
 import sys
 
+from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_AlphabeticalMyUserList
+
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
-from SchedulingApp.functions import func_AlphabeticalMyUserList
-from django.test import TestCase, Client
+from django.test import TestCase
 class AlphabeticalMyUserListTest(TestCase):
     def setUp(self):
         self.emmaSonnen = MyUser(1,"esonnen@uwm.edu", "password", "Emma", "Sonnen", "5555555555", "1234 main st",

@@ -39,8 +39,11 @@ def func_MyUserCreator(email, password, passwordconfirm, first, last, phone, str
 
 
 def func_EditFirstName(firstname, email):
+    try:
+        changeUser = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
     if func_ValidateFirstName(firstname):
-        changeUser = MyUser.objects.filter(email=email).first()
         changeUser.firstName = firstname
         changeUser.save()
         return "First name changed successfully!"
@@ -49,8 +52,11 @@ def func_EditFirstName(firstname, email):
 
 
 def func_EditLastName(lastname, email):
+    try:
+        changeUser = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
     if func_ValidateLastName(lastname):
-        changeUser = MyUser.objects.filter(email=email).first()
         changeUser.lastName = lastname
         changeUser.save()
         return "Last name changed successfully!"
@@ -58,8 +64,11 @@ def func_EditLastName(lastname, email):
         return "Invalid last name. Must be capitalized and have only contain letters."
 
 def func_EditPhoneNumber(phonenumber, email):
+    try:
+        changeUser = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
     if func_ValidatePhoneNumber(phonenumber):
-        changeUser = MyUser.objects.filter(email=email).first()
         changeUser.phoneNumber = phonenumber
         changeUser.save()
         return "Phone number changed successfully!"
@@ -67,8 +76,11 @@ def func_EditPhoneNumber(phonenumber, email):
         return "Invalid phone number. Format is 123-456-7890"
 
 def func_EditStreetAddress(streetaddress, email):
+    try:
+        changeUser = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
     if func_ValidateStreetAddress(streetaddress):
-        changeUser = MyUser.objects.filter(email=email).first()
         changeUser.streetAddress = streetaddress
         changeUser.save()
         return "Street address changed successfully!"
@@ -76,8 +88,11 @@ def func_EditStreetAddress(streetaddress, email):
         return "Invalid street address."
 
 def func_EditCity(city, email):
+    try:
+        changeUser = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
     if func_ValidateCity(city):
-        changeUser = MyUser.objects.filter(email=email).first()
         changeUser.city = city
         changeUser.save()
         return "City changed successfully!"
@@ -85,8 +100,11 @@ def func_EditCity(city, email):
         return "Invalid city. Must be capitalized."
 
 def func_EditState(state, email):
+    try:
+        changeUser = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
     if func_ValidateState(state):
-        changeUser = MyUser.objects.filter(email=email).first()
         changeUser.state = state
         changeUser.save()
         return "State changed successfully!"
@@ -94,8 +112,11 @@ def func_EditState(state, email):
         return "Invalid state. Two letter state code only."
 
 def func_EditZipcode(zipcode, email):
+    try:
+        changeUser = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
     if func_ValidateZipCode(zipcode):
-        changeUser = MyUser.objects.filter(email=email).first()
         changeUser.zipcode = zipcode
         changeUser.save()
         return "Zipcode changed successfully!"
@@ -103,8 +124,11 @@ def func_EditZipcode(zipcode, email):
         return "Invalid zipcode. Must be 5 digits long."
 
 def func_EditRole(role, email):
+    try:
+        changeUser = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
     if func_ValidateRole(role):
-        changeUser = MyUser.objects.filter(email=email).first()
         changeUser.role = role
         changeUser.save()
         return "Role changed successfully!"
@@ -112,8 +136,12 @@ def func_EditRole(role, email):
         return "Invalid role. Can only be Admin, Instructor, or TA."
 
 def func_MyUserDeleter(email):
-    MyUser.objects.filter(email=email).first().delete()
-    return "User successfully deleted"
+    try:
+        user = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
+    user.delete()
+    return "User deleted successfully"
 
 
 """

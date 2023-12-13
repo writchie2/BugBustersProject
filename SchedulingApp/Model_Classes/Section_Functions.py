@@ -3,8 +3,7 @@ import re
 from operator import itemgetter
 
 
-from SchedulingApp.models import Course, Section
-
+from SchedulingApp.models import Course, Section, MyUser
 
 
 def func_SectionCreator(number, courseID, days, location, type, starttime, endtime):
@@ -18,17 +17,57 @@ def func_SectionCreator(number, courseID, days, location, type, starttime, endti
         return "Invalid Type. Must be lecture, lab, or grader."
     if func_ValidateStartAndEndTime(starttime, endtime) == False:
         return "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end."
-
+    try:
+        course = Course.objects.get(id=courseID)
+    except:
+        return "Course does not exist!"
     newSection = Section.objects.create(sectionNumber=number, type=type,
                                         location=location, daysMeeting=days,
                                         startTime=starttime, endTime=endtime,
-                                        course=Course.objects.filter(id=courseID).first())
+                                        course=course)
     newSection.save()
     return "Section created successfully!"
 
+def func_AssignUserToSection(email, sectionID):
+    try:
+        user_added = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
+    try:
+        section = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
+    if user_added not in section.course.assignedUser.all():
+        return "That user is not in this course!"
+    if section.assignedUser == user_added:
+        return "User is already assigned to the section!"
+    if section.assignedUser != None:
+        return "There is already someone assigned to the section!"
+    section.assignedUser = user_added
+    section.save()
+    return "User added successfully!"
 
+def func_RemoveSectionUser(email, sectionID):
+    try:
+        user_removed = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
+    try:
+        section = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
+    if section.assignedUser != user_removed:
+        return "User is not assigned to the section!"
+    if section.assignedUser == None:
+        return "There is nobody assigned to the section!"
+    section.assignedUser = None
+    section.save()
+    return "User removed successfully!"
 def func_EditSectionNumber(number, sectionID):
-    chosen = Section.objects.filter(id=sectionID).first()
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateSectionNumber(number, chosen.course) == False:
         return "Invalid Section Number. Must be between 100 and 999 and unique!"
     else:
@@ -39,8 +78,11 @@ def func_EditSectionNumber(number, sectionID):
 
 
 def func_EditLocation(location, sectionID):
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateLocation(location):
-        chosen = Section.objects.filter(id=sectionID).first()
         chosen.location = location
         chosen.save()
         return "Location edited successfully!"
@@ -49,8 +91,11 @@ def func_EditLocation(location, sectionID):
 
 
 def func_EditDaysMeeting(days, sectionID):
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateDaysMeeting(days):
-        chosen = Section.objects.filter(id=sectionID).first()
         chosen.daysMeeting = days
         chosen.save()
         return "Days Meeting edited successfully!"
@@ -59,7 +104,10 @@ def func_EditDaysMeeting(days, sectionID):
 
 
 def func_EditStartTime(starttime, sectionID):
-    chosen = Section.objects.filter(id=sectionID).first()
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateStartAndEndTime(starttime, chosen.endTime):
         chosen.startTime = starttime
         chosen.save()
@@ -69,7 +117,10 @@ def func_EditStartTime(starttime, sectionID):
 
 
 def func_EditEndTime(endtime, sectionID):
-    chosen = Section.objects.filter(id=sectionID).first()
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateStartAndEndTime(chosen.startTime, endtime):
         chosen.endTime = endtime
         chosen.save()
@@ -79,9 +130,11 @@ def func_EditEndTime(endtime, sectionID):
 
 
 def func_EditType(type, sectionID):
-
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateSectionType(type):
-        chosen = Section.objects.filter(id=sectionID).first()
         chosen.type = type
         chosen.save()
         return "Type edited successfully!"
@@ -90,7 +143,11 @@ def func_EditType(type, sectionID):
 
 
 def func_SectionDeleter(sectionID):
-    Section.objects.filter(id=sectionID).first().delete()
+    try:
+        section = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
+    section.delete()
     return "Section deleted successfully"
 """
 Input: int, int - section number and course id.
@@ -100,7 +157,7 @@ that number exists in the course. If all conditions met returns True. Otherwise 
 
 def func_ValidateSectionNumber(sectionNumber, courseID):
     if isinstance(sectionNumber, int):
-        if sectionNumber < 99 or sectionNumber > 999:
+        if sectionNumber < 100 or sectionNumber > 999:
             return False
         if (Section.objects.filter(sectionNumber=sectionNumber).first() == None):
             return True
@@ -156,6 +213,7 @@ def func_ValidateDaysMeeting(daysMeeting):
         'U': 6,
         'A': -1,
     }
+    valid = ['M', 'T', 'W', 'H', 'F', 'S', 'U', 'A']
     if not isinstance(daysMeeting, str):
         return False
     if daysMeeting == "A":
@@ -165,6 +223,8 @@ def func_ValidateDaysMeeting(daysMeeting):
             return False
         else:
             for index in range(0, len(daysMeeting)):
+                if not daysMeeting[index] in valid:
+                    return False
                 current = order.get(daysMeeting[index])
                 if index + 1 == len(daysMeeting):
                     return True
