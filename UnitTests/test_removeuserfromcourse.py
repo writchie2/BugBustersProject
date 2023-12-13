@@ -1,7 +1,7 @@
 import sys
 from django.test import TestCase, Client
 from SchedulingApp.models import Course, MyUser
-from SchedulingApp.functions import func_RemoveUserFromCourse
+
 
 
 # check that user doing this is admin

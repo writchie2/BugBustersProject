@@ -20,10 +20,57 @@ def func_CourseCreator(coursename, department, number, semester, year):
     newCourse.save()
     return "Course created successfully!"
 
+def func_AssignUserToCourse(user_email, courseID):
+    try:
+        user = MyUser.objects.get(email=user_email)
+    except:
+        return "User does not exist!"
 
+    try:
+        course = Course.objects.get(id=courseID)
+    except:
+        return "This course does not exist!"
+    if course in user.course_set.all():
+        return "User is already in the course!"
+    course.assignedUser.add(user)
+    course.save()
+    return "User added successfully!"
+
+def func_RemoveCourseUser(user_email, courseID):
+    try:
+        user = MyUser.objects.get(email=user_email)
+    except:
+        return "User does not exist!"
+
+    try:
+        course = Course.objects.get(id=courseID)
+    except:
+        return "This course does not exist!"
+    if not course in user.course_set.all():
+        return "User is not in the course!"
+    course.assignedUser.remove(user)
+    course.save()
+    return "User removed successfully!"
+
+def func_UserIsInstructorOfCourse(user_email, courseID):
+    try:
+        user = MyUser.objects.get(email=user_email)
+    except:
+        return "User does not exist!"
+    try:
+        course = Course.objects.get(id=courseID)
+    except:
+        return "This course does not exist!"
+    if user.role == 'instructor' and course in user.course_set.all():
+        return "True"
+    else:
+        return "False"
 def func_EditCourseName(coursename, courseID):
+    try:
+        chosen = Course.objects.get(id=courseID)
+    except:
+        return "Course does not exist!"
     if func_ValidateCourseName(coursename):
-        chosen = Course.objects.filter(id=courseID).first()
         chosen.name = coursename
         chosen.save()
         return "Course Name edited successfully!"
@@ -32,8 +79,11 @@ def func_EditCourseName(coursename, courseID):
 
 
 def func_EditDepartment(department, courseID):
+    try:
+        chosen = Course.objects.get(id=courseID)
+    except:
+        return "Course does not exist!"
     if func_ValidateDepartment(department):
-        chosen = Course.objects.filter(id=courseID).first()
         chosen.department = department
         chosen.save()
         return "Department edited successfully!"
@@ -42,7 +92,10 @@ def func_EditDepartment(department, courseID):
 
 
 def func_EditCourseNumber(coursenumber, courseID):
-    chosen = Course.objects.filter(id=courseID).first()
+    try:
+        chosen = Course.objects.get(id=courseID)
+    except:
+        return "Course does not exist!"
     if func_ValidateCourseNumber(coursenumber, chosen.department):
         chosen.courseNumber = coursenumber
         chosen.save()
@@ -52,8 +105,11 @@ def func_EditCourseNumber(coursenumber, courseID):
 
 
 def func_EditSemester(semester, courseID):
+    try:
+        chosen = Course.objects.get(id=courseID)
+    except:
+        return "Course does not exist!"
     if func_ValidateSemester(semester):
-        chosen = Course.objects.filter(id=courseID).first()
         chosen.semester = semester
         chosen.save()
         return "Semester edited successfully!"
@@ -61,8 +117,11 @@ def func_EditSemester(semester, courseID):
         return "Invalid Semester. Acceptable values are fall, spring, winter, and summer"
 
 def func_EditYear(year, courseID):
+    try:
+        chosen = Course.objects.get(id=courseID)
+    except:
+        return "Course does not exist!"
     if func_ValidateYear(year):
-        chosen = Course.objects.filter(id=courseID).first()
         chosen.year = year
         chosen.save()
         return "Year edited successfully!"
@@ -70,7 +129,11 @@ def func_EditYear(year, courseID):
         return "Invalid Year. Must be later than 1956 and cannot be greater than 2025"
 
 def func_CourseDeleter(courseID):
-    Course.objects.filter(id=courseID).first().delete()
+    try:
+        course = Course.objects.get(id=courseID)
+    except:
+        return "Course does not exist!"
+    course.delete()
     return "Course deleted successfully"
 """
 Input: string - a name.
