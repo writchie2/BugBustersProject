@@ -64,7 +64,10 @@ def func_RemoveSectionUser(email, sectionID):
     section.save()
     return "User removed successfully!"
 def func_EditSectionNumber(number, sectionID):
-    chosen = Section.objects.filter(id=sectionID).first()
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateSectionNumber(number, chosen.course) == False:
         return "Invalid Section Number. Must be between 100 and 999 and unique!"
     else:
@@ -75,8 +78,11 @@ def func_EditSectionNumber(number, sectionID):
 
 
 def func_EditLocation(location, sectionID):
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateLocation(location):
-        chosen = Section.objects.filter(id=sectionID).first()
         chosen.location = location
         chosen.save()
         return "Location edited successfully!"
@@ -85,8 +91,11 @@ def func_EditLocation(location, sectionID):
 
 
 def func_EditDaysMeeting(days, sectionID):
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateDaysMeeting(days):
-        chosen = Section.objects.filter(id=sectionID).first()
         chosen.daysMeeting = days
         chosen.save()
         return "Days Meeting edited successfully!"
@@ -95,7 +104,10 @@ def func_EditDaysMeeting(days, sectionID):
 
 
 def func_EditStartTime(starttime, sectionID):
-    chosen = Section.objects.filter(id=sectionID).first()
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateStartAndEndTime(starttime, chosen.endTime):
         chosen.startTime = starttime
         chosen.save()
@@ -105,7 +117,10 @@ def func_EditStartTime(starttime, sectionID):
 
 
 def func_EditEndTime(endtime, sectionID):
-    chosen = Section.objects.filter(id=sectionID).first()
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateStartAndEndTime(chosen.startTime, endtime):
         chosen.endTime = endtime
         chosen.save()
@@ -115,9 +130,11 @@ def func_EditEndTime(endtime, sectionID):
 
 
 def func_EditType(type, sectionID):
-
+    try:
+        chosen = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
     if func_ValidateSectionType(type):
-        chosen = Section.objects.filter(id=sectionID).first()
         chosen.type = type
         chosen.save()
         return "Type edited successfully!"
