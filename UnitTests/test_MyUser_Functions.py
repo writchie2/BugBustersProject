@@ -523,19 +523,20 @@ class TestMyUserDeleter(TestCase):
 
     def test_delete(self):
         msg = func_MyUserDeleter("nichole@uwm.edu")
-        self.assertEqual(msg, "User successfully deleted")
-        self.assertFalse(MyUser.objects.filter(email="nichole@uwm.edu").exists(), "User was not deleted!")
-        self.assertTrue(MyUser.objects.filter(email="erik@uwm.edu").exists(), "Wrong user was deleted!")
-        self.assertTrue(MyUser.objects.filter(email="henry@uwm.edu").exists(), "Wrong user was deleted!")
-        self.assertTrue(MyUser.objects.filter(email="kevin@uwm.edu").exists(), "Wrong user was deleted!")
+        self.assertEqual(msg, "User deleted successfully")
+        self.assertFalse(MyUser.objects.filter(email="nichole@uwm.edu").exists(), "User: Nichole was not deleted!")
+        self.assertTrue(MyUser.objects.filter(email="erik@uwm.edu").exists(), "Wrong user: Erik was deleted!")
+        self.assertTrue(MyUser.objects.filter(email="henry@uwm.edu").exists(), "Wrong user: Henry was deleted!")
+        self.assertTrue(MyUser.objects.filter(email="kevin@uwm.edu").exists(), "Wrong user: Kevin was deleted!")
 
     def test_delete_non_existing_user(self):
         msg = func_MyUserDeleter("non-existing@uwm.edu")
         self.assertEqual(msg, "User does not exist!")
-        self.assertFalse(MyUser.objects.filter(email="nichole@uwm.edu").exists(), "Wrong user was deleted!")
-        self.assertTrue(MyUser.objects.filter(email="erik@uwm.edu").exists(), "Wrong user was deleted!")
-        self.assertTrue(MyUser.objects.filter(email="henry@uwm.edu").exists(), "Wrong user was deleted!")
-        self.assertTrue(MyUser.objects.filter(email="kevin@uwm.edu").exists(), "Wrong user was deleted!")
+        self.assertTrue(MyUser.objects.filter(email="nichole@uwm.edu").exists(), "Wrong user: Nichole was deleted!")
+        self.assertTrue(MyUser.objects.filter(email="erik@uwm.edu").exists(), "Wrong user: Erik was deleted!")
+        self.assertTrue(MyUser.objects.filter(email="henry@uwm.edu").exists(), "Wrong user: Henry was deleted!")
+        self.assertTrue(MyUser.objects.filter(email="kevin@uwm.edu").exists(), "Wrong user: Kevin was deleted!")
+
 
 class TestSaveBio(TestCase):
 
@@ -548,7 +549,8 @@ class TestSaveBio(TestCase):
     def test_change_bio(self):
         bio = "I would rather be playing Baldur's Gate 3"
         func_SaveBio("nichole@uwm.edu", bio)
-        self.assertEqual(bio, MyUser.objects.filter(email="nichole@uwm.edu").get(bio))
+        user_bio = MyUser.objects.filter(email="nichole@uwm.edu").get(bio)
+        self.assertEqual(bio, user_bio)
 
 
 class TestRemoveExcessNewLine(TestCase):
