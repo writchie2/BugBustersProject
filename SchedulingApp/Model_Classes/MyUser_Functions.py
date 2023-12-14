@@ -64,7 +64,7 @@ def func_EditPhoneNumber(phonenumber, email):
         changeUser.save()
         return "Phone number changed successfully!"
     else:
-        return "Invalid phone number. Format is 123-456-7890"
+            return "Invalid phone number. Format is 123-456-7890"
 
 def func_EditStreetAddress(streetaddress, email):
     if func_ValidateStreetAddress(streetaddress):
