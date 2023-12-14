@@ -472,31 +472,43 @@ class TestEditRole(TestCase):
         role = "Admin"
         msg = func_EditRole(role, "nichole@uwm.edu")
         self.assertEqual(msg, "Role changed successfully!")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").role, role)
+
 
     def test_empty_role(self):
+        og_role = MyUser.objects.get(email="nichole@uwm.edu").role
         role = ""
         msg = func_EditRole(role, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid role. Can only be Admin, Instructor, or TA.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").role, og_role)
 
     def test_no_role(self):
+        og_role = MyUser.objects.get(email="nichole@uwm.edu").role
         role = " "
         msg = func_EditRole(role, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid role. Can only be Admin, Instructor, or TA.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").role, og_role)
 
     def test_invalid_role(self):
+        og_role = MyUser.objects.get(email="nichole@uwm.edu").role
         role = "Prof"
         msg = func_EditRole(role, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid role. Can only be Admin, Instructor, or TA.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").role, og_role)
 
     def test_num_in_role(self):
+        og_role = MyUser.objects.get(email="nichole@uwm.edu").role
         role = "Adm1n"
         msg = func_EditRole(role, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid role. Can only be Admin, Instructor, or TA.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").role, og_role)
 
     def test_bad_char_in_role(self):
+        og_role = MyUser.objects.get(email="nichole@uwm.edu").role
         role = "T@"
         msg = func_EditRole(role, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid role. Can only be Admin, Instructor, or TA.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").role, og_role)
 
 
 class TestMyUserDeleter(TestCase):
