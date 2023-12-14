@@ -1,4 +1,7 @@
 import sys
+
+from SchedulingApp.Model_Classes.MyUser_Functions import func_RemoveExcessNewLine
+
 sys.path.append('../SchedulingApp')
 from SchedulingApp.Model_Classes.MyUser_Functions import func_RemoveExcessNewLine
 from django.test import TestCase

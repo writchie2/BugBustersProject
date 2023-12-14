@@ -1,8 +1,11 @@
 import sys
 
+from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_AlphabeticalCourseList
+
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_AlphabeticalCourseList
+
 from django.test import TestCase, Client
 class AlphabeticalCourseListTest(TestCase):
     def setUp(self):

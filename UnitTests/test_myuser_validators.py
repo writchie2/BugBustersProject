@@ -1,5 +1,9 @@
 import sys
 
+from SchedulingApp.Model_Classes.MyUser_Functions import func_ValidateEmail, func_ValidatePassword, \
+    func_ValidateFirstName, func_ValidateLastName, func_ValidatePhoneNumber, func_ValidateStreetAddress, \
+    func_ValidateCity, func_ValidateState, func_ValidateZipCode, func_ValidateRole
+
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.Model_Classes.MyUser_Functions import (
@@ -137,7 +141,7 @@ class ValidatePhoneNumberTest(TestCase):
 
     invalid_whitespace = [" (414)123-4567", "(414)123-4567 ", " (414)123-4567 "]
 
-    long_number = 123456789012345678901
+    long_number = "123456789012345678901"
 
     def test_no_number(self):
         self.assertFalse(func_ValidatePhoneNumber(""), "Expected: False Actual: True")
@@ -154,7 +158,7 @@ class ValidatePhoneNumberTest(TestCase):
             self.assertFalse(func_ValidatePhoneNumber(number), "Expected: False Actual: True")
 
     def test_long_number(self):
-        self.assertFalse(func_ValidateState(self.long_number), "Expected: False Actual: True")
+        self.assertFalse(func_ValidatePhoneNumber(self.long_number), "Expected: False Actual: True")
 
     def test_whitespace(self):
         for number in self.invalid_whitespace:
@@ -289,4 +293,4 @@ class ValidateRoleTest(TestCase):
 
     def test_invalid_role(self):
         for role in self.invalid_role:
-            self.assertFalse(func_ValidateState(role), "Expected: False Actual: True")
+            self.assertFalse(func_ValidateRole(role), "Expected: False Actual: True")

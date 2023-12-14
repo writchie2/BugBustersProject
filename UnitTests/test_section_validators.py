@@ -1,5 +1,8 @@
 import sys
 
+from SchedulingApp.Model_Classes.Section_Functions import func_ValidateSectionNumber, func_ValidateLocation, \
+    func_ValidateDaysMeeting, func_ValidateStartAndEndTime
+
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.Model_Classes.Section_Functions import (
@@ -8,6 +11,7 @@ from SchedulingApp.Model_Classes.Section_Functions import (
     func_ValidateDaysMeeting,
     func_ValidateStartAndEndTime
 )
+
 from django.test import TestCase, Client
 
 class ValidateSectionNumberTest(TestCase):

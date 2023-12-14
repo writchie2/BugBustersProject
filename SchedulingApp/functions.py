@@ -392,7 +392,7 @@ If a validator function fails then no object is created and returns with a failu
     return "Course created successfully!"""
 
 #TODO make course getters and setters
-"""def func_EditCourse(request):
+""" def func_EditCourse(request):
     chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
     if 'coursename' in request.POST:
         return func_EditCourseName(request.POST["coursename"], request.session['selectedcourse'])
@@ -447,7 +447,34 @@ If a validator function fails then no object is created and returns with a failu
             chosen = Course.objects.filter(id=request.session['selectedcourse']).first()
             chosen.year = newYear
             chosen.save()
-            return "Year edited successfully!" """
+
+            return "Year edited successfully!"
+
+def func_RemoveUserFromCourse(request):
+    if request.session['role'] != 'admin':
+        return "Permission Denied"
+    email_to_remove = request.POST.get('removeuser', None)
+    try:
+        user = MyUser.objects.get(email=email_to_remove)
+    except MyUser.DoesNotExist:
+        return "User does not exist!"
+    try:
+        course = Course.objects.filter(id=request.session['selectedcourse']).first()
+    except Course.DoesNotExist:
+        return "Course does not exist!"
+
+    if user not in course.assignedUser.all():
+        return "User is not in this course!"
+
+    course.assignedUser.remove(user)
+    course.save()
+    return "User removed from course successfully!"
+
+
+
+def func_DeleteCourse(request):
+    Course.objects.filter(id=request.session['selectedcourse']).first().delete() """
+
 
 #TODO make course getters and setters
 """def func_DeleteCourse(request):
@@ -571,7 +598,7 @@ If a validator function fails then no object is created and returns with a failu
         return func_SectionDeleter(request.session['selectedsection'])
     Section.objects.filter(id=request.session['selectedsection']).first().delete()"""
 #TODO Make methods in course class to add user
-def func_AddUserToCourse(request):
+"""def func_AddUserToCourse(request):
     if request.session['role'] != 'admin':
         return "Only admins can add users to courses!"
     try:
@@ -587,37 +614,89 @@ def func_AddUserToCourse(request):
         return "User is already in the course!"
     course.assignedUser.add(user)
     course.save()
-    return "User added successfully!"
+    return "User added successfully!"""
 
-def func_RemoveUserFromCourse(request):
-    return "Need to implement RemoveUserFromCourse."
-
-def func_AddUserToSection(request):
-    return "Need to implement AddUserToSection."
-
-def func_RemoveUserFromSection(request):
+"""def func_RemoveUserFromCourse(request):
+    if request.session['role'] != 'admin':
+        return "Only admins can add users to courses!"
     try:
-        course = Course.objects.filter(id=request.session['selectedcourse']).first()
-    except:
-        return  "Course does not exist!"
-    if request.session['role'] != 'admin' or request.session['role'] != 'instructor':
-        return "Only admins and instructors can remove users from sections!"
-    try:
-        user = MyUser.objects.filter(email=request.session['removeuser']).first()
+        user = MyUser.objects.get(email=request.POST['removeuser'])
     except:
         return "User does not exist!"
 
     try:
-        section = Section.objects.get(id=request.session['selectedcourse'])
+        course = Course.objects.get(id=request.session['selectedcourse'])
     except:
-        return "This section does not exist!"
-    if section not in user.section_set.all():
-        return "User is already in the course!"
-    section.assignedUser.delete(user)
+        return "This course does not exist!"
+    if not course in user.course_set.all():
+        return "User is not in the course!"
+    course.assignedUser.remove(user)
+    course.save()
+    return "User removed successfully!"""
+
+"""def func_AddUserToSection(request):
+    try:
+        course = Course.objects.get(id=request.session['selectedcourse'])
+    except:
+        return "This course does not exist!"
+
+    try:
+        user_adding = MyUser.objects.get(email=request.session['email'])
+    except:
+        return "You are not logged in!"
+    if request.session['role'] != 'admin' and not(request.session['role'] == 'instructor' and course in user_adding.course_set.all()):
+        return "Only admins or instructors of the course can add users to sections!"
+    try:
+        user_added = MyUser.objects.get(email=request.POST['adduser'])
+    except:
+        return "User does not exist!"
+
+    try:
+        section = Section.objects.get(id=request.session['selectedsection'])
+    except:
+        return "Section does not exist!"
+
+
+    if section.assignedUser == user_added:
+        return "User is already assigned to the section!"
+    if section.assignedUser != None:
+        return "There is already someone assigned to the section!"
+    section.assignedUser = user_added
     section.save()
-    return "User removed successfully!"
+    return "User added successfully!"""
 
-def func_AddUserToCourse(request):
+"""def func_RemoveUserFromSection(request):
+    try:
+        course = Course.objects.get(id=request.session['selectedcourse'])
+    except:
+        return "This course does not exist!"
+
+    try:
+        user_removing = MyUser.objects.get(email=request.session['email'])
+    except:
+        return "You are not logged in!"
+    if request.session['role'] != 'admin' and not (
+            user_removing.role == 'instructor' and course in user_removing.course_set.all()):
+        return "Only admins or instructors of the course can remove users to sections!"
+    try:
+        user_removed = MyUser.objects.get(email=request.POST['removeuser'])
+    except:
+        return "User does not exist!"
+
+    try:
+        section = Section.objects.get(id=request.session['selectedsection'])
+    except:
+        return "Section does not exist!"
+
+    if section.assignedUser != user_removed:
+        return "User is not assigned to the section!"
+    if section.assignedUser == None:
+        return "There is nobody assigned to the section!"
+    section.assignedUser = None
+    section.save()
+    return "User removed successfully!"""
+
+"""def func_AddUserToCourse(request):
     if request.session['role'] != 'admin':
         return "Only admins can add users to courses!"
     try:
@@ -633,14 +712,14 @@ def func_AddUserToCourse(request):
         return "User is already in the course!"
     course.assignedUser.add(user)
     course.save()
-    return "User added successfully!"
+    return "User added successfully!"""
 
 
-def func_RemoveUserFromCourse(request):
-    return "Need to implement RemoveUserFromCourse."
+"""def func_RemoveUserFromCourse(request):
+    return "Need to implement RemoveUserFromCourse."""
 
 
-def func_AddUserToSection(request):
+"""def func_AddUserToSection(request):
     # if request.session['role'] != 'admin' or request.session['role'] != 'instructor':
     #     return "Only admins and instructors can add users to sections!"
 
@@ -657,10 +736,10 @@ def func_AddUserToSection(request):
     print(section.assignedUser)
     #user.save()
     #section.save()
-    return "User added successfully!"
+    return "User added successfully!"""
 
 
-def func_RemoveUserFromSection(request):
+"""def func_RemoveUserFromSection(request):
     if request.session['role'] != 'admin' or request.session['role'] != 'instructor':
         return "Only admins and instructors of this course can remove users!"
     try:
@@ -677,7 +756,7 @@ def func_RemoveUserFromSection(request):
         return "User is already in the section!"
     section.assignedUser.remove(user)
     section.save()
-    return "User removed successfully."
+    return "User removed successfully."""
 
 """
 MyUser validator functions used when creating or editing MyUser objects

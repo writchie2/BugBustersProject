@@ -1,18 +1,23 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from .Model_Classes.Course_Functions import func_CourseCreator, func_EditCourseName, func_EditDepartment, func_EditCourseNumber, \
-    func_EditSemester, func_EditYear, func_CourseDeleter
+from .Model_Classes.Course_Functions import func_CourseCreator, func_EditCourseName, func_EditDepartment, \
+    func_EditCourseNumber, \
+    func_EditSemester, func_EditYear, func_CourseDeleter, func_AssignUserToCourse, func_RemoveCourseUser, \
+    func_UserIsInstructorOfCourse
 from .Model_Classes.MyUser_Functions import func_MyUserCreator, func_EditFirstName, func_EditLastName, \
     func_EditPhoneNumber, \
     func_EditStreetAddress, func_EditCity, func_EditState, func_EditZipcode, func_EditRole, func_MyUserDeleter, \
     func_SaveBio
 from .Model_Classes.Section_Functions import func_SectionCreator, func_EditSectionNumber, func_EditLocation, \
-    func_EditDaysMeeting, func_EditStartTime, func_EditEndTime, func_EditType, func_SectionDeleter
+    func_EditDaysMeeting, func_EditStartTime, func_EditEndTime, func_EditType, func_SectionDeleter, \
+    func_AssignUserToSection, func_RemoveSectionUser
 
 from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_UserAsDict, func_AlphabeticalMyUserList, func_AscendingSectionList, func_AlphabeticalCourseList, func_SectionAsDict, func_CourseAsDict
 from .models import Section, MyUser, Course
-from .functions import func_AddUserToCourse, func_AddUserToSection, func_RemoveUserFromCourse, func_RemoveUserFromSection
+
+
+
 
 
 class Login(View):
@@ -350,12 +355,15 @@ class CoursePage(View):
                     return render(request, "coursepage.html", {"message": message,
                                                                "course": func_CourseAsDict(
                                                                    request.session['selectedcourse'])})
-
         if 'selectedsection' in request.POST:
             request.session["selectedsection"] = request.POST['selectedsection']
             return redirect("/sectionpage/")
+        if 'selecteduser' in request.POST:
+            request.session['selecteduser'] = request.POST['selecteduser']
+            return redirect('/userpage/')
+
         if 'adduser' in request.POST:
-                message = func_AddUserToCourse(request)
+                message = self.addUserToCourse(request)
                 return render(request, "coursepage.html",
                               {"course": func_CourseAsDict(request.session['selectedcourse']),
                                "role": request.session['role'],
@@ -363,7 +371,7 @@ class CoursePage(View):
                                    MyUser.objects.exclude(course=request.session['selectedcourse'])),
                                'message': message})
         if 'removeuser' in request.POST:
-            message = func_RemoveUserFromCourse(request)
+            message = self.removeUserFromCourse(request)
             return render(request, "coursepage.html",
                           {"course": func_CourseAsDict(request.session['selectedcourse']),
                            "role": request.session['role'],
@@ -371,11 +379,22 @@ class CoursePage(View):
                                MyUser.objects.exclude(course=request.session['selectedcourse'])),
                            'message': message})
 
-    def deleteCourse(self,request):
+    def deleteCourse(self, request):
         if request.session['role'] != 'admin':
             return "Only admins can delete courses!"
         else:
             return func_CourseDeleter(request.session['selectedcourse'])
+
+    def addUserToCourse(self, request):
+        if request.session['role'] != 'admin':
+            return "Only admins can add users to courses!"
+        return func_AssignUserToCourse(request.POST['adduser'],request.session['selectedcourse'])
+
+    def removeUserFromCourse(self, request):
+        if request.session['role'] != 'admin':
+            return "Only admins can remove users from courses!"
+        return func_RemoveCourseUser(request.POST['removeuser'], request.session['selectedcourse'])
+
 
 
 
@@ -516,7 +535,7 @@ class SectionPage(View):
                                                                     request.session['selectedsection'])})
 
         if 'adduser' in request.POST:
-            message = func_AddUserToSection(request)
+            message = self.addUserToSection(request)
             return render(request, "sectionpage.html",
                           {"section": func_SectionAsDict(request.session['selectedsection']),
                            "role": request.session['role'],
@@ -524,13 +543,16 @@ class SectionPage(View):
                                MyUser.objects.filter(course=request.session['selectedcourse'])),
                            'message': message})
         if 'removeuser' in request.POST:
-            message = func_RemoveUserFromSection(request)
+            message = self.removeUserFromSection(request)
             return render(request, "sectionpage.html",
                           {"section": func_SectionAsDict(request.session['selectedsection']),
                            "role": request.session['role'],
                            'unassignedusers': func_AlphabeticalMyUserList(
                                MyUser.objects.filter(course=request.session['selectedcourse'])),
                            'message': message})
+        if 'selecteduser' in request.POST:
+            request.session['selecteduser'] = request.POST['selecteduser']
+            return redirect('/userpage/')
 
     def deleteSection(self, request):
         if request.session['role'] != 'admin':
@@ -538,6 +560,17 @@ class SectionPage(View):
         else:
             return func_SectionDeleter(request.session['selectedsection'])
 
+    def addUserToSection(self, request):
+        if request.session['role'] != 'admin' and not func_UserIsInstructorOfCourse(request.session['email'], request.session['selectedcourse']) == "True":
+            return "Only admins or instructors of the course can add users to sections!"
+        else:
+            return func_AssignUserToSection(request.POST['adduser'], request.session['selectedsection'])
+
+    def removeUserFromSection(self, request):
+        if request.session['role'] != 'admin' and not func_UserIsInstructorOfCourse(request.session['email'], request.session['selectedcourse']) == "True":
+            return "Only admins or instructors of the course can remove users from sections! "
+        else:
+            return func_RemoveSectionUser(request.POST['adduser'], request.session['selectedsection'])
 
 class CreateSection(View):
     def get(self, request):

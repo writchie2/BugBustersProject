@@ -1,5 +1,7 @@
 import sys
 
+from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_UserAsDict
+
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
 from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_UserAsDict
