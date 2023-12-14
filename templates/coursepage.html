@@ -119,7 +119,7 @@
         <tbody>
         {% for section in course.sections %}
             <tr>
-                <td>{{ section.title }}</td>
+                <td>{{ section.title }} - {{ section.daysMeeting }} {{ section.location }} </td>
                 <td>
                     <form action="/coursepage/" method="post">
                         {% csrf_token %}

@@ -91,11 +91,15 @@ def func_UserAsDict(userEmail):
 def func_AscendingSectionList(section_bin):
     sectionList = []
     for section in section_bin:
-        """full_dict = func_SectionAsDict(section.id)"""
+        daysMeetingFormat = section.daysMeeting
+        if daysMeetingFormat == 'A':
+            daysMeetingFormat = "Async"
         thisdict = {
             "title": section.__str__(),
             "id": section.id,
-
+            "daysMeeting": daysMeetingFormat,
+            "location": section.location,
+            "course": section.course.__str__()
         }
         sectionList.append(thisdict)
     alphabetical = sorted(sectionList, key=itemgetter('title'))
