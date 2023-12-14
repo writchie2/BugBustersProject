@@ -30,6 +30,7 @@
 </div>
 <br>
 <br>
+{{ message }}
 <div class="grid-container">
     <div class="grid-child">
     {% if role == 'admin' %}
@@ -86,12 +87,15 @@
             {% for user in course.users %}
                 <tr>
                     <td>{{ user.fullname }}</td>
+                    <td>{{ user.role }}</td>
                     <td>
                         <form action="/coursepage/" method="post">
                         {% csrf_token %}
                         <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View User</button>
-                        {% csrf_token %}
-                        <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ user.email }} class="redbutton">Remove User</button>
+                        {% if role == 'admin' %}
+                            {% csrf_token %}
+                            <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ user.email }} class="redbutton">Remove User</button>
+                        {% endif %}
                         </form>
                     </td>
                 </tr>
@@ -104,10 +108,12 @@
         <thead>
             <td class="label">Sections: </td>
             <td>
+                {% if role == 'admin' %}
                 <form action="/coursepage/" method="post">
                     {% csrf_token %}
                     <button type="submit" name="navigation" value="createsection" class="greenbutton">Create New Section</button>
                 </form>
+                {% endif %}
             </td>
         </thead>
         <tbody>

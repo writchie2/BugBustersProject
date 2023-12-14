@@ -1,18 +1,14 @@
 import sys
 
+from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_AscendingSectionList
+
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
-from SchedulingApp.functions import func_AscendingSectionList
+
 from django.test import TestCase, Client, RequestFactory
 
 class AscendingSectionListTest(TestCase):
     def setUp(self):
-        self.client = Client()
-        session = self.client.session
-        session["email"] = "writchie@uwm.edu"
-        session["role"] = "admin"
-        session["selectedcourse"] = 1
-        session.save()
         self.swe = Course(1, "SWE", "COMPSCI", 361, "spring", 2023)
         self.swe.save()
         self.section1 = Section(1, 100, 'lecture', "Chemistry BLDG 180", "TH", "09:30", "10:20", self.swe.id)
