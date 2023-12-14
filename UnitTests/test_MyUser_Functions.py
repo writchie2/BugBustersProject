@@ -1,4 +1,5 @@
 from django.test import TestCase
+from SchedulingApp.models import MyUser
 
 from SchedulingApp.Model_Classes.MyUser_Functions import (
     func_MyUserCreator, func_EditStreetAddress,
@@ -457,3 +458,70 @@ class TestEditZipcode(TestCase):
         zipcode = "123456"
         msg = func_EditZipcode(zipcode, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid zipcode. Must be 5 digits long.")
+
+
+class TestEditRole(TestCase):
+    def setUp(self):
+        self.nichole = func_MyUserCreator("nichole@uwm.edu", "Password!123",
+                                          "Password!123", "Nichole",
+                                          "Chaim", "4141234567", "1234 Main St",
+                                          "Milwaukee", "WI", "53220", "TA")
+
+    def test_valid_input(self):
+        role = "Admin"
+        msg = func_EditRole(role, "nichole@uwm.edu")
+        self.assertEqual(msg, "Role changed successfully!")
+
+    def test_empty_role(self):
+        role = ""
+        msg = func_EditRole(role, "nichole@uwm.edu")
+        self.assertEqual(msg, "Invalid role. Can only be Admin, Instructor, or TA.")
+
+    def test_no_role(self):
+        role = " "
+        msg = func_EditRole(role, "nichole@uwm.edu")
+        self.assertEqual(msg, "Invalid role. Can only be Admin, Instructor, or TA.")
+
+    def test_invalid_role(self):
+        role = "Prof"
+        msg = func_EditRole(role, "nichole@uwm.edu")
+        self.assertEqual(msg, "Invalid role. Can only be Admin, Instructor, or TA.")
+
+    def test_num_in_role(self):
+        role = "Adm1n"
+        msg = func_EditRole(role, "nichole@uwm.edu")
+        self.assertEqual(msg, "Invalid role. Can only be Admin, Instructor, or TA.")
+
+    def test_bad_char_in_role(self):
+        role = "T@"
+        msg = func_EditRole(role, "nichole@uwm.edu")
+        self.assertEqual(msg, "Invalid role. Can only be Admin, Instructor, or TA.")
+
+
+class TestMyUserDeleter(TestCase):
+    def setUp(self):
+        self.nichole = func_MyUserCreator("nichole@uwm.edu", "Password!123",
+                                          "Password!123", "Nichole",
+                                          "Chaim", "4141234567", "1234 Main St",
+                                          "Milwaukee", "WI", "53220", "TA")
+
+        self.erik = func_MyUserCreator("erik@uwm.edu", "Password!1234",
+                                       "Password!1234", "Erik",
+                                       "Shen", "4141234568", "4321 Main St",
+                                       "Milwaukee", "WI", "53220", "Admin")
+
+        self.henry = func_MyUserCreator("henry@uwm.edu", "Password!12345",
+                                        "Password!12345", "Henry",
+                                        "Ritchie", "4141234569", "2134 Main St",
+                                        "Milwaukee", "WI", "53220", "TA")
+
+        self.kevin = func_MyUserCreator("kevin@uwm.edu", "Password!123456",
+                                        "Password!123456", "Kevin",
+                                        "Santamaria", "4141234560", "4231 Main St",
+                                        "Milwaukee", "WI", "53220", "Admin")
+
+    def test_delete(self):
+        msg = func_MyUserDeleter("nichole@uwm.edu")
+        self.assertEqual(msg, "User successfully deleted")
+        MyUser.objects.filter(email="")
+
