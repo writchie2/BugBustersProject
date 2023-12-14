@@ -523,5 +523,23 @@ class TestMyUserDeleter(TestCase):
     def test_delete(self):
         msg = func_MyUserDeleter("nichole@uwm.edu")
         self.assertEqual(msg, "User successfully deleted")
-        MyUser.objects.filter(email="")
+        self.assertFalse(MyUser.objects.filter(email="nichole@uwm.edu").exists(), "User was not deleted!")
+        self.assertTrue(MyUser.objects.filter(email="erik@uwm.edu").exists(), "Wrong user was deleted!")
+        self.assertTrue(MyUser.objects.filter(email="henry@uwm.edu").exists(), "Wrong user was deleted!")
+        self.assertTrue(MyUser.objects.filter(email="kevin@uwm.edu").exists(), "Wrong user was deleted!")
+
+
+class TestSaveBio(TestCase):
+
+    def setUp(self):
+        self.nichole = func_MyUserCreator("nichole@uwm.edu", "Password!123",
+                                          "Password!123", "Nichole",
+                                          "Chaim", "4141234567", "1234 Main St",
+                                          "Milwaukee", "WI", "53220", "TA")
+
+    def test_change_bio(self):
+        bio = "I would rather be playing Baldur's Gate 3"
+        func_SaveBio("nichole@uwm.edu", bio)
+        self.assertEqual(bio, MyUser.objects.filter(email="nichole@uwm.edu").get(bio))
+
 
