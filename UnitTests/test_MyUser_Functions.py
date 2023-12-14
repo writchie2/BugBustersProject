@@ -547,10 +547,9 @@ class TestSaveBio(TestCase):
                                           "Milwaukee", "WI", "53220", "TA")
 
     def test_change_bio(self):
-        bio = "I would rather be playing Baldur's Gate 3"
+        bio = func_RemoveExcessNewLine("I would rather be playing Baldur's Gate 3")
         func_SaveBio("nichole@uwm.edu", bio)
-        user_bio = MyUser.objects.filter(email="nichole@uwm.edu").get(bio)
-        self.assertEqual(bio, user_bio)
+        self.assertEqual(bio, MyUser.objects.get(email="nichole@uwm.edu").bio)
 
 
 class TestRemoveExcessNewLine(TestCase):
