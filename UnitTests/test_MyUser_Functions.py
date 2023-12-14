@@ -145,6 +145,7 @@ class TestMyUserCreator(TestCase):
 
     def test_valid_input(self):
         self.assertEqual(self.valid_user, "User created successfully!")
+        self.assertTrue()
 
     def test_invalid_email(self):
         self.assertEqual(self.bad_email, "Invalid email. Must be a UWM email.")
@@ -528,6 +529,13 @@ class TestMyUserDeleter(TestCase):
         self.assertTrue(MyUser.objects.filter(email="henry@uwm.edu").exists(), "Wrong user was deleted!")
         self.assertTrue(MyUser.objects.filter(email="kevin@uwm.edu").exists(), "Wrong user was deleted!")
 
+    def test_delete_non_existing_user(self):
+        msg = func_MyUserDeleter("non-existing@uwm.edu")
+        self.assertEqual(msg, "User does not exist!")
+        self.assertFalse(MyUser.objects.filter(email="nichole@uwm.edu").exists(), "Wrong user was deleted!")
+        self.assertTrue(MyUser.objects.filter(email="erik@uwm.edu").exists(), "Wrong user was deleted!")
+        self.assertTrue(MyUser.objects.filter(email="henry@uwm.edu").exists(), "Wrong user was deleted!")
+        self.assertTrue(MyUser.objects.filter(email="kevin@uwm.edu").exists(), "Wrong user was deleted!")
 
 class TestSaveBio(TestCase):
 
@@ -543,3 +551,5 @@ class TestSaveBio(TestCase):
         self.assertEqual(bio, MyUser.objects.filter(email="nichole@uwm.edu").get(bio))
 
 
+class TestRemoveExcessNewLine(TestCase):
+    pass
