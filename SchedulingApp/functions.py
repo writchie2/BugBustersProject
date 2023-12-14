@@ -477,12 +477,12 @@ def func_DeleteCourse(request):
 
 
 #TODO make course getters and setters
-"""def func_DeleteCourse(request):
-    if request.session['role'] != 'admin':
-        return "Only admins can delete courses!"
-    else:
-        return func_CourseDeleter(request.session['selectedcourse'])
-    Course.objects.filter(id=request.session['selectedcourse']).first().delete()"""
+# def func_DeleteCourse(request):
+#     if request.session['role'] != 'admin':
+#         return "Only admins can delete courses!"
+#     else:
+#         return func_CourseDeleter(request.session['selectedcourse'])
+#     Course.objects.filter(id=request.session['selectedcourse']).first().delete()"""
 
 #TODO section create method
 """def func_CreateSection(request):
