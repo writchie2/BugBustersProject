@@ -11,7 +11,7 @@ from .Model_Classes.MyUser_Functions import func_MyUserCreator, func_EditFirstNa
     func_SaveBio
 from .Model_Classes.Section_Functions import func_SectionCreator, func_EditSectionNumber, func_EditLocation, \
     func_EditDaysMeeting, func_EditStartTime, func_EditEndTime, func_EditType, func_SectionDeleter, \
-    func_AssignUserToSection, func_RemoveSectionUser
+    func_AssignUserToSection, func_RemoveSectionUser, func_GetCourseFromSection
 
 from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_UserAsDict, func_AlphabeticalMyUserList, func_AscendingSectionList, func_AlphabeticalCourseList, func_SectionAsDict, func_CourseAsDict
 from .models import Section, MyUser, Course
@@ -68,19 +68,26 @@ class Dashboard(View):
     def post(self, request):
         if 'email' not in request.session:
             return redirect('/')
-
-        if request.POST['navigation'] == "logout":
-            request.session.flush()
-            return redirect("/")
-        if request.POST['navigation'] == "viewself":
-            request.session["selecteduser"] = request.session["email"]
-            return redirect("/userpage/")
-        if request.POST['navigation'] == "courselist":
-            return redirect("/courselist/")
-        if request.POST['navigation'] == "directory":
-            return redirect("/directory/")
-        if request.POST['navigation'] == "dashboard":
-            return redirect("/dashboard/")
+        if 'navigation' in request.POST:
+            if request.POST['navigation'] == "logout":
+                request.session.flush()
+                return redirect("/")
+            if request.POST['navigation'] == "viewself":
+                request.session["selecteduser"] = request.session["email"]
+                return redirect("/userpage/")
+            if request.POST['navigation'] == "courselist":
+                return redirect("/courselist/")
+            if request.POST['navigation'] == "directory":
+                return redirect("/directory/")
+            if request.POST['navigation'] == "dashboard":
+                return redirect("/dashboard/")
+        if 'selectedcourse' in request.POST:
+            request.session['selectedcourse'] = request.POST['selectedcourse']
+            return redirect('/coursepage/')
+        if 'selectedsection' in request.POST:
+            request.session['selectedcourse'] = func_GetCourseFromSection(request.POST['selectedsection'])
+            request.session['selectedsection'] = request.POST['selectedsection']
+            return redirect('/sectionpage/')
 
 
 class Directory(View):
@@ -499,6 +506,7 @@ class SectionPage(View):
                 return render(request, "sectionpage.html",
                           {"section": func_SectionAsDict(request.session['selectedsection']),
                            "role": request.session['role'],
+                           "isInstructor": func_UserIsInstructorOfCourse(request.session['email'], request.session['selectedcourse']) == "True",
                            'unassignedusers': func_AlphabeticalMyUserList(MyUser.objects.filter(course=request.session['selectedcourse']))})
             else:
                 return redirect("/coursepage/")

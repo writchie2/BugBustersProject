@@ -155,6 +155,13 @@ def func_SectionDeleter(sectionID):
     return "Section deleted successfully"
 
 
+def func_GetCourseFromSection(sectionID):
+    try:
+        section = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
+    return section.course.id
+
 """
 Input: int, int - section number and course id.
 Output: True the section number has 3 digits and no other section with 

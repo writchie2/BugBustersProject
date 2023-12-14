@@ -129,10 +129,10 @@ html {
 .grid-container {
     display: grid;
     grid-gap: 20px;
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 2fr;
-    grid-template-areas:  "one two"
-                          "one  three";
+    grid-template-rows: 1fr 2fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:  "one one"
+                          "two  three";
 }
 
 
