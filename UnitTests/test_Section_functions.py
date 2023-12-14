@@ -7,13 +7,13 @@ from SchedulingApp.Model_Classes.Section_Functions import (
     func_SectionDeleter,
     func_AssignUserToSection,
     func_RemoveSectionUser,
-    func_UserIsInstructorOfSection,
     func_EditSectionNumber,
     func_EditType,
     func_EditLocation,
     func_EditDaysMeeting,
     func_EditStartTime,
-    func_EditEndTime
+    func_EditEndTime,
+    # func_GetCourseFromSection
 )
 from django.test import TestCase
 
@@ -22,7 +22,7 @@ class TestSectionCreator(TestCase):
     def setUp(self):
         self.newCourse = Course(1, "Software Engineering", "COMPSCI", "361", "spring", 2023)
         self.newCourse.save()
-        self.newSection = Section.objects.create(2, 200, "section", "1020 Kenwood", "M", "15:00", "16:00")
+        self.newSection = Section(2, 200, "section", "1020 Kenwood", "M", "15:00", "16:00", 1)
         self.newSection.save()
 
     def test_ValidSection(self):
@@ -48,8 +48,9 @@ class TestSectionCreator(TestCase):
         self.assertNotIn(Section.objects.filter(sectionNumber=1000).first(), self.newCourse.section_set.all())
 
     def test_InvalidSectionId(self):
-        with self.assertRaises(Exception, msg="Adding to non-existent course does not raise an exception."):
-            func_SectionCreator(100, 5, "TH", "E108 CHEM BLDG", "lecture", "14:30", "16:20")
+        message = func_SectionCreator(100, 5, "TH", "E108 CHEM BLDG", "lecture", "14:30", "16:20")
+        self.assertEqual(message, "Course does not exist!")
+        self.assertEqual(Section.objects.filter(id=3).first(), None)
 
     def test_InvalidSectionDays(self):
         message = func_SectionCreator(100, 1, "WM", "E108 CHEM BLDG", "lecture", "14:30", "16:20")
@@ -156,7 +157,7 @@ class TestAssignUserToSection(TestCase):
     def setUp(self):
         self.newCourse = Course(1, "Test", "Department", 100, "spring", 2023)
         self.newCourse.save()
-        self.newSection = Section(2, 200, "section", "1020 Kenwood", "M", "15:00", "16:00", None, self.newCourse)
+        self.newSection = Section(2, 200, "section", "1020 Kenwood", "M", "15:00", "16:00", 1)
         self.newSection.save()
         self.erik = MyUser(1, "erikshen@uwm.edu", "Qwerty-12345", "Erik", "Shen", "123-456-7890",
                            "3400 N Maryland Ave", "Milwaukee", "WI", "53211", "admin")
@@ -164,19 +165,19 @@ class TestAssignUserToSection(TestCase):
         self.henry = MyUser(2, "writchie@uwm.edu", "password", "Henry", "Ritchie", "123-456-7890",
                             "3400 N Maryland Ave", "Milwaukee", "WI", "53211", "admin")
         self.henry.save()
-        self.newCourse.add(self.erik, self.henry)
+        self.newCourse.assignedUser.add(self.erik, self.henry)
         self.newCourse.save()
-        self.newSection.add(self.erik)
+        self.newSection.assignedUser = self.erik
         self.newSection.save()
 
     def test_ValidAssignUser(self):
         message = func_AssignUserToSection('writchie@uwm.edu', 2)
-        self.assertEqual(message, "User added successfully!")
-        self.assertIn(self.henry, self.newSection.assignedUser.all(), "User not added to section's users")
+        self.assertEqual(message, "There is already someone assigned to the section!")
+        self.assertEqual(self.erik, self.newSection.assignedUser, "User not added to section's users")
 
     def test_AssignUserAlreadyIn(self):
         message = func_AssignUserToSection("erikshen@uwm.edu", 2)
-        self.assertEqual(message, "User is already in the section!")
+        self.assertEqual(message, "User is already assigned to the section!")
 
     def test_AssignUserNonexistantUser(self):
         message = func_AssignUserToSection("mystery@uwm.edu", 2)
@@ -184,14 +185,14 @@ class TestAssignUserToSection(TestCase):
 
     def test_AssignUserNonexistantSection(self):
         message = func_AssignUserToSection("writchie@uwm.edu", 3)
-        self.assertEqual(message, "This section does not exist!")
+        self.assertEqual(message, "Section does not exist!")
 
 
 class TestRemoveSectionUser(TestCase):
     def setUp(self):
         self.newCourse = Course(1, "Test", "Department", 100, "spring", 2023)
         self.newCourse.save()
-        self.newSection = Section(2, 200, "section", "1020 Kenwood", "M", "15:00", "16:00", None, self.newCourse)
+        self.newSection = Section(2, 200, "section", "1020 Kenwood", "M", "15:00", "16:00", 1)
         self.newSection.save()
         self.erik = MyUser(1, "erikshen@uwm.edu", "Qwerty-12345", "Erik", "Shen", "123-456-7890", "3400 N Maryland Ave",
                            "Milwaukee", "WI", "53211", "admin")
@@ -201,17 +202,17 @@ class TestRemoveSectionUser(TestCase):
         self.henry.save()
         self.newCourse.assignedUser.add(self.erik, self.henry)
         self.newCourse.save()
-        self.newSection.assignedUser.add(self.erik)
+        self.newSection.assignedUser = self.erik
         self.newSection.save()
 
     def test_ValidRemoveUser(self):
         message = func_RemoveSectionUser('erikshen@uwm.edu', 2)
         self.assertEqual(message, "User removed successfully!")
-        self.assertNotIn(self.erik, self.swe.assignedUser.all(), "User not removed from section's users")
+        self.assertEqual(self.erik, self.newSection.assignedUser, "User not removed from section's users")
 
     def test_AssignUserNotIn(self):
         message = func_RemoveSectionUser('writchie@uwm.edu', 2)
-        self.assertEqual(message, "User is not in the section!")
+        self.assertEqual(message, "User is not assigned to the section!")
 
     def test_AssignUserNonexistantUser(self):
         message = func_RemoveSectionUser('mystery@uwm.edu', 2)
@@ -219,85 +220,37 @@ class TestRemoveSectionUser(TestCase):
 
     def test_AssignUserNonexistantSection(self):
         message = func_RemoveSectionUser('erikshen@uwm.edu', 3)
-        self.assertEqual(message, "This section does not exist!")
-
-
-class TestUserIsInstructorOfSection(TestCase):
-    def setUp(self):
-        self.newCourse = Course(1, "Test", "Department", 100, "spring", 2023)
-        self.newCourse.save()
-        self.newSection = Section(2, 200, "section", "1020 Kenwood", "M", "15:00", "16:00", None, self.newCourse)
-        self.newSection.save()
-        self.erik = MyUser(1, "erikshen@uwm.edu", "Qwerty-12345", "Erik", "Shen", "123-456-7890",
-                           "3400 N Maryland Ave", "Milwaukee", "WI", "53211", "instructor")
-        self.erik.save()
-        self.henry = MyUser(2, "writchie@uwm.edu", "password", "Henry", "Ritchie", "123-456-7890",
-                            "3400 N Maryland Ave", "Milwaukee", "WI", "53211", "instructor")
-        self.henry.save()
-        self.sarah = MyUser(3, "scramer@uwm.edu", "password", "Sarah", "Cramer", "123-456-7890",
-                            "3400 N Maryland Ave", "Milwaukee", "WI", "53211", "ta")
-        self.sarah.save()
-        self.bob = MyUser(4, "ballen@uwm.edu", "password", "Bob", "Allen", "123-456-7890",
-                          "3400 N Maryland Ave", "Milwaukee", "WI", "53211", "admin")
-        self.bob.save()
-        self.newCourse.assignedUser.add(self.erik, self.henry, self.sarah, self.bob)
-        self.newCourse.save()
-        self.newSection.assignedUser.add(self.erik, self.sarah)
-        self.newSection.save()
-
-        def test_IsInstructorInSection(self):
-            result = func_UserIsInstructorOfSection('erikshen@uwm.edu', 1, 2)
-            self.assertEqual(result, 'True', "True not passed for instructor of section")
-
-        def test_InstructorNotInSection(self):
-            result = func_UserIsInstructorOfSection('writchie@uwm.edu', 1, 2)
-            self.assertEqual(result, 'False', "False not passed for instructor not in course")
-
-        def test_TAInSection(self):
-            result = func_UserIsInstructorOfSection('scramer@uwm.edu', 1, 2)
-            self.assertEqual(result, 'False', "False not passed for TA in section")
-
-        def test_AdminNotInSection(self):
-            result = func_UserIsInstructorOfSection('ballen@uwm.edu', 1, 2)
-            self.assertEqual(result, 'False', "False not passed for admin not in section")
-
-        def test_NonexistantUser(self):
-            result = func_UserIsInstructorOfSection('mystery@uwm.edu', 1, 2)
-            self.assertEqual(result, 'User does not exist!', "False not passed for admin not in section")
-
-        def test_NonexistantSection(self):
-            result = func_UserIsInstructorOfSection('writchie@uwm.edu', 1, 3)
-            self.assertEqual(result, 'This section does not exist!', "False not passed for admin not in section")
+        self.assertEqual(message, "Section does not exist!")
 
 
 class TestEditSectionNumber(TestCase):
     def setUp(self):
         self.newCourse = Course(1, "Software Engineering", "COMPSCI", "361", 2023)
         self.newCourse.save()
-        self.newSection = Section(1, 800, "section", "1020 Kenwood", "M", "15:00", "16:00", None, self.newCourse)
+        self.newSection = Section(1, 800, "section", "1020 Kenwood", "M", "15:00", "16:00", 1)
         self.newSection.save()
 
     def test_EditNumberValid(self):
         message = func_EditSectionNumber(802, 1)
         self.assertEqual(message, 'Section Number edited successfully!', "success message does not play")
-        self.assertEqual(Section.objects.get(id="1").sectionNumber, '802', 'section number not changed')
+        self.assertEqual(Section.objects.get(id="1").sectionNumber, 802, 'section number not changed')
 
         message = func_EditSectionNumber(804, 1)
         self.assertEqual(message, 'Section Number edited successfully!', "success message does not play")
-        self.assertEqual(Section.objects.get(id="1").sectionNumber, '804', 'section number not changed')
+        self.assertEqual(Section.objects.get(id="1").sectionNumber, 804, 'section number not changed')
 
     def test_EditNumberInvalidNumber(self):
         message = func_EditSectionNumber('', 1)
         self.assertEqual(message, "Invalid Section Number. Must be between 100 and 999 and unique!", "error message does not play for invalid section number")
-        self.assertEqual(Section.objects.get(id=1).sectionNumber, '800', 'section number changed when invalid')
+        self.assertEqual(Section.objects.get(id=1).sectionNumber, 800, 'section number changed when invalid')
 
         message = func_EditSectionNumber('99', 1)
         self.assertEqual(message, "Invalid Section Number. Must be between 100 and 999 and unique!", "error message does not play for invalid section number")
-        self.assertEqual(Section.objects.get(id=1).sectionNumber, '800', 'section number changed when invalid')
+        self.assertEqual(Section.objects.get(id=1).sectionNumber, 800, 'section number changed when invalid')
 
         message = func_EditSectionNumber('1000', 1)
         self.assertEqual(message, "Invalid Section Number. Must be between 100 and 999 and unique!", "error message does not play for invalid section number")
-        self.assertEqual(Section.objects.get(id=1).sectionNumber, '800', 'section number changed when invalid')
+        self.assertEqual(Section.objects.get(id=1).sectionNumber, 800, 'section number changed when invalid')
 
     def test_EditNumberInvalidSection(self):
         message = func_EditSectionNumber('802', 2)
@@ -308,38 +261,38 @@ class TestEditType(TestCase):
     def setUp(self):
         self.newCourse = Course(1, "Software Engineering", "COMPSCI", "361", 2023)
         self.newCourse.save()
-        self.newSection = Section(1, 800, "section", "1020 Kenwood", "M", "15:00", "16:00", None, self.newCourse)
+        self.newSection = Section(1, 800, "lab", "1020 Kenwood", "M", "15:00", "16:00", 1)
         self.newSection.save()
 
     def test_EditTypeValid(self):
         message = func_EditType('lecture', 1)
         self.assertEqual(message, 'Type edited successfully!', "success message does not play")
-        self.assertEqual(Section.objects.get(id="1").type, 'lecture', 'section number not changed')
+        self.assertEqual(Section.objects.get(id=1).type, 'lecture', 'section number not changed')
 
         message = func_EditType('lab', 1)
         self.assertEqual(message, 'Type edited successfully!', "success message does not play")
-        self.assertEqual(Section.objects.get(id="1").type, 'lab', 'section number not changed')
+        self.assertEqual(Section.objects.get(id=1).type, 'lab', 'section number not changed')
 
     def test_EditTypeInvalid(self):
         message = func_EditType('Lecture', 1)
-        self.assertEqual(message, 'Invalid Type. Must be lecture, lab, or grader.', "error message does not play for invalid course department")
-        self.assertEqual(Section.objects.get(id="1").type, 'lecture', 'section type changed when invalid')
+        self.assertEqual(message, 'Invalid Type. Must be lecture, lab, or grader.', "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).type, 'lab', 'section type changed when invalid')
 
         message = func_EditType('labs', 1)
         self.assertEqual(message, 'Invalid Type. Must be lecture, lab, or grader.',
-                         "error message does not play for invalid course department")
-        self.assertEqual(Section.objects.get(id="1").type, 'lecture', 'section type changed when invalid')
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).type, 'lab', 'section type changed when invalid')
 
         message = func_EditType('', 1)
         self.assertEqual(message, 'Invalid Type. Must be lecture, lab, or grader.',
-                         "error message does not play for invalid course department")
-        self.assertEqual(Section.objects.get(id="1").type, 'lecture', 'section type changed when invalid')
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).type, 'lab', 'section type changed when invalid')
 
     def test_EditTypeInvalidSection(self):
         message = func_EditType('lecture', 2)
-        self.assertEqual(message, 'Invalid Type. Must be lecture, lab, or grader.',
-                         "error message does not play for invalid course department")
-        self.assertEqual(Section.objects.get(id="1").type, 'lecture', 'section type changed when invalid')
+        self.assertEqual(message, 'Section does not exist!',
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).type, 'lab', 'section type changed when invalid')
 
 
 class TestEditLocation(TestCase):
@@ -355,6 +308,10 @@ class TestEditStartTime(TestCase):
 
 
 class TestEditEndTime(TestCase):
+    pass
+
+
+class TestGetCourseFromSection(TestCase):
     pass
 
 
@@ -379,15 +336,15 @@ class TestRemoveSection(TestCase):
         self.assertEqual(message, "Section deleted successfully")
 
     def test_invalidsectionid(self):
-        with self.assertRaises(Exception, msg="Removing from non-existent course does not raise an exception."):
-            func_SectionDeleter(5)
+        message = func_SectionDeleter(5)
+        self.assertEqual(message, "Section does not exist!")
 
     def test_nosectionid(self):
-        with self.assertRaises(Exception, msg="Removing from empty course does not raise an exception."):
-            func_SectionDeleter(None)
+        message = func_SectionDeleter(None)
+        self.assertEqual(message, "Section does not exist!")
 
     def test_removedoublesection(self):
         message = func_SectionDeleter(3)
         self.assertEqual(message, "Section deleted successfully")
-        with self.assertRaises(Exception, msg="Removing section multiple times does not raise an exception."):
-            func_SectionDeleter(3)
+        message = func_SectionDeleter(3)
+        self.assertEqual(message, "Section does not exist!")
