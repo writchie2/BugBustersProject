@@ -2,9 +2,7 @@ import time
 import re
 from operator import itemgetter
 
-
-from SchedulingApp.models import Course, Section
-
+from SchedulingApp.models import Course, Section, MyUser
 
 
 def func_SectionCreator(number, courseID, days, location, type, starttime, endtime):
@@ -25,6 +23,64 @@ def func_SectionCreator(number, courseID, days, location, type, starttime, endti
                                         course=Course.objects.filter(id=courseID).first())
     newSection.save()
     return "Section created successfully!"
+
+
+def func_AssignUserToSection(email, sectionID):
+    try:
+        user_added = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
+    try:
+        section = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
+    if user_added not in section.course.assignedUser.all():
+        return "That user is not in this course!"
+    if section.assignedUser == user_added:
+        return "User is already assigned to the section!"
+    if section.assignedUser != None:
+        return "There is already someone assigned to the section!"
+    section.assignedUser = user_added
+    section.save()
+    return "User added successfully!"
+
+
+def func_RemoveSectionUser(email, sectionID):
+    try:
+        user_removed = MyUser.objects.get(email=email)
+    except:
+        return "User does not exist!"
+    try:
+        section = Section.objects.get(id=sectionID)
+    except:
+        return "Section does not exist!"
+    if section.assignedUser != user_removed:
+        return "User is not assigned to the section!"
+    if section.assignedUser == None:
+        return "There is nobody assigned to the section!"
+    section.assignedUser = None
+    section.save()
+    return "User removed successfully!"
+
+
+def func_UserIsInstructorOfSection(user_email, courseID, sectionID):
+    try:
+        user = MyUser.objects.get(email=user_email)
+    except:
+        return "User does not exist!"
+    try:
+        course = Course.objects.get(id=courseID)
+    except:
+        return "This course does not exist!"
+    try:
+        section = Section.objects.get(id=sectionID)
+    except:
+        return "This section does not exist!"
+    if user.role == 'instructor' and course in user.course_set.all():
+        if section in user.section_set.all():
+            return "True"
+    else:
+        return "False"
 
 
 def func_EditSectionNumber(number, sectionID):
@@ -79,7 +135,6 @@ def func_EditEndTime(endtime, sectionID):
 
 
 def func_EditType(type, sectionID):
-
     if func_ValidateSectionType(type):
         chosen = Section.objects.filter(id=sectionID).first()
         chosen.type = type
@@ -92,15 +147,18 @@ def func_EditType(type, sectionID):
 def func_SectionDeleter(sectionID):
     Section.objects.filter(id=sectionID).first().delete()
     return "Section deleted successfully"
+
+
 """
 Input: int, int - section number and course id.
 Output: True the section number has 3 digits and no other section with 
 that number exists in the course. If all conditions met returns True. Otherwise False otherwise.
 """
 
+
 def func_ValidateSectionNumber(sectionNumber, courseID):
     if isinstance(sectionNumber, int):
-        if sectionNumber < 99 or sectionNumber > 999:
+        if sectionNumber < 100 or sectionNumber > 999:
             return False
         if (Section.objects.filter(sectionNumber=sectionNumber).first() == None):
             return True
@@ -113,11 +171,13 @@ def func_ValidateSectionNumber(sectionNumber, courseID):
     else:
         return False
 
+
 """
 Input: string - a location.
 Output: True in the format #### Building Name. Room numbers need to be at least 1 digit and can
  start or end with a letter (i.e. S195). If all conditions met returns True. Otherwise False otherwise.
 """
+
 
 def func_ValidateLocation(location):
     if not isinstance(location, str):
@@ -138,12 +198,14 @@ def func_ValidateLocation(location):
         else:
             return False
 
+
 """
 Input: string - Days the section meet.
 Output: True if in chronological order (i.e. M before T).
 'A' represent Asynchronous and cannot be in a string with any other days.
 If all conditions met returns True. Otherwise False otherwise.
 """
+
 
 def func_ValidateDaysMeeting(daysMeeting):
     order = {
@@ -172,12 +234,14 @@ def func_ValidateDaysMeeting(daysMeeting):
                 if next <= current:
                     return False
 
+
 """
 Input: string, string - Start time and End Time for section.
 Output: Start must be before end. Start must not be earlier than '08:00' and cannot be
 later than '17:59' (5:59pm). End time cannot be later than '19:59' (7:59pm). If all 
 conditions met returns True. Otherwise returns False.
 """
+
 
 def func_ValidateStartAndEndTime(startTime, endTime):
     if not isinstance(startTime, str) or not isinstance(endTime, str):
@@ -209,14 +273,15 @@ def func_ValidateStartAndEndTime(startTime, endTime):
     else:
         return False
 
+
 """
 Input: string - a section type.
 Output: True 'lecture', 'grader',or  'lab'. False otherwise.
 """
+
 
 def func_ValidateSectionType(type):
     if type == 'lecture' or type == 'grader' or type == 'lab':
         return True
     else:
         return False
-
