@@ -53,7 +53,8 @@ def func_SectionAsDict(sectionID):
             "daysmeeting": daysMeetingFormat,
             "starttime": start_12hour,
             "endtime": end_12hour,
-            "course": func_CourseAsDict(section.course.id)
+            "course": func_CourseAsDict(section.course.id),
+            "assigneduser": None
         }
     return dict
 def func_UserAsDict(userEmail):
@@ -90,9 +91,11 @@ def func_UserAsDict(userEmail):
 def func_AscendingSectionList(section_bin):
     sectionList = []
     for section in section_bin:
+        """full_dict = func_SectionAsDict(section.id)"""
         thisdict = {
             "title": section.__str__(),
             "id": section.id,
+
         }
         sectionList.append(thisdict)
     alphabetical = sorted(sectionList, key=itemgetter('title'))
