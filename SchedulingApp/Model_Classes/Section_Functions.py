@@ -28,6 +28,7 @@ def func_SectionCreator(number, courseID, days, location, type, starttime, endti
     newSection.save()
     return "Section created successfully!"
 
+
 def func_AssignUserToSection(email, sectionID):
     try:
         user_added = MyUser.objects.get(email=email)
@@ -47,6 +48,7 @@ def func_AssignUserToSection(email, sectionID):
     section.save()
     return "User added successfully!"
 
+
 def func_RemoveSectionUser(email, sectionID):
     try:
         user_removed = MyUser.objects.get(email=email)
@@ -63,6 +65,7 @@ def func_RemoveSectionUser(email, sectionID):
     section.assignedUser = None
     section.save()
     return "User removed successfully!"
+
 def func_EditSectionNumber(number, sectionID):
     try:
         chosen = Section.objects.get(id=sectionID)
@@ -134,6 +137,7 @@ def func_EditType(type, sectionID):
         chosen = Section.objects.get(id=sectionID)
     except:
         return "Section does not exist!"
+
     if func_ValidateSectionType(type):
         chosen.type = type
         chosen.save()
@@ -150,17 +154,20 @@ def func_SectionDeleter(sectionID):
     section.delete()
     return "Section deleted successfully"
 
+
 def func_GetCourseFromSection(sectionID):
     try:
         section = Section.objects.get(id=sectionID)
     except:
         return "Section does not exist!"
     return section.course.id
+
 """
 Input: int, int - section number and course id.
 Output: True the section number has 3 digits and no other section with 
 that number exists in the course. If all conditions met returns True. Otherwise False otherwise.
 """
+
 
 def func_ValidateSectionNumber(sectionNumber, courseID):
     if isinstance(sectionNumber, int):
@@ -177,11 +184,13 @@ def func_ValidateSectionNumber(sectionNumber, courseID):
     else:
         return False
 
+
 """
 Input: string - a location.
 Output: True in the format #### Building Name. Room numbers need to be at least 1 digit and can
  start or end with a letter (i.e. S195). If all conditions met returns True. Otherwise False otherwise.
 """
+
 
 def func_ValidateLocation(location):
     if not isinstance(location, str):
@@ -202,12 +211,14 @@ def func_ValidateLocation(location):
         else:
             return False
 
+
 """
 Input: string - Days the section meet.
 Output: True if in chronological order (i.e. M before T).
 'A' represent Asynchronous and cannot be in a string with any other days.
 If all conditions met returns True. Otherwise False otherwise.
 """
+
 
 def func_ValidateDaysMeeting(daysMeeting):
     order = {
@@ -239,12 +250,14 @@ def func_ValidateDaysMeeting(daysMeeting):
                 if next <= current:
                     return False
 
+
 """
 Input: string, string - Start time and End Time for section.
 Output: Start must be before end. Start must not be earlier than '08:00' and cannot be
 later than '17:59' (5:59pm). End time cannot be later than '19:59' (7:59pm). If all 
 conditions met returns True. Otherwise returns False.
 """
+
 
 def func_ValidateStartAndEndTime(startTime, endTime):
     if not isinstance(startTime, str) or not isinstance(endTime, str):
@@ -276,14 +289,15 @@ def func_ValidateStartAndEndTime(startTime, endTime):
     else:
         return False
 
+
 """
 Input: string - a section type.
 Output: True 'lecture', 'grader',or  'lab'. False otherwise.
 """
+
 
 def func_ValidateSectionType(type):
     if type == 'lecture' or type == 'grader' or type == 'lab':
         return True
     else:
         return False
-

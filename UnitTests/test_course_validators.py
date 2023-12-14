@@ -5,6 +5,13 @@ from SchedulingApp.Model_Classes.Course_Functions import func_ValidateCourseName
 
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import Course
+from SchedulingApp.Model_Classes.Course_Functions import (
+    func_ValidateCourseName,
+    func_ValidateDepartment,
+    func_ValidateCourseNumber,
+    func_ValidateSemester,
+    func_ValidateYear
+)
 
 from django.test import TestCase
 

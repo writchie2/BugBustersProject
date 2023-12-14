@@ -6,7 +6,18 @@ from SchedulingApp.Model_Classes.MyUser_Functions import func_ValidateEmail, fun
 
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
-
+from SchedulingApp.Model_Classes.MyUser_Functions import (
+    func_ValidateEmail,
+    func_ValidatePassword,
+    func_ValidateFirstName,
+    func_ValidateLastName,
+    func_ValidatePhoneNumber,
+    func_ValidateStreetAddress,
+    func_ValidateCity,
+    func_ValidateState,
+    func_ValidateZipCode,
+    func_ValidateRole
+)
 from django.test import TestCase, Client
 
 

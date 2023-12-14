@@ -4,6 +4,7 @@ from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_AscendingS
 
 sys.path.append('../SchedulingApp')
 from SchedulingApp.models import MyUser, Course, Section
+from SchedulingApp.Model_Classes.Template_Dicts_Functions import func_AscendingSectionList
 
 from django.test import TestCase, Client, RequestFactory
 
