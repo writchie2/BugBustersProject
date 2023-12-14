@@ -97,7 +97,7 @@
                 <form action="/sectionpage/" method="post">
                 {% csrf_token %}
                 <button type="submit" name="selecteduser" value={{ section.assigneduser.email }} class="bluebutton">View User</button>
-                    {% if admin == True or isInstructor == True %}
+                    {% if role == 'admin' or isInstructor == True %}
                 {% csrf_token %}
                 <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ section.assigneduser.email }} class="redbutton">Remove User</button>
                     {% endif %}
