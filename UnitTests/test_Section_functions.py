@@ -13,7 +13,7 @@ from SchedulingApp.Model_Classes.Section_Functions import (
     func_EditDaysMeeting,
     func_EditStartTime,
     func_EditEndTime,
-    # func_GetCourseFromSection
+    func_GetCourseFromSection
 )
 from django.test import TestCase
 
@@ -241,15 +241,18 @@ class TestEditSectionNumber(TestCase):
 
     def test_EditNumberInvalidNumber(self):
         message = func_EditSectionNumber('', 1)
-        self.assertEqual(message, "Invalid Section Number. Must be between 100 and 999 and unique!", "error message does not play for invalid section number")
+        self.assertEqual(message, "Invalid Section Number. Must be between 100 and 999 and unique!",
+                         "error message does not play for invalid section number")
         self.assertEqual(Section.objects.get(id=1).sectionNumber, 800, 'section number changed when invalid')
 
         message = func_EditSectionNumber('99', 1)
-        self.assertEqual(message, "Invalid Section Number. Must be between 100 and 999 and unique!", "error message does not play for invalid section number")
+        self.assertEqual(message, "Invalid Section Number. Must be between 100 and 999 and unique!",
+                         "error message does not play for invalid section number")
         self.assertEqual(Section.objects.get(id=1).sectionNumber, 800, 'section number changed when invalid')
 
         message = func_EditSectionNumber('1000', 1)
-        self.assertEqual(message, "Invalid Section Number. Must be between 100 and 999 and unique!", "error message does not play for invalid section number")
+        self.assertEqual(message, "Invalid Section Number. Must be between 100 and 999 and unique!",
+                         "error message does not play for invalid section number")
         self.assertEqual(Section.objects.get(id=1).sectionNumber, 800, 'section number changed when invalid')
 
     def test_EditNumberInvalidSection(self):
@@ -267,15 +270,16 @@ class TestEditType(TestCase):
     def test_EditTypeValid(self):
         message = func_EditType('lecture', 1)
         self.assertEqual(message, 'Type edited successfully!', "success message does not play")
-        self.assertEqual(Section.objects.get(id=1).type, 'lecture', 'section number not changed')
+        self.assertEqual(Section.objects.get(id=1).type, 'lecture', 'section type not changed')
 
         message = func_EditType('lab', 1)
         self.assertEqual(message, 'Type edited successfully!', "success message does not play")
-        self.assertEqual(Section.objects.get(id=1).type, 'lab', 'section number not changed')
+        self.assertEqual(Section.objects.get(id=1).type, 'lab', 'section type not changed')
 
     def test_EditTypeInvalid(self):
         message = func_EditType('Lecture', 1)
-        self.assertEqual(message, 'Invalid Type. Must be lecture, lab, or grader.', "error message does not play for invalid section type")
+        self.assertEqual(message, 'Invalid Type. Must be lecture, lab, or grader.',
+                         "error message does not play for invalid section type")
         self.assertEqual(Section.objects.get(id=1).type, 'lab', 'section type changed when invalid')
 
         message = func_EditType('labs', 1)
@@ -296,55 +300,242 @@ class TestEditType(TestCase):
 
 
 class TestEditLocation(TestCase):
-    pass
+    def setUp(self):
+        self.newCourse = Course(1, "Software Engineering", "COMPSCI", "361", 2023)
+        self.newCourse.save()
+        self.newSection = Section(1, 800, "lab", "1020 Kenwood", "M", "15:00", "16:00", 1)
+        self.newSection.save()
+
+    def test_EditLocationValid(self):
+        message = func_EditLocation('1020 Kenwood', 1)
+        self.assertEqual(message, 'Location edited successfully!', "success message does not play")
+        self.assertEqual(Section.objects.get(id=1).location, "1020 Kenwood", 'section location not changed')
+
+        message = func_EditLocation('E108 Chemistry', 1)
+        self.assertEqual(message, 'Location edited successfully!', "success message does not play")
+        self.assertEqual(Section.objects.get(id=1).location, 'E108 Chemistry', 'section location not changed')
+
+    def test_EditLocationInvalid(self):
+        message = func_EditLocation('Kenwood', 1)
+        self.assertEqual(message, 'Invalid Location. Format: Room# Building Name',
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).location, '1020 Kenwood', 'section location changed when invalid')
+
+        message = func_EditLocation('1020', 1)
+        self.assertEqual(message, 'Invalid Location. Format: Room# Building Name',
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).location, '1020 Kenwood', 'section location changed when invalid')
+
+        message = func_EditLocation('', 1)
+        self.assertEqual(message, 'Invalid Location. Format: Room# Building Name',
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).location, '1020 Kenwood', 'section location changed when invalid')
+
+    def test_EditLocationInvalidSection(self):
+        message = func_EditLocation('1020 Kenwood', 2)
+        self.assertEqual(message, 'Section does not exist!',
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).location, '1020 Kenwood', 'section location changed when invalid')
 
 
 class TestEditDaysMeeting(TestCase):
-    pass
+    def setUp(self):
+        self.newCourse = Course(1, "Software Engineering", "COMPSCI", "361", 2023)
+        self.newCourse.save()
+        self.newSection = Section(1, 800, "lab", "1020 Kenwood", "M", "15:00", "16:00", 1)
+        self.newSection.save()
+
+    def test_EditDaysMeetingValid(self):
+        message = func_EditDaysMeeting('M', 1)
+        self.assertEqual(message, 'Days Meeting edited successfully!', "success message does not play")
+        self.assertEqual(Section.objects.get(id=1).daysMeeting, "M", 'section days not changed')
+
+        message = func_EditDaysMeeting('TH', 1)
+        self.assertEqual(message, 'Days Meeting edited successfully!', "success message does not play")
+        self.assertEqual(Section.objects.get(id=1).daysMeeting, 'TH', 'section days not changed')
+
+        message = func_EditDaysMeeting('A', 1)
+        self.assertEqual(message, 'Days Meeting edited successfully!', "success message does not play")
+        self.assertEqual(Section.objects.get(id=1).daysMeeting, 'A', 'section days not changed')
+
+    def test_EditDaysMeetingInvalid(self):
+        message = func_EditDaysMeeting('WM', 1)
+        self.assertEqual(message,
+                         "Invalid Days Meeting. Must be in order MTWHFSU, 'No Meeting Pattern' cannot be selected with other days.",
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).daysMeeting, 'M', 'section days changed when invalid')
+
+        message = func_EditDaysMeeting('MA', 1)
+        self.assertEqual(message,
+                         "Invalid Days Meeting. Must be in order MTWHFSU, 'No Meeting Pattern' cannot be selected with other days.",
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).daysMeeting, 'M', 'section days changed when invalid')
+
+        message = func_EditDaysMeeting('', 1)
+        self.assertEqual(message,
+                         "Invalid Days Meeting. Must be in order MTWHFSU, 'No Meeting Pattern' cannot be selected with other days.",
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).daysMeeting, 'M', 'section days changed when invalid')
+
+    def test_EditDaysMeetingInvalidSection(self):
+        message = func_EditDaysMeeting('M', 2)
+        self.assertEqual(message, 'Section does not exist!',
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).daysMeeting, 'M', 'section days changed when invalid')
 
 
 class TestEditStartTime(TestCase):
-    pass
+    def setUp(self):
+        self.newCourse = Course(1, "Software Engineering", "COMPSCI", "361", 2023)
+        self.newCourse.save()
+        self.newSection = Section(1, 800, "lab", "1020 Kenwood", "M", "15:00", "16:00", 1)
+        self.newSection.save()
+
+    def test_EditStartTimeValid(self):
+        message = func_EditStartTime('15:00', 1)
+        self.assertEqual(message, 'Start Time edited successfully!', "success message does not play")
+        self.assertEqual(Section.objects.get(id=1).startTime, "15:00", 'section start time not changed')
+
+        message = func_EditStartTime('8:00', 1)
+        self.assertEqual(message, 'Start Time edited successfully!', "success message does not play")
+        self.assertEqual(Section.objects.get(id=1).startTime, '8:00', 'section start time not changed')
+
+        message = func_EditStartTime('13:30', 1)
+        self.assertEqual(message, 'Start Time edited successfully!', "success message does not play")
+        self.assertEqual(Section.objects.get(id=1).startTime, '13:30', 'section start time not changed')
+
+    def test_EditStartTimeInvalid(self):
+        message = func_EditStartTime('6:00', 1)
+        self.assertEqual(message,
+                         "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end.",
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).startTime, '15:00', 'section start time changed when invalid')
+
+        message = func_EditStartTime('19:00', 1)
+        self.assertEqual(message,
+                         "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end.",
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).startTime, '15:00', 'section start time changed when invalid')
+
+        message = func_EditStartTime('32:00', 1)
+        self.assertEqual(message,
+                         "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end.",
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).startTime, '15:00', 'section start time changed when invalid')
+
+        message = func_EditStartTime('', 1)
+        self.assertEqual(message,
+                         "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end.",
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).startTime, '15:00', 'section start time changed when invalid')
+
+    def test_EditStartTimeInvalidSection(self):
+        message = func_EditStartTime('15:00', 2)
+        self.assertEqual(message, 'Section does not exist!',
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).startTime, '15:00', 'section start time changed when invalid')
 
 
 class TestEditEndTime(TestCase):
-    pass
+    def setUp(self):
+        self.newCourse = Course(1, "Software Engineering", "COMPSCI", "361", 2023)
+        self.newCourse.save()
+        self.newSection = Section(1, 800, "lab", "1020 Kenwood", "M", "15:00", "16:00", 1)
+        self.newSection.save()
+
+    def test_EditEndTimeValid(self):
+        message = func_EditEndTime('16:00', 1)
+        self.assertEqual(message, 'End Time edited successfully!', "success message does not play")
+        self.assertEqual(Section.objects.get(id=1).endTime, "16:00", 'section end time not changed')
+
+        message = func_EditEndTime('18:30', 1)
+        self.assertEqual(message, 'End Time edited successfully!', "success message does not play")
+        self.assertEqual(Section.objects.get(id=1).endTime, "18:30", 'section end time not changed')
+
+        message = func_EditEndTime('19:00', 1)
+        self.assertEqual(message, 'End Time edited successfully!', "success message does not play")
+        self.assertEqual(Section.objects.get(id=1).endTime, '19:00', 'section end time not changed')
+
+    def test_EditEndTimeInvalid(self):
+        message = func_EditEndTime('6:00', 1)
+        self.assertEqual(message,
+                         "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end.",
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).endTime, '16:00', 'section end time changed when invalid')
+
+        message = func_EditEndTime('22:00', 1)
+        self.assertEqual(message,
+                         "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end.",
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).endTime, '16:00', 'section end time changed when invalid')
+
+        message = func_EditEndTime('32:00', 1)
+        self.assertEqual(message,
+                         "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end.",
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).endTime, '16:00', 'section end time changed when invalid')
+
+        message = func_EditEndTime('', 1)
+        self.assertEqual(message,
+                         "Invalid Start/End Time. Sections cannot start before 8am, cannot start after 6pm, and must end by 9pm. They also must start earlier than they end.",
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).endTime, '16:00', 'section end time changed when invalid')
+
+    def test_EditEndTimeInvalidSection(self):
+        message = func_EditEndTime('16:00', 2)
+        self.assertEqual(message, 'Section does not exist!',
+                         "error message does not play for invalid section type")
+        self.assertEqual(Section.objects.get(id=1).endTime, '16:00', 'section end time changed when invalid')
 
 
 class TestGetCourseFromSection(TestCase):
-    pass
-
-
-class TestRemoveSection(TestCase):
     def setUp(self):
-        self.newCourse = Course.objects.create(id=1, name="Test", department="Department", courseNumber=100,
-                                               semester="spring", year=2023)
+        self.newCourse = Course(1, "Software Engineering", "COMPSCI", "361", 2023)
         self.newCourse.save()
-        self.newSection = Section.objects.create(id=2, sectionNumber=200, type="section", location="1020 Kenwood",
-                                                 daysMeeting="M", startTime="15:00", endTime="16:00",
-                                                 assignedUser=None,
-                                                 course=self.newCourse)
+        self.newSection = Section(1, 800, "lab", "1020 Kenwood", "M", "15:00", "16:00", 1)
         self.newSection.save()
-        self.newSection = Section.objects.create(id=3, sectionNumber=300, type="section", location="2020 Kenwood",
-                                                 daysMeeting="W", startTime="15:00", endTime="16:00",
-                                                 assignedUser=None,
-                                                 course=self.newCourse)
-        self.newSection.save()
+        self.newSectiontwo = Section(2, 401, "lecture", "E108 Chemistry", "MW", "9:30", "10:20", 1)
+        self.newSectiontwo.save()
 
-    def test_validremovesection(self):
-        message = func_SectionDeleter(3)
+    def test_GetCourseFromSectionValid(self):
+        func_GetCourseFromSection(2)
+        self.assertEqual(Section.objects.get(id=2).course, Course.objects.get(id=1),
+                         'section was not gotten when valid')
+
+        func_GetCourseFromSection(1)
+        self.assertEqual(Section.objects.get(id=1).course, Course.objects.get(id=1),
+                         'section was not gotten when valid')
+
+    def test_GetCourseFromSectionInvalid(self):
+        message = func_GetCourseFromSection(3)
+        self.assertEqual(message, 'Section does not exist!',
+                         "error message does not play for invalid section from course")
+        self.assertEqual(Section.objects.get(id=1).course, Course.objects.get(id=1), 'section gotten when invalid')
+
+
+class TestSectionDeleter(TestCase):
+    def setUp(self):
+        self.newCourse = Course(1, "Test", "Department", 100, "spring", 2023)
+        self.newCourse.save()
+        self.newSection = Section(1, 800, "lab", "1020 Kenwood", "M", "15:00", "16:00", 1)
+        self.newSection.save()
+        self.newSectiontwo = Section(2, 401, "lecture", "E108 Chemistry", "MW", "9:30", "10:20", 1)
+        self.newSectiontwo.save()
+
+    def test_SectionDeleterValid(self):
+        message = func_SectionDeleter(2)
         self.assertEqual(message, "Section deleted successfully")
 
-    def test_invalidsectionid(self):
+    def test_SectionDeleterIDInvalid(self):
         message = func_SectionDeleter(5)
         self.assertEqual(message, "Section does not exist!")
 
-    def test_nosectionid(self):
+    def test_SectionDeleterNoIDInvalid(self):
         message = func_SectionDeleter(None)
         self.assertEqual(message, "Section does not exist!")
 
-    def test_removedoublesection(self):
-        message = func_SectionDeleter(3)
+    def test_SectionDeleterDoubleInvalid(self):
+        message = func_SectionDeleter(2)
         self.assertEqual(message, "Section deleted successfully")
-        message = func_SectionDeleter(3)
+        message = func_SectionDeleter(2)
         self.assertEqual(message, "Section does not exist!")
