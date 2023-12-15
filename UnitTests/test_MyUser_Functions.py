@@ -145,10 +145,23 @@ class TestMyUserCreator(TestCase):
 
     def test_valid_input(self):
         self.assertEqual(self.valid_user, "User created successfully!")
-        self.assertTrue()
+        self.assertTrue(MyUser.objects.filter(email="email@uwm.edu").exists(), "User with valid input was not created!")
 
     def test_invalid_email(self):
         self.assertEqual(self.bad_email, "Invalid email. Must be a UWM email.")
+
+    def test_same_email(self):
+        msg = func_MyUserCreator("email@uwm.edu",
+                                 "Password!2",
+                                 "Password!2",
+                                 "First", "Last",
+                                 "123-456-7890",
+                                 "1234 Main St",
+                                 "Milwaukee",
+                                 "WI",
+                                 "53206",
+                                 "TA")
+        self.assertEqual(msg, "Non-unique email. Please try again.")
 
     def test_invalid_pass(self):
         self.assertEqual(self.bad_pass, "Passwords must match and contain one lowercase letter, one uppercase letter,"
@@ -208,20 +221,32 @@ class TestEditFirstName(TestCase):
                                         "Milwaukee", "WI", "53220", "Admin")
 
     def test_numbers(self):
+        og_first = MyUser.objects.get(email="nichole@uwm.edu").firstName
         msg = func_EditFirstName("N1chole", "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid first name. Must be capitalized and have only contain letters.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").firstName, og_first)
+
+    def test_non_existing_user(self):
+        msg = func_EditFirstName("Nichole", "nonexisting@uwm.edu")
+        self.assertEqual(msg, "User does not exist!")
 
     def test_non_letters(self):
+        og_first = MyUser.objects.get(email="erik@uwm.edu").firstName
         msg = func_EditFirstName("Er!k", "erik@uwm.edu")
         self.assertEqual(msg, "Invalid first name. Must be capitalized and have only contain letters.")
+        self.assertEqual(MyUser.objects.get(email="erik@uwm.edu").firstName, og_first)
 
     def test_no_capital(self):
+        og_first = MyUser.objects.get(email="henry@uwm.edu").firstName
         msg = func_EditFirstName("henry", "henry@uwm.edu")
         self.assertEqual(msg, "Invalid first name. Must be capitalized and have only contain letters.")
+        self.assertEqual(MyUser.objects.get(email="henry@uwm.edu").firstName, og_first)
 
     def test_valid_input(self):
-        msg = func_EditFirstName("Kevin", "kevin@uwm.edu")
+        first = "Kevin"
+        msg = func_EditFirstName(first, "kevin@uwm.edu")
         self.assertEqual(msg, "First name changed successfully!")
+        self.assertEqual(MyUser.objects.get(email="kevin@uwm.edu").firstName, first)
 
 
 class TestEditLastName(TestCase):
@@ -248,20 +273,32 @@ class TestEditLastName(TestCase):
                                         "Milwaukee", "WI", "53220", "Admin")
 
     def test_numbers(self):
+        og_last = MyUser.objects.get(email="nichole@uwm.edu").lastName
         msg = func_EditLastName("Ch6im", "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid last name. Must be capitalized and have only contain letters.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").lastName, og_last)
+
+    def test_non_existing_user(self):
+        msg = func_EditLastName("Chaim", "nonexisting@uwm.edu")
+        self.assertEqual(msg, "User does not exist!")
 
     def test_non_letters(self):
+        og_last = MyUser.objects.get(email="erik@uwm.edu").lastName
         msg = func_EditLastName("Sh#n", "erik@uwm.edu")
         self.assertEqual(msg, "Invalid last name. Must be capitalized and have only contain letters.")
+        self.assertEqual(MyUser.objects.get(email="erik@uwm.edu").lastName, og_last)
 
     def test_no_capital(self):
+        og_last = MyUser.objects.get(email="henry@uwm.edu").lastName
         msg = func_EditLastName("ritchie", "henry@uwm.edu")
         self.assertEqual(msg, "Invalid last name. Must be capitalized and have only contain letters.")
+        self.assertEqual(MyUser.objects.get(email="henry@uwm.edu").lastName, og_last)
 
     def test_valid_input(self):
-        msg = func_EditLastName("Santamaria", "kevin@uwm.edu")
+        last = "Santamaria"
+        msg = func_EditLastName(last, "kevin@uwm.edu")
         self.assertEqual(msg, "Last name changed successfully!")
+        self.assertEqual(MyUser.objects.get(email="kevin@uwm.edu").lastName, last)
 
 
 class TestEditPhoneNumber(TestCase):
@@ -276,37 +313,54 @@ class TestEditPhoneNumber(TestCase):
         new_number = "4149876543"
         msg = func_EditPhoneNumber(new_number, "nichole@uwm.edu")
         self.assertEqual(msg, "Phone number changed successfully!")
-        # should assert the number changed?
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").phoneNumber, new_number)
+
+    def test_non_existing_user(self):
+        new_number = "4149876543"
+        msg = func_EditPhoneNumber(new_number, "nonexistinge@uwm.edu")
+        self.assertEqual(msg, "User does not exist!")
 
     def test_no_input(self):
+        og_number = MyUser.objects.get(email="nichole@uwm.edu").phoneNumber
         new_number = ""
         msg = func_EditPhoneNumber(new_number, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid phone number. Format is 123-456-7890")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").phoneNumber, og_number)
 
     def test_empty_input(self):
+        og_number = MyUser.objects.get(email="nichole@uwm.edu").phoneNumber
         new_number = " "
         msg = func_EditPhoneNumber(new_number, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid phone number. Format is 123-456-7890")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").phoneNumber, og_number)
 
     def test_num_too_long(self):
+        og_number = MyUser.objects.get(email="nichole@uwm.edu").phoneNumber
         new_number = "41498765432"
         msg = func_EditPhoneNumber(new_number, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid phone number. Format is 123-456-7890")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").phoneNumber, og_number)
 
     def test_num_too_short(self):
+        og_number = MyUser.objects.get(email="nichole@uwm.edu").phoneNumber
         new_number = "4149876"
         msg = func_EditPhoneNumber(new_number, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid phone number. Format is 123-456-7890")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").phoneNumber, og_number)
 
     def test_alpha_in_num(self):
+        og_number = MyUser.objects.get(email="nichole@uwm.edu").phoneNumber
         new_number = "4I49876543"
         msg = func_EditPhoneNumber(new_number, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid phone number. Format is 123-456-7890")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").phoneNumber, og_number)
 
     def test_invalid_char_in_num(self):
+        og_number = MyUser.objects.get(email="nichole@uwm.edu").phoneNumber
         new_number = "414_987_6543"
         msg = func_EditPhoneNumber(new_number, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid phone number. Format is 123-456-7890")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").phoneNumber, og_number)
 
 
 class TestEditStreetAddress(TestCase):
@@ -320,31 +374,47 @@ class TestEditStreetAddress(TestCase):
         street = "1111 Kenwood Blvd"
         msg = func_EditStreetAddress(street, "nichole@uwm.edu")
         self.assertEqual(msg, "Street address changed successfully!")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").streetAddress, street)
+
+    def test_non_existing_user(self):
+        street = "1111 Kenwood Blvd"
+        msg = func_EditStreetAddress(street, "nonexisting@uwm.edu")
+        self.assertEqual(msg, "User does not exist!")
 
     def test_no_street(self):
+        og_street = MyUser.objects.get(email="nichole@uwm.edu").streetAddress
         street = ""
         msg = func_EditStreetAddress(street, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid street address.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").streetAddress, og_street)
 
     def test_empty_street(self):
+        og_street = MyUser.objects.get(email="nichole@uwm.edu").streetAddress
         street = ""
         msg = func_EditStreetAddress(street, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid street address.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").streetAddress, og_street)
 
     def test_only_building_number(self):
+        og_street = MyUser.objects.get(email="nichole@uwm.edu").streetAddress
         street = "12345"
         msg = func_EditStreetAddress(street, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid street address.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").streetAddress, og_street)
 
     def test_no_street_type(self):
+        og_street = MyUser.objects.get(email="nichole@uwm.edu").streetAddress
         street = "12345 Main"
         msg = func_EditStreetAddress(street, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid street address.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").streetAddress, og_street)
 
     def test_invalid_char(self):
+        og_street = MyUser.objects.get(email="nichole@uwm.edu").streetAddress
         street = "1234 M@ain St"
         msg = func_EditStreetAddress(street, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid street address.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").streetAddress, og_street)
 
 
 class TestEditCity(TestCase):
@@ -358,31 +428,47 @@ class TestEditCity(TestCase):
         city = "Greenfield"
         msg = func_EditCity(city, "nichole@uwm.edu")
         self.assertEqual(msg, "City changed successfully!")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").city, city)
+
+    def test_non_existing_user(self):
+        city = "Greenfield"
+        msg = func_EditCity(city, "nonexisting@uwm.edu")
+        self.assertEqual(msg, "User does not exist!")
 
     def test_no_city(self):
+        og_city = MyUser.objects.get(email="nichole@uwm.edu").city
         city = ""
         msg = func_EditCity(city, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid city. Must be capitalized.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").city, og_city)
 
     def test_empty_city(self):
+        og_city = MyUser.objects.get(email="nichole@uwm.edu").city
         city = " "
         msg = func_EditCity(city, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid city. Must be capitalized.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").city, og_city)
 
     def test_no_capital(self):
+        og_city = MyUser.objects.get(email="nichole@uwm.edu").city
         city = "milwaukee"
         msg = func_EditCity(city, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid city. Must be capitalized.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").city, og_city)
 
     def test_too_short(self):
+        og_city = MyUser.objects.get(email="nichole@uwm.edu").city
         city = "A"
         msg = func_EditCity(city, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid city. Must be capitalized.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").city, og_city)
 
     def test_too_long(self):
+        og_city = MyUser.objects.get(email="nichole@uwm.edu").city
         city = "Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         msg = func_EditCity(city, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid city. Must be capitalized.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").city, og_city)
 
 
 class TestEditState(TestCase):
@@ -396,26 +482,40 @@ class TestEditState(TestCase):
         state = "IL"
         msg = func_EditState(state, "nichole@uwm.edu")
         self.assertEqual(msg, "State changed successfully!")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").state, state)
+
+    def test_non_existing_user(self):
+        state = "IL"
+        msg = func_EditState(state, "nonexisting@uwm.edu")
+        self.assertEqual(msg, "User does not exist!")
 
     def test_no_input(self):
+        og_state = MyUser.objects.get(email="nichole@uwm.edu").state
         state = ""
         msg = func_EditState(state, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid state. Two letter state code only.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").state, og_state)
 
     def test_empty_input(self):
+        og_state = MyUser.objects.get(email="nichole@uwm.edu").state
         state = " "
         msg = func_EditState(state, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid state. Two letter state code only.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").state, og_state)
 
     def test_full_state_name(self):
+        og_state = MyUser.objects.get(email="nichole@uwm.edu").state
         state = "Wisconsin"
         msg = func_EditState(state, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid state. Two letter state code only.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").state, og_state)
 
     def test_non_existing_state(self):
+        og_state = MyUser.objects.get(email="nichole@uwm.edu").state
         state = "DQ"
         msg = func_EditState(state, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid state. Two letter state code only.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").state, og_state)
 
 
 class TestEditZipcode(TestCase):
@@ -429,36 +529,54 @@ class TestEditZipcode(TestCase):
         zipcode = "53206"
         msg = func_EditZipcode(zipcode, "nichole@uwm.edu")
         self.assertEqual(msg, "Zipcode changed successfully!")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").zipcode, zipcode)
+
+    def test_non_existing_user(self):
+        zipcode = "53206"
+        msg = func_EditZipcode(zipcode, "nonexisting@uwm.edu")
+        self.assertEqual(msg, "User does not exist!")
 
     def test_empty(self):
+        og_zip = MyUser.objects.get(email="nichole@uwm.edu").zipcode
         zipcode = ""
         msg = func_EditZipcode(zipcode, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid zipcode. Must be 5 digits long.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").zipcode, og_zip)
 
     def test_no_input(self):
+        og_zip = MyUser.objects.get(email="nichole@uwm.edu").zipcode
         zipcode = " "
         msg = func_EditZipcode(zipcode, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid zipcode. Must be 5 digits long.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").zipcode, og_zip)
 
     def test_alpha_in_zip(self):
+        og_zip = MyUser.objects.get(email="nichole@uwm.edu").zipcode
         zipcode = "abdce"
         msg = func_EditZipcode(zipcode, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid zipcode. Must be 5 digits long.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").zipcode, og_zip)
 
     def test_invalid_char_in_zip(self):
+        og_zip = MyUser.objects.get(email="nichole@uwm.edu").zipcode
         zipcode = "532$0"
         msg = func_EditZipcode(zipcode, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid zipcode. Must be 5 digits long.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").zipcode, og_zip)
 
     def test_zip_too_short(self):
+        og_zip = MyUser.objects.get(email="nichole@uwm.edu").zipcode
         zipcode = "5432"
         msg = func_EditZipcode(zipcode, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid zipcode. Must be 5 digits long.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").zipcode, og_zip)
 
     def test_zip_too_long(self):
+        og_zip = MyUser.objects.get(email="nichole@uwm.edu").zipcode
         zipcode = "123456"
         msg = func_EditZipcode(zipcode, "nichole@uwm.edu")
         self.assertEqual(msg, "Invalid zipcode. Must be 5 digits long.")
+        self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").zipcode, og_zip)
 
 
 class TestEditRole(TestCase):
@@ -474,6 +592,10 @@ class TestEditRole(TestCase):
         self.assertEqual(msg, "Role changed successfully!")
         self.assertEqual(MyUser.objects.get(email="nichole@uwm.edu").role, role)
 
+    def test_nonexisting_user(self):
+        role = "Instructor"
+        msg = func_EditRole(role, "nonexisting@uwm.edu")
+        self.assertEqual(msg, "User does not exist!")
 
     def test_empty_role(self):
         og_role = MyUser.objects.get(email="nichole@uwm.edu").role
@@ -565,4 +687,32 @@ class TestSaveBio(TestCase):
 
 
 class TestRemoveExcessNewLine(TestCase):
-    pass
+    def test_remove_excess_newline(self):
+        input_string = "Hello\r\n\r\nWorld\r\n"
+        expected_output = "Hello\r\nWorld\r\n"
+        result = func_RemoveExcessNewLine(input_string)
+        self.assertEqual(result, expected_output)
+
+    def test_remove_excess_newline_empty_string(self):
+        input_string = ""
+        expected_output = ""
+        result = func_RemoveExcessNewLine(input_string)
+        self.assertEqual(result, expected_output)
+
+    def test_remove_excess_newline_no_newline(self):
+        input_string = "NoNewline"
+        expected_output = "NoNewline\r\n"
+        result = func_RemoveExcessNewLine(input_string)
+        self.assertEqual(result, expected_output)
+
+    def test_remove_excess_newline_multiple_empty_lines(self):
+        input_string = "Line1\r\n\r\n\r\nLine2\r\n\r\n"
+        expected_output = "Line1\r\nLine2\r\n"
+        result = func_RemoveExcessNewLine(input_string)
+        self.assertEqual(result, expected_output)
+
+    def test_remove_excess_newline_whitespace_lines(self):
+        input_string = "   \r\n  \r\n\t\r\n"
+        expected_output = "   \r\n  \r\n\t\r\n"
+        result = func_RemoveExcessNewLine(input_string)
+        self.assertEqual(result, expected_output)
