@@ -6,7 +6,7 @@ from SchedulingApp.models import Course, Section, MyUser
 
 def func_CourseAsDict(courseID):
     if courseID is None or Course.objects.filter(id=courseID).first() is None:
-        raise Exception("Course does not exist!")
+        return None
     course = Course.objects.filter(id=courseID).first()
     dict = {
         "id": course.id,
@@ -23,7 +23,7 @@ def func_CourseAsDict(courseID):
 
 def func_SectionAsDict(sectionID):
     if sectionID is None or Section.objects.filter(id=sectionID).first() is None:
-        raise Exception("Section does not exist!")
+        return None
     section = Section.objects.filter(id=sectionID).first()
     start_t = time.strptime(section.startTime, "%H:%M")
     end_t = time.strptime(section.endTime, "%H:%M")
@@ -59,7 +59,7 @@ def func_SectionAsDict(sectionID):
     return dict
 def func_UserAsDict(userEmail):
     if userEmail is None or MyUser.objects.filter(email=userEmail).first() is None:
-        raise Exception("User does not exist!")
+        return None
     user = MyUser.objects.filter(email=userEmail).first()
 
     my_courses = func_AlphabeticalCourseList(Course.objects.filter(assignedUser=user))

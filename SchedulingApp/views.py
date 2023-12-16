@@ -156,7 +156,7 @@ class UserPage(View):
                     return redirect("/edituser/")
             if request.POST['navigation'] == "deleteuser":
                 message = self.deleteUser(request)
-                if message == "User successfully deleted":
+                if message == "User deleted successfully":
                     del request.session["selecteduser"]
                     return redirect("/directory/")
                 else:
@@ -576,9 +576,9 @@ class SectionPage(View):
 
     def removeUserFromSection(self, request):
         if request.session['role'] != 'admin' and not func_UserIsInstructorOfCourse(request.session['email'], request.session['selectedcourse']) == "True":
-            return "Only admins or instructors of the course can remove users from sections! "
+            return "Only admins or instructors of the course can remove users from sections!"
         else:
-            return func_RemoveSectionUser(request.POST['adduser'], request.session['selectedsection'])
+            return func_RemoveSectionUser(request.POST['removeuser'], request.session['selectedsection'])
 
 class CreateSection(View):
     def get(self, request):
