@@ -90,10 +90,11 @@ html {
 
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     gap: 0px 0px;
-    grid-template-areas: "one two three";
+    grid-template-areas: "one two"
+                         "one three";
 }
 
 .grid-child:nth-child(1) {
