@@ -32,12 +32,12 @@
 <br>
 <div class="grid-container">
     <div class="grid-child">
-        {% if role == 'admin' %}
-            <form action="/coursepage/" method="post">
-                {% csrf_token %}
-                <button type="submit" name="navigation" value="courselist" class="bluebutton">Back to Courses</button>
-                {{ message }}
-                <div class="totheright">
+        <form action="/coursepage/" method="post">
+            {% csrf_token %}
+            <button type="submit" name="navigation" value="courselist" class="bluebutton">Back to Courses</button>
+            {{ message }}
+            <div class="totheright">
+                {% if role == 'admin' %}
                     {% csrf_token %}
                     <button type="submit" name="navigation" value="editcourse" class="bluebutton">Edit This Course
                     </button>
@@ -46,9 +46,9 @@
                             value="deletecourse"
                             class="redbutton">Delete Course
                     </button>
-                </div>
-            </form>
-        {% endif %}
+                {% endif %}
+            </div>
+        </form>
     </div>
     <div class="grid-child">
         <table id="myTable">
