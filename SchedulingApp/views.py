@@ -490,12 +490,16 @@ class EditCourse(View):
             return func_EditDepartment(request.POST["department"], request.session['selectedcourse'])
 
         if 'coursenumber' in request.POST:
+            if request.POST["coursenumber"] == '':
+                return "Invalid Course Number. Must be between 100 and 999 and unique."
             return func_EditCourseNumber(int(request.POST["coursenumber"]), request.session['selectedcourse'])
 
         if 'semester' in request.POST:
             return func_EditSemester(request.POST["semester"], request.session['selectedcourse'])
 
         if 'year' in request.POST:
+            if request.POST["year"] == '':
+                return "Invalid Year. Must be later than 1956 and cannot be greater than 2025"
             return func_EditYear(int(request.POST["year"]), request.session['selectedcourse'])
 
 
@@ -547,17 +551,21 @@ class SectionPage(View):
             return render(request, "sectionpage.html",
                           {"section": func_SectionAsDict(request.session['selectedsection']),
                            "role": request.session['role'],
+                           "isInstructor": func_UserIsInstructorOfCourse(request.session['email'],
+                                                                         request.session['selectedcourse']) == "True",
+                           "message": message,
                            'unassignedusers': func_AlphabeticalMyUserList(
-                               MyUser.objects.filter(course=request.session['selectedcourse'])),
-                           'message': message})
+                               MyUser.objects.filter(course=request.session['selectedcourse']))})
         if 'removeuser' in request.POST:
             message = self.removeUserFromSection(request)
             return render(request, "sectionpage.html",
                           {"section": func_SectionAsDict(request.session['selectedsection']),
                            "role": request.session['role'],
+                           "isInstructor": func_UserIsInstructorOfCourse(request.session['email'],
+                                                                         request.session['selectedcourse']) == "True",
+                           "message":message,
                            'unassignedusers': func_AlphabeticalMyUserList(
-                               MyUser.objects.filter(course=request.session['selectedcourse'])),
-                           'message': message})
+                               MyUser.objects.filter(course=request.session['selectedcourse']))})
         if 'selecteduser' in request.POST:
             request.session['selecteduser'] = request.POST['selecteduser']
             return redirect('/userpage/')
@@ -657,6 +665,8 @@ class EditSection(View):
     def editSection(self, request):
         chosen = Section.objects.filter(id=request.session['selectedsection']).first()
         if 'sectionnumber' in request.POST:
+            if request.POST["sectionnumber"] == '':
+                return "Invalid Section Number. Must be between 100 and 999 and unique!"
             return func_EditSectionNumber(int(request.POST["sectionnumber"]), request.session['selectedsection'])
 
         if 'location' in request.POST:
