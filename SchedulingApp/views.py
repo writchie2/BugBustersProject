@@ -549,6 +549,7 @@ class SectionPage(View):
                            "role": request.session['role'],
                            "isInstructor": func_UserIsInstructorOfCourse(request.session['email'],
                                                                          request.session['selectedcourse']) == "True",
+                           "message": message,
                            'unassignedusers': func_AlphabeticalMyUserList(
                                MyUser.objects.filter(course=request.session['selectedcourse']))})
         if 'removeuser' in request.POST:
@@ -558,6 +559,7 @@ class SectionPage(View):
                            "role": request.session['role'],
                            "isInstructor": func_UserIsInstructorOfCourse(request.session['email'],
                                                                          request.session['selectedcourse']) == "True",
+                           "message":message,
                            'unassignedusers': func_AlphabeticalMyUserList(
                                MyUser.objects.filter(course=request.session['selectedcourse']))})
         if 'selecteduser' in request.POST:
