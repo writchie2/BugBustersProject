@@ -220,7 +220,7 @@ def func_ValidateLastName(lastName):
         return False
     if lastName == '':
         return False
-    if (all(c.isalpha() and not c.isspace() for c in lastName)):
+    if (all((c.isalpha() and not c.isspace()) or c == '-' for c in lastName)):
         if lastName[0].islower():
             return False
         else:
