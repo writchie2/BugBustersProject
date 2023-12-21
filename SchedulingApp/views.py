@@ -547,17 +547,19 @@ class SectionPage(View):
             return render(request, "sectionpage.html",
                           {"section": func_SectionAsDict(request.session['selectedsection']),
                            "role": request.session['role'],
+                           "isInstructor": func_UserIsInstructorOfCourse(request.session['email'],
+                                                                         request.session['selectedcourse']) == "True",
                            'unassignedusers': func_AlphabeticalMyUserList(
-                               MyUser.objects.filter(course=request.session['selectedcourse'])),
-                           'message': message})
+                               MyUser.objects.filter(course=request.session['selectedcourse']))})
         if 'removeuser' in request.POST:
             message = self.removeUserFromSection(request)
             return render(request, "sectionpage.html",
                           {"section": func_SectionAsDict(request.session['selectedsection']),
                            "role": request.session['role'],
+                           "isInstructor": func_UserIsInstructorOfCourse(request.session['email'],
+                                                                         request.session['selectedcourse']) == "True",
                            'unassignedusers': func_AlphabeticalMyUserList(
-                               MyUser.objects.filter(course=request.session['selectedcourse'])),
-                           'message': message})
+                               MyUser.objects.filter(course=request.session['selectedcourse']))})
         if 'selecteduser' in request.POST:
             request.session['selecteduser'] = request.POST['selecteduser']
             return redirect('/userpage/')
