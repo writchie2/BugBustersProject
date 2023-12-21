@@ -23,6 +23,21 @@ html {
     cursor: pointer;
 }
 
+.redbuttonsmall {
+    background-color: #ea9999;
+    border: 3px solid #e06666;
+    border-radius: 5px;
+    color: black;
+    padding: 4px 8px;
+    text-align: center;
+    display: inline;
+    font-size: 10px;
+    font-weight: bolder;
+    margin: 2px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
 .bluebutton {
     background-color: #c9daf8;
     border: 3px solid #3c78d8;
@@ -38,6 +53,20 @@ html {
     cursor: pointer;
 }
 
+.bluebuttonsmall {
+    background-color: #c9daf8;
+    border: 3px solid #3c78d8;
+    border-radius: 5px;
+    color: black;
+    padding: 4px 8px;
+    text-align: center;
+    display: inline;
+    font-size: 10px;
+    font-weight: bolder;
+    margin: 2px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
 .redbutton:hover {
     background-color: #e06666;
 }

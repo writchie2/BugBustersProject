@@ -92,13 +92,13 @@
                     <td>
                         <form action="/coursepage/" method="post">
                             {% csrf_token %}
-                            <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View
+                            <button type="submit" name="selecteduser" value={{ user.email }} class="bluebuttonsmall">View
                                 User
                             </button>
                             {% if role == 'admin' %}
                                 {% csrf_token %}
                                 <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')"
-                                        value={{ user.email }} class="redbutton">Remove User
+                                        value={{ user.email }} class="redbuttonsmall">Remove User
                                 </button>
                             {% endif %}
                         </form>
@@ -130,7 +130,7 @@
                     <td>
                         <form action="/coursepage/" method="post">
                             {% csrf_token %}
-                            <button type="submit" name="selectedsection" class="bluebutton" value={{ section.id }}>View
+                            <button type="submit" name="selectedsection" class="bluebuttonsmall" value={{ section.id }}>View
                                 Section
                             </button>
                         </form>
