@@ -18,7 +18,7 @@ html {
     display: inline;
     font-size: 18px;
     font-weight: bolder;
-    margin: 4px 2px;
+    margin: 2px 2px;
     transition-duration: 0.4s;
     cursor: pointer;
 }
@@ -49,6 +49,20 @@ html {
     font-size: 18px;
     font-weight: bolder;
     margin: 2px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.smallbluebutton {
+    background-color: #c9daf8;
+    border: 3px solid #3c78d8;
+    border-radius: 5px;
+    color: black;
+    padding: 8px 18px;
+    text-align: center;
+    display: inline;
+    font-size: 12px;
+    font-weight: bolder;
     transition-duration: 0.4s;
     cursor: pointer;
 }
@@ -100,9 +114,40 @@ html {
 
 #myTable th, td {
     text-align: left;
-    padding: 16px 4px;
+    padding: 12px 18px;
 }
 
 #myTable tr:nth-child(even) {
     background-color: #fcfcfc
+}
+
+#myTable thead tr {
+    display: block;
+}
+
+#myTable thead {
+    background: #f3f3f3;
+    color: #000;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 2fr;
+    gap: 0px 0px;
+    grid-template-areas: "one one"
+                         "two three";
+}
+
+.grid-child:nth-child(1) {
+    grid-area: one;
+    text-align: center;
+}
+
+.grid-child:nth-child(2) {
+    grid-area: two;
+}
+
+.grid-child:nth-child(3) {
+    grid-area: three;
 }

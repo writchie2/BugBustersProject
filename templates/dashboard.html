@@ -51,7 +51,7 @@
                         <td>
                             <form action="/dashboard/" method="post">
                                 {% csrf_token %}
-                                <button type="submit" name="selectedcourse" class="bluebutton" value={{ course.id }}>
+                                <button type="submit" name="selectedcourse" class="smallbluebutton" value={{ course.id }}>
                                     View Course
                                 </button>
                             </form>
@@ -70,13 +70,12 @@
                 {% for section in user.sections %}
                     <tr>
                         <td>{{ section.title }}
-                            - {{ section.daysMeeting }} {{ section.location }}<br>{{ section.course }} </td>
+                            - {{ section.daysMeeting }} {{ section.location }}<br><b>{{ section.course }}</b></td>
                         <td>
                             <form action="/dashboard/" method="post">
                                 {% csrf_token %}
-                                <button type="submit" name="selectedsection" class="bluebutton" value={{ section.id }}>
-                                    View
-                                    Section
+                                <button type="submit" name="selectedsection" class="smallbluebutton" value={{ section.id }}>
+                                    View Section
                                 </button>
                             </form>
                         </td>
