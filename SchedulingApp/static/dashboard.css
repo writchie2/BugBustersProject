@@ -58,7 +58,7 @@ html {
     border: 3px solid #3c78d8;
     border-radius: 5px;
     color: black;
-    padding: 8px 18px;
+    padding: 8px 10px;
     text-align: center;
     display: inline;
     font-size: 12px;
@@ -186,8 +186,15 @@ html {
 
 .grid-child:nth-child(2) {
     grid-area: two;
+    border-top: 5px solid #f3f3f3;
+    margin-top: 50px;
+    padding-left: 5px;
 }
 
 .grid-child:nth-child(3) {
     grid-area: three;
+    border-top: 5px solid #f3f3f3;
+    border-left: 5px solid #f3f3f3;
+    margin-top: 50px;
+    padding-left: 5px;
 }

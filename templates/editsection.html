@@ -30,99 +30,108 @@
 </div>
 <br>
 <br>
-{{ message }}
-<table id="myTable">
-    <tr>
-        <td class="label">Current Section Number:</td>
-        <td>{{ section.sectionnumber }}</td>
-    </tr>
-    <tr>
-        <td class="label">New Value:</td>
-        <td>
-            <form action="/editsection/" method="post">
-                {% csrf_token %}
-                <input type="text" name="sectionnumber"> <input type="submit" value="Save"></form>
-        </td>
-    </tr>
-    <tr>
-        <td class="label">Current Location:</td>
-        <td>{{ section.location }}</td>
-    </tr>
-    <tr>
-        <td class="label">New Value:</td>
-        <td>
-            <form action="/editsection/" method="post">
-                {% csrf_token %}
-                <input type="text" name="location"> <input type="submit" value="Save"></form>
-        </td>
-    </tr>
-    <tr>
-        <td class="label">Current Days Meeting:</td>
-        <td>{{ section.daysmeeting }}</td>
-    </tr>
-    <tr>
-        <td class="label">New Value:</td>
-        <td>
-            <form action="/editsection/" method="post">
-                {% csrf_token %}
-                <input type="checkbox" name="daysmeeting" value="M" id="M"><label for="M">Mon</label>
-                <input type="checkbox" name="daysmeeting" value="T" id="T"><label for="T">Tue</label>
-                <input type="checkbox" name="daysmeeting" value="W" id="W"><label for="W">Wed</label>
-                <input type="checkbox" name="daysmeeting" value="H" id="H"><label for="H">Thu</label>
-                <input type="checkbox" name="daysmeeting" value="F" id="F"><label for="F">Fri</label>
-                <input type="checkbox" name="daysmeeting" value="S" id="S"><label for="S">Sat</label>
-                <input type="checkbox" name="daysmeeting" value="U" id="U"><label for="U">Sun</label>
-                <input type="checkbox" name="daysmeeting" value="A" id="A"><label for="A">ONLINE</label>
-                <input type="submit" value="Save">
-            </form>
-
-        </td>
-    </tr>
-    <tr>
-        <td class="label">Current Start Time:</td>
-        <td>{{ section.starttime }}</td>
-    </tr>
-    <tr>
-        <td class="label">New Value:</td>
-        <td>
-            <form action="/editsection/" method="post">
-                {% csrf_token %}
-                <input type="time" name="starttime"> <input type="submit" value="Save"></form>
-        </td>
-    </tr>
-    <tr>
-        <td class="label">Current End Time:</td>
-        <td>{{ section.endtime }}</td>
-    </tr>
-    <tr>
-        <td class="label">New Value:</td>
-        <td>
-            <form action="/editsection/" method="post">
-                {% csrf_token %}
-                <input type="time" name="endtime"> <input type="submit" value="Save"></form>
-        </td>
-    </tr>
-    <tr>
-        <td class="label">Current Section Type:</td>
-        <td>{{ section.type }}</td>
-    </tr>
-    <tr>
-        <td class="label">New Value:</td>
-        <td>
-            <form action="/editsection/" method="post">
-                {% csrf_token %}
-                <select name="type" id="type">
-                    <option value="lecture">Lecture</option>
-                    <option value="grader">Grader</option>
-                    <option value="lab">Lab</option>
-                </select>
-                <input type="submit" value="Save"></form>
-        </td>
-    </tr>
-</table>
-<form action="/editsection/" method="post">
-    {% csrf_token %}
-    <button type="submit" name="navigation" value="cancel" class="redbutton">Cancel</button>
-</form>
+<div class="grid-container">
+    <div class="grid-child">
+        <table id="myTable">
+            <tr>
+                <td class="label">Current Section Number:</td>
+                <td>{{ section.sectionnumber }}</td>
+            </tr>
+            <tr>
+                <td class="label">New Value:</td>
+                <td>
+                    <form action="/editsection/" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="sectionnumber"> <input type="submit" value="Save"></form>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Current Location:</td>
+                <td>{{ section.location }}</td>
+            </tr>
+            <tr>
+                <td class="label">New Value:</td>
+                <td>
+                    <form action="/editsection/" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="location"> <input type="submit" value="Save"></form>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Current Days Meeting:</td>
+                <td>{{ section.daysmeeting }}</td>
+            </tr>
+            <tr>
+                <td class="label">New Value:</td>
+                <td>
+                    <form action="/editsection/" method="post">
+                        {% csrf_token %}
+                        <input type="checkbox" name="daysmeeting" value="M" id="M"><label for="M">Mon</label>
+                        <input type="checkbox" name="daysmeeting" value="T" id="T"><label for="T">Tue</label>
+                        <input type="checkbox" name="daysmeeting" value="W" id="W"><label for="W">Wed</label>
+                        <input type="checkbox" name="daysmeeting" value="H" id="H"><label for="H">Thu</label>
+                        <input type="checkbox" name="daysmeeting" value="F" id="F"><label for="F">Fri</label>
+                        <input type="checkbox" name="daysmeeting" value="S" id="S"><label for="S">Sat</label>
+                        <input type="checkbox" name="daysmeeting" value="U" id="U"><label for="U">Sun</label>
+                        <input type="checkbox" name="daysmeeting" value="A" id="A"><label for="A">ONLINE</label><br>
+                        <input type="submit" value="Save">
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="grid-child">
+        <table id="myTable">
+            <tr>
+                <td class="label">Current Start Time:</td>
+                <td>{{ section.starttime }}</td>
+            </tr>
+            <tr>
+                <td class="label">New Value:</td>
+                <td>
+                    <form action="/editsection/" method="post">
+                        {% csrf_token %}
+                        <input type="time" name="starttime"> <input type="submit" value="Save"></form>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Current End Time:</td>
+                <td>{{ section.endtime }}</td>
+            </tr>
+            <tr>
+                <td class="label">New Value:</td>
+                <td>
+                    <form action="/editsection/" method="post">
+                        {% csrf_token %}
+                        <input type="time" name="endtime"> <input type="submit" value="Save"></form>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Current Section Type:</td>
+                <td>{{ section.type }}</td>
+            </tr>
+            <tr>
+                <td class="label">New Value:</td>
+                <td>
+                    <form action="/editsection/" method="post">
+                        {% csrf_token %}
+                        <select name="type" id="type">
+                            <option value="lecture">Lecture</option>
+                            <option value="grader">Grader</option>
+                            <option value="lab">Lab</option>
+                        </select>
+                        <input type="submit" value="Save"></form>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="grid-child">
+        <form action="/editsection/" method="post">
+            {% csrf_token %}
+            <button type="submit" name="navigation" value="cancel" class="redbutton">Cancel</button>
+        </form>
+        {{ message }}
+    </div>
+</div>
 </body>
 </html>
