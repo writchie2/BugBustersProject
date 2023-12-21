@@ -137,10 +137,8 @@ html {
 .grid-container {
     display: grid;
     grid-gap: 20px;
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:  "one two"
-                          "one  three";
+    grid-template-columns: 2fr 2fr 1fr;
+    grid-template-areas:  "one two three";
 }
 
 
