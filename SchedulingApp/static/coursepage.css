@@ -23,6 +23,20 @@ html {
     cursor: pointer;
 }
 
+.smallredbutton {
+    background-color: #ea9999;
+    border: 3px solid #e06666;
+    border-radius: 5px;
+    color: black;
+    padding: 8px 10px;
+    text-align: center;
+    display: inline;
+    font-size: 12px;
+    font-weight: bolder;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
 .greenbutton {
     background-color: #99ea9b;
     border: 3px solid #6de16b;
@@ -33,7 +47,21 @@ html {
     display: inline;
     font-size: 18px;
     font-weight: bolder;
-    margin: 4px 2px;
+    margin: 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.smallgreenbutton {
+    background-color: #99ea9b;
+    border: 3px solid #6de16b;
+    border-radius: 5px;
+    color: black;
+    padding: 8px 10px;
+    text-align: center;
+    display: inline;
+    font-size: 12px;
+    font-weight: bolder;
     transition-duration: 0.4s;
     cursor: pointer;
 }
@@ -48,20 +76,34 @@ html {
     display: inline;
     font-size: 18px;
     font-weight: bolder;
-    margin: 2px 2px;
+    margin: 2px;
     transition-duration: 0.4s;
     cursor: pointer;
 }
 
-.redbutton:hover {
+.smallbluebutton {
+    background-color: #c9daf8;
+    border: 3px solid #3c78d8;
+    border-radius: 5px;
+    color: black;
+    padding: 8px 10px;
+    text-align: center;
+    display: inline;
+    font-size: 12px;
+    font-weight: bolder;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.redbutton:hover, .smallredbutton:hover {
     background-color: #e06666;
 }
 
-.greenbutton:hover {
+.greenbutton:hover, .smallgreenbutton:hover {
     background-color: #6de16b;
 }
 
-.bluebutton:hover {
+.bluebutton:hover, .smallbluebutton:hover {
     background-color: #3c78d8;
 }
 

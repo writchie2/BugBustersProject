@@ -79,7 +79,7 @@
                                 <option value= {{ user.email }}>{{ user.fullname }}</option>
                             {% endfor %}
                         </datalist>
-                        <input type="submit" class="greenbutton">
+                        <input type="submit" class="smallgreenbutton">
                     </form>
                 {% endif %}
             </td>
@@ -92,13 +92,13 @@
                     <td>
                         <form action="/coursepage/" method="post">
                             {% csrf_token %}
-                            <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View
+                            <button type="submit" name="selecteduser" value={{ user.email }} class="smallbluebutton">View
                                 User
                             </button>
                             {% if role == 'admin' %}
                                 {% csrf_token %}
                                 <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')"
-                                        value={{ user.email }} class="redbutton">Remove User
+                                        value={{ user.email }} class="smallredbutton">Remove User
                                 </button>
                             {% endif %}
                         </form>
@@ -116,7 +116,7 @@
                 {% if role == 'admin' %}
                     <form action="/coursepage/" method="post">
                         {% csrf_token %}
-                        <button type="submit" name="navigation" value="createsection" class="greenbutton">Create New
+                        <button type="submit" name="navigation" value="createsection" class="smallgreenbutton">Create New
                             Section
                         </button>
                     </form>
@@ -130,7 +130,7 @@
                     <td>
                         <form action="/coursepage/" method="post">
                             {% csrf_token %}
-                            <button type="submit" name="selectedsection" class="bluebutton" value={{ section.id }}>View
+                            <button type="submit" name="selectedsection" class="smallbluebutton" value={{ section.id }}>View
                                 Section
                             </button>
                         </form>

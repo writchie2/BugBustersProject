@@ -85,7 +85,7 @@
             {% if ownpage == True %}
                 <form action="/userpage/" method="post">
                     {% csrf_token %}
-                    <button type="submit" name="editbio" value="True" class="bluebutton">Edit Bio</button>
+                    <button type="submit" name="editbio" value="True" class="smallbluebutton">Edit Bio</button>
                 </form>
             {% endif %}
         {% endif %}
@@ -95,7 +95,7 @@
                 {% csrf_token %}
                 <textarea id="bio-text" name="savebio" rows="5" cols="80" maxlength="750">{{ user.bio }}</textarea>
                 <br>
-                <input type="submit" value="Save" class="bluebutton"></input>
+                <input type="submit" value="Save" class="smallbluebutton"></input>
             </form>
         {% endif %}
     </div>
