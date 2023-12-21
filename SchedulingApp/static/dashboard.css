@@ -101,10 +101,19 @@ html {
     display: inline;
 }
 
-#myTable table {
+#myTable {
     border-spacing: 0;
     width: 100%;
-    border: 1px solid #000;
+    table-layout: fixed;
+    border-collapse: collapse;
+    float: left;
+}
+
+#myTable tbody {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    height: 200px;
 }
 
 #myTable th {
