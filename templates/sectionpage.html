@@ -78,15 +78,15 @@
             {% if section.assigneduser.fullname == None %}
                 {% if role == 'admin' or isInstructor == True %}
                     <form action="/sectionpage/" method="post">
-                    {% csrf_token %}
-                    <label for="adduser">Assign a user to the section:</label>
-                    <input list="addusers" name="adduser" id="adduser">
-                    <datalist id="addusers">
-                    {% for user in unassignedusers %}
-                        <option value= {{ user.email }}>{{ user.fullname }}</option>
-                    {% endfor %}
-                    </datalist>
-                    <input type="submit">
+                        {% csrf_token %}
+                        <label for="adduser">Assign a user to the section:</label>
+                        <input list="addusers" name="adduser" id="adduser">
+                        <datalist id="addusers">
+                            {% for user in unassignedusers %}
+                                <option value= {{ user.email }}>{{ user.fullname }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <input type="submit">
                     </form>
                 {% else %}
                     No user assigned
@@ -95,11 +95,15 @@
             {% if section.assigneduser.fullname != None %}
                 {{ section.assigneduser.fullname }}
                 <form action="/sectionpage/" method="post">
-                {% csrf_token %}
-                <button type="submit" name="selecteduser" value={{ section.assigneduser.email }} class="bluebutton">View User</button>
+                    {% csrf_token %}
+                    <button type="submit" name="selecteduser" value={{ section.assigneduser.email }} class="bluebutton">
+                        View User
+                    </button>
                     {% if role == 'admin' or isInstructor == True %}
-                {% csrf_token %}
-                <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ section.assigneduser.email }} class="redbutton">Remove User</button>
+                        {% csrf_token %}
+                        <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')"
+                                value={{ section.assigneduser.email }} class="redbutton">Remove User
+                        </button>
                     {% endif %}
                 </form>
             {% endif %}

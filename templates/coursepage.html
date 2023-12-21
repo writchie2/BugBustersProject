@@ -33,40 +33,42 @@
 {{ message }}
 <div class="grid-container">
     <div class="grid-child">
-    {% if role == 'admin' %}
-        <form action="/coursepage/" method="post">
-            {% csrf_token %}
-            <button type="submit" name="navigation" value="courselist" class="bluebutton">Back to Courses</button>
-            {{ message }}
-            <div class="totheright">
+        {% if role == 'admin' %}
+            <form action="/coursepage/" method="post">
                 {% csrf_token %}
-                <button type="submit" name="navigation" value="editcourse" class="bluebutton">Edit This Course</button>
-                {% csrf_token %}
-                <button type="submit" name="navigation" onclick="return confirm('Are you sure?')" value="deletecourse"
-                        class="redbutton">Delete Course
-                </button>
-            </div>
-        </form>
-    {% endif %}
+                <button type="submit" name="navigation" value="courselist" class="bluebutton">Back to Courses</button>
+                {{ message }}
+                <div class="totheright">
+                    {% csrf_token %}
+                    <button type="submit" name="navigation" value="editcourse" class="bluebutton">Edit This Course
+                    </button>
+                    {% csrf_token %}
+                    <button type="submit" name="navigation" onclick="return confirm('Are you sure?')"
+                            value="deletecourse"
+                            class="redbutton">Delete Course
+                    </button>
+                </div>
+            </form>
+        {% endif %}
     </div>
     <div class="grid-child">
-    <table id="myTable">
-        <thead>
-        <tr>
-            <td class="label">Course:</td>
-            <td>{{ course.title }}</td>
-        </tr>
-        <tr>
-            <td class="label">Semester:</td>
-            <td>{{ course.semester }} {{ course.year }}</td>
-        </tr>
-        </thead>
-    </table>
+        <table id="myTable">
+            <thead>
+            <tr>
+                <td class="label">Course:</td>
+                <td>{{ course.title }}</td>
+            </tr>
+            <tr>
+                <td class="label">Semester:</td>
+                <td>{{ course.semester }} {{ course.year }}</td>
+            </tr>
+            </thead>
+        </table>
     </div>
     <div class="grid-child">
-    <table id="myTable">
-        <thead>
-            <td class="label">Assigned Users: </td>
+        <table id="myTable">
+            <thead>
+            <td class="label">Assigned Users:</td>
             <td>
                 {% if role == 'admin' %}
                     <form action="/coursepage/" method="post">
@@ -82,56 +84,62 @@
                     </form>
                 {% endif %}
             </td>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for user in course.users %}
                 <tr>
                     <td>{{ user.fullname }}</td>
                     <td>{{ user.role }}</td>
                     <td>
                         <form action="/coursepage/" method="post">
-                        {% csrf_token %}
-                        <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View User</button>
-                        {% if role == 'admin' %}
                             {% csrf_token %}
-                            <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')" value={{ user.email }} class="redbutton">Remove User</button>
-                        {% endif %}
+                            <button type="submit" name="selecteduser" value={{ user.email }} class="bluebutton">View
+                                User
+                            </button>
+                            {% if role == 'admin' %}
+                                {% csrf_token %}
+                                <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')"
+                                        value={{ user.email }} class="redbutton">Remove User
+                                </button>
+                            {% endif %}
                         </form>
                     </td>
                 </tr>
             {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
     </div>
     <div class="grid-child">
-    <table id="myTable">
-        <thead>
-            <td class="label">Sections: </td>
+        <table id="myTable">
+            <thead>
+            <td class="label">Sections:</td>
             <td>
                 {% if role == 'admin' %}
-                <form action="/coursepage/" method="post">
-                    {% csrf_token %}
-                    <button type="submit" name="navigation" value="createsection" class="greenbutton">Create New Section</button>
-                </form>
-                {% endif %}
-            </td>
-        </thead>
-        <tbody>
-        {% for section in course.sections %}
-            <tr>
-                <td>{{ section.title }} - {{ section.daysMeeting }} {{ section.location }} </td>
-                <td>
                     <form action="/coursepage/" method="post">
                         {% csrf_token %}
-                        <button type="submit" name="selectedsection" class="bluebutton" value={{ section.id }}>View
+                        <button type="submit" name="navigation" value="createsection" class="greenbutton">Create New
                             Section
                         </button>
                     </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                {% endif %}
+            </td>
+            </thead>
+            <tbody>
+            {% for section in course.sections %}
+                <tr>
+                    <td>{{ section.title }} - {{ section.daysMeeting }} {{ section.location }} </td>
+                    <td>
+                        <form action="/coursepage/" method="post">
+                            {% csrf_token %}
+                            <button type="submit" name="selectedsection" class="bluebutton" value={{ section.id }}>View
+                                Section
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 </body>
