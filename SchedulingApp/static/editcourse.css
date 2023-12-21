@@ -5,7 +5,7 @@ html {
 }
 
 .label {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .redbutton {
@@ -19,6 +19,21 @@ html {
     font-size: 18px;
     font-weight: bolder;
     margin: 2px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.greenbutton {
+    background-color: #99ea9b;
+    border: 3px solid #6de16b;
+    border-radius: 5px;
+    color: black;
+    padding: 8px 16px;
+    text-align: center;
+    display: inline;
+    font-size: 18px;
+    font-weight: bolder;
+    margin: 4px 2px;
     transition-duration: 0.4s;
     cursor: pointer;
 }
@@ -42,6 +57,10 @@ html {
     background-color: #e06666;
 }
 
+.greenbutton:hover {
+    background-color: #6de16b;
+}
+
 .bluebutton:hover {
     background-color: #3c78d8;
 }
@@ -51,6 +70,27 @@ html {
     height: auto;
     max-width: 1200px;
     margin: 0 auto;
+}
+
+#titlebar {
+    background-color: #c9daf8;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    margin-top: 10%;
+}
+
+#loginform {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10%;
+    text-align: right;
+}
+
+#loginform .label {
+    font-size: 20px;
+    font-weight: bold;
 }
 
 #navlist {
@@ -66,6 +106,12 @@ html {
     text-align: center;
     float: right;
     display: inline;
+}
+
+#dashlist {
+    text-align: center;
+    display: block;
+    margin-top: 10%;
 }
 
 #myTable table {
@@ -86,4 +132,32 @@ html {
 
 #myTable tr:nth-child(even) {
     background-color: #fcfcfc
+}
+
+.grid-container {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
+    grid-template-areas:  "one two"
+                          "one  three";
+}
+
+
+.grid-child:nth-child(1) {
+    grid-area: one;
+}
+
+.grid-child:nth-child(2) {
+    grid-area: two;
+}
+
+.grid-child:nth-child(3) {
+    grid-area: three;
+}
+
+
+#bio-text {
+    max-width: 600px;
+
 }

@@ -46,12 +46,15 @@
             <table id="myTable">
                 {% for course in user.courses %}
                     <tr>
-                        <td class="label">{{ course.title }}</td>
-                        <td>{{ course.semester }}, {{ course.year }}</td>
+                        <td>
+                            <b>{{ course.title }}</b> <br>
+                            {{ course.semester }}, {{ course.year }}
+                        </td>
                         <td>
                             <form action="/dashboard/" method="post">
                                 {% csrf_token %}
-                                <button type="submit" name="selectedcourse" class="smallbluebutton" value={{ course.id }}>
+                                <button type="submit" name="selectedcourse" class="smallbluebutton"
+                                        value={{ course.id }}>
                                     View Course
                                 </button>
                             </form>
@@ -69,12 +72,16 @@
             <table id="myTable">
                 {% for section in user.sections %}
                     <tr>
-                        <td>{{ section.title }}
-                            - {{ section.daysMeeting }} {{ section.location }}<br><b>{{ section.course }}</b></td>
+                        <td>
+                            <b>{{ section.title }}
+                                - {{ section.daysMeeting }} {{ section.location }}</b><br>
+                            {{ section.course }}
+                        </td>
                         <td>
                             <form action="/dashboard/" method="post">
                                 {% csrf_token %}
-                                <button type="submit" name="selectedsection" class="smallbluebutton" value={{ section.id }}>
+                                <button type="submit" name="selectedsection" class="smallbluebutton"
+                                        value={{ section.id }}>
                                     View Section
                                 </button>
                             </form>
