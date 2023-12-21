@@ -87,3 +87,23 @@ html {
 #myTable tr:nth-child(even) {
     background-color: #fcfcfc
 }
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas: "one two three";
+}
+
+.grid-child:nth-child(1) {
+    grid-area: one;
+}
+
+.grid-child:nth-child(2) {
+    grid-area: two;
+}
+
+.grid-child:nth-child(3) {
+    grid-area: three;
+}
