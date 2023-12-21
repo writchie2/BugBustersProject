@@ -9,18 +9,18 @@ html {
 }
 
 .redbutton {
-    background-color: #ea9999;
-    border: 3px solid #e06666;
-    border-radius: 5px;
-    color: black;
-    padding: 8px 16px;
-    text-align: center;
-    display: inline;
-    font-size: 18px;
-    font-weight: bolder;
-    margin: 2px 2px;
-    transition-duration: 0.4s;
-    cursor: pointer;
+  background-color: #ea9999;
+  border: 3px solid #e06666;
+  border-radius: 5px;
+  color: black;
+  padding: 8px 16px;
+  text-align: center;
+  display: inline;
+  font-size: 18px;
+  font-weight:bolder;
+  margin: 2px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
 }
 
 .bluebutton {
@@ -44,34 +44,6 @@ html {
 
 .bluebutton:hover {
     background-color: #3c78d8;
-}
-
-.totheright {
-    float: right;
-    display: inline;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 80px 1fr;
-    gap: 0px 0px;
-    grid-template-areas: "one one"
-                         "two three";
-}
-
-.grid-child:nth-child(1) {
-    grid-area: one;
-}
-
-.grid-child:nth-child(2) {
-    grid-area: two;
-}
-
-.grid-child:nth-child(3) {
-    grid-area: three;
-    border-left: 5px solid #f3f3f3;
-    padding-left: 15px;
 }
 
 #wrapper {

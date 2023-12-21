@@ -30,99 +30,85 @@
 </div>
 <br>
 <br>
-<div class="grid-container">
-    <div class="grid-child">
-        <form action="/sectionpage/" method="post">
-            {% csrf_token %}
-            <button type="submit" name="navigation" value="viewcourse" class="bluebutton">Back To Course</button>
-            {{ message }}
-            <div class="totheright">
-                {% if role == 'admin' %}
-                    {% csrf_token %}
-                    <button type="submit" name="navigation" value="editsection" class="bluebutton">Edit This Section
-                    </button>
-                    {% csrf_token %}
-                    <button type="submit" onclick="return confirm('Are you sure?')" name="navigation"
-                            value="deletesection"
-                            class="redbutton">Delete This Section
-                    </button>
+{{ message }}
+<form action="/sectionpage/" method="post">
+    {% csrf_token %}
+    <button type="submit" name="navigation" value="viewcourse" class="bluebutton">Back To Course</button>
+    {% if role == 'admin' %}
+        {% csrf_token %}
+        <button type="submit" name="navigation" value="editsection" class="bluebutton">Edit This Section</button>
+        {% csrf_token %}
+        <button type="submit" onclick="return confirm('Are you sure?')" name="navigation" value="deletesection"
+                class="redbutton">Delete This Section
+        </button>
+    {% endif %}
+</form>
+<table id="myTable">
+    <tr>
+        <td class="label">Section Number:</td>
+        <td>{{ section.sectionnumber }}</td>
+    </tr>
+    <tr>
+        <td class="label">Type:</td>
+        <td>{{ section.type }}</td>
+    </tr>
+    <tr>
+        <td class="label">Location:</td>
+        <td>{{ section.location }}</td>
+    </tr>
+    <tr>
+        <td class="label">Days Meeting:</td>
+        <td>{{ section.daysmeeting }}</td>
+    </tr>
+    <tr>
+        <td class="label">Start Time:</td>
+        <td>{{ section.starttime }}</td>
+    </tr>
+    <tr>
+        <td class="label">End Time:</td>
+        <td>{{ section.endtime }}</td>
+    </tr>
+    <tr>
+        <td class="label">Course:</td>
+        <td>{{ section.course.title }}</td>
+    </tr>
+    <tr>
+        <td class="label">Instructor:</td>
+        <td>
+            {% if section.assigneduser.fullname == None %}
+                {% if role == 'admin' or isInstructor == True %}
+                    <form action="/sectionpage/" method="post">
+                        {% csrf_token %}
+                        <label for="adduser">Assign a user to the section:</label>
+                        <input list="addusers" name="adduser" id="adduser">
+                        <datalist id="addusers">
+                            {% for user in unassignedusers %}
+                                <option value= {{ user.email }}>{{ user.fullname }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <input type="submit">
+                    </form>
+                {% else %}
+                    No user assigned
                 {% endif %}
-            </div>
-        </form>
-    </div>
-    <div class="grid-child">
-        <table id="myTable">
-            <tr>
-                <td class="label">Section Number:</td>
-                <td>{{ section.sectionnumber }}</td>
-            </tr>
-            <tr>
-                <td class="label">Type:</td>
-                <td>{{ section.type }}</td>
-            </tr>
-            <tr>
-                <td class="label">Location:</td>
-                <td>{{ section.location }}</td>
-            </tr>
-            <tr>
-                <td class="label">Days Meeting:</td>
-                <td>{{ section.daysmeeting }}</td>
-            </tr>
-            <tr>
-                <td class="label">Start Time:</td>
-                <td>{{ section.starttime }}</td>
-            </tr>
-            <tr>
-                <td class="label">End Time:</td>
-                <td>{{ section.endtime }}</td>
-            </tr>
-        </table>
-    </div>
-    <div class="grid-child">
-        <table id="myTable">
-            <tr>
-                <td class="label">Course:</td>
-                <td>{{ section.course.title }}</td>
-            </tr>
-            <tr>
-                <td class="label">Instructor:</td>
-                <td>
-                    {% if section.assigneduser.fullname == None %}
-                        {% if role == 'admin' or isInstructor == True %}
-                            <form action="/sectionpage/" method="post">
-                                {% csrf_token %}
-                                <label for="adduser">Assign a user to the section:</label>
-                                <input list="addusers" name="adduser" id="adduser">
-                                <datalist id="addusers">
-                                    {% for user in unassignedusers %}
-                                        <option value= {{ user.email }}>{{ user.fullname }}</option>
-                                    {% endfor %}
-                                </datalist>
-                                <input type="submit">
-                            </form>
-                        {% else %}
-                            No user assigned
-                        {% endif %}
+            {% endif %}
+            {% if section.assigneduser.fullname != None %}
+                {{ section.assigneduser.fullname }}
+                <form action="/sectionpage/" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="selecteduser" value={{ section.assigneduser.email }} class="bluebutton">
+                        View User
+                    </button>
+                    {% if role == 'admin' or isInstructor == True %}
+                        {% csrf_token %}
+                        <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')"
+                                value={{ section.assigneduser.email }} class="redbutton">Remove User
+                        </button>
                     {% endif %}
-                    {% if section.assigneduser.fullname != None %}
-                        {{ section.assigneduser.fullname }}
-                        <form action="/sectionpage/" method="post">
-                            {% csrf_token %}
-                            <button type="submit" name="selecteduser"
-                                    value={{ section.assigneduser.email }} class="bluebutton">View User
-                            </button>
-                            {% if role == 'admin' or isInstructor == True %}
-                                {% csrf_token %}
-                                <button type="submit" name="removeuser" onclick="return confirm('Are you sure?')"
-                                        value={{ section.assigneduser.email }} class="redbutton">Remove User
-                                </button>
-                            {% endif %}
-                        </form>
-                    {% endif %}
-                </td>
-            </tr>
-        </table>
-    </div>
-</div>
+                </form>
+            {% endif %}
+        </td>
+    </tr>
+</table>
 </body>
 </html>

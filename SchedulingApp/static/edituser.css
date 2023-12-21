@@ -9,33 +9,18 @@ html {
 }
 
 .redbutton {
-    background-color: #ea9999;
-    border: 3px solid #e06666;
-    border-radius: 5px;
-    color: black;
-    padding: 8px 16px;
-    text-align: center;
-    display: inline;
-    font-size: 18px;
-    font-weight: bolder;
-    margin: 2px 2px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-}
-
-.greenbutton {
-    background-color: #99ea9b;
-    border: 3px solid #6de16b;
-    border-radius: 5px;
-    color: black;
-    padding: 8px 16px;
-    text-align: center;
-    display: inline;
-    font-size: 18px;
-    font-weight: bolder;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    cursor: pointer;
+  background-color: #ea9999;
+  border: 3px solid #e06666;
+  border-radius: 5px;
+  color: black;
+  padding: 8px 16px;
+  text-align: center;
+  display: inline;
+  font-size: 18px;
+  font-weight:bolder;
+  margin: 2px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
 }
 
 .bluebutton {
@@ -57,12 +42,29 @@ html {
     background-color: #e06666;
 }
 
-.greenbutton:hover {
-    background-color: #6de16b;
-}
-
 .bluebutton:hover {
     background-color: #3c78d8;
+}
+
+.grid-container {
+    display: grid;
+    grid-gap: 0px;
+    grid-template-rows: 1fr;
+    grid-template-columns: 2fr 2fr 1fr;
+    grid-template-areas:  "one two three";
+
+}
+
+.grid-child:nth-child(1) {
+    grid-area: one;
+}
+
+.grid-child:nth-child(2) {
+    grid-area: two;
+}
+
+.grid-child:nth-child(3) {
+    grid-area: three;
 }
 
 #wrapper {
@@ -106,29 +108,4 @@ html {
 
 #myTable tr:nth-child(even) {
     background-color: #fcfcfc
-}
-
-.grid-container {
-    display: grid;
-    grid-gap: 0px;
-    grid-template-rows: 1fr;
-    grid-template-columns: 2fr 2fr 1fr;
-    grid-template-areas:  "one two three";
-
-}
-
-.grid-child:nth-child(1) {
-    grid-area: one;
-}
-
-.grid-child:nth-child(2) {
-    grid-area: two;
-}
-
-.grid-child:nth-child(3) {
-    grid-area: three;
-}
-
-#bio-text {
-    max-width: 600px;
 }
